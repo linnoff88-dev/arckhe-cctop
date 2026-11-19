@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.3 Documentando Código Legado em 3 Sessões | Mestre em Contexto e Tokens</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .dark body { background-color: #111827; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #4b5563; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-teal-400 { color: #0d9488; }
+    html:not(.dark) .bg-teal-500\/20 { background-color: rgba(13, 148, 136, 0.12); }
+    html:not(.dark) .bg-teal-500\/10 { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .bg-teal-900\/20 { background-color: rgba(13, 148, 136, 0.06); }
+    html:not(.dark) .bg-teal-900\/30 { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .bg-teal-900\/40 { background-color: rgba(13, 148, 136, 0.1); }
+    html:not(.dark) .border-teal-500\/30 { border-color: rgba(13, 148, 136, 0.25); }
+    html:not(.dark) .border-teal-500\/40 { border-color: rgba(13, 148, 136, 0.35); }
+    html:not(.dark) .border-teal-500 { border-color: #0d9488; }
+    html:not(.dark) .hover\:bg-teal-500\/10:hover { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .hover\:text-teal-400:hover { color: #0d9488; }
+
+    html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .hover\:text-emerald-400:hover { color: #059669; }
+    html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .hover\:text-blue-400:hover { color: #2563eb; }
+    html:not(.dark) .hover\:bg-purple-500\/10:hover { background-color: rgba(147, 51, 234, 0.08); }
+    html:not(.dark) .hover\:text-purple-400:hover { color: #9333ea; }
+    html:not(.dark) .hover\:bg-amber-500\/10:hover { background-color: rgba(180, 83, 9, 0.08); }
+    html:not(.dark) .hover\:text-amber-400:hover { color: #b45309; }
+    html:not(.dark) .hover\:bg-rose-500\/10:hover { background-color: rgba(190, 24, 93, 0.08); }
+    html:not(.dark) .hover\:text-rose-400:hover { color: #be185d; }
+
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-900\/20 { background-color: rgba(37, 99, 235, 0.06); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .text-red-400 { color: #dc2626; }
+    html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+    html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.25); }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.35); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧠</span>
+            <span class="font-bold text-lg hidden sm:inline">Contexto e Tokens</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Rotina</span></a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Handoff</span></a>
+          <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Avançado</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-teal-400 bg-teal-500/10"><span class="sm:hidden">T5</span><span class="hidden sm:inline">Exemplos</span></a>
+          <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Expert</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-teal-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-teal-400">Trilha 5</a>
+      <span>/</span>
+      <span class="text-teal-400">Módulo 5.3</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-teal-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-teal-500/20 text-teal-400 text-xs font-semibold rounded-full mb-4">MÓDULO 5.3</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">📚 Documentando Código Legado em 3 Sessões</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Projeto grande sem docs. Dividir em 3 sessões com handoff entre cada uma. Subagentes paralelos para acelerar. No final: cálculo real de tokens e custo mostrando ~5× de economia vs sessão única.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">6</div><div class="text-xs text-neutral-400">Passos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">~40</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">3</div><div class="text-xs text-neutral-400">Sessões</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">5×</div><div class="text-xs text-neutral-400">Economia</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- CENARIO DE ABERTURA -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6">
+        <h2 class="text-lg font-semibold text-teal-400 mb-3 flex items-center"><span class="mr-2">🎬</span>O cenário</h2>
+        <p class="text-neutral-300 leading-relaxed">
+          Projeto <strong class="text-teal-400">grande</strong>, 5 módulos principais, zero documentação. O time novo está sofrendo para entrar. Você foi encarregado de documentar. Tentar numa sessão só é receita para <strong>context rot</strong>: Claude entra com atenção afiada no módulo 1 e termina produzindo texto vago no módulo 5. A saída é dividir em <strong class="text-teal-400">3 sessões encadeadas</strong>, com handoff estruturado entre elas. No fim você terá ARCHITECTURE.md, 5 docs por módulo, CONTRIBUTING.md e CLAUDE.md — e terá gastado ~5× menos que no fluxo ingênuo.
+        </p>
+      </div>
+    </section>
+
+    <!-- MAPA DAS 3 SESSOES -->
+    <section class="mb-12">
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Mapa das 3 sessões</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-teal-900/20 rounded-lg p-4 border-l-4 border-teal-500">
+            <div class="font-bold text-teal-400 mb-1">Sessão 1 · Inventário</div>
+            <div class="text-xs text-neutral-400 mb-2">~30 min · ~40k tokens</div>
+            <div class="text-sm text-neutral-300">Explorar repo, produzir ARCHITECTURE.md, handoff.</div>
+          </div>
+          <div class="bg-teal-900/20 rounded-lg p-4 border-l-4 border-teal-500">
+            <div class="font-bold text-teal-400 mb-1">Sessão 2 · Docs por módulo</div>
+            <div class="text-xs text-neutral-400 mb-2">~45 min · ~80k tokens</div>
+            <div class="text-sm text-neutral-300">5 subagentes paralelos, revisão, handoff.</div>
+          </div>
+          <div class="bg-teal-900/20 rounded-lg p-4 border-l-4 border-teal-500">
+            <div class="font-bold text-teal-400 mb-1">Sessão 3 · Guias</div>
+            <div class="text-xs text-neutral-400 mb-2">~20 min · ~60k tokens</div>
+            <div class="text-sm text-neutral-300">CONTRIBUTING.md + CLAUDE.md curto.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PASSO 1 -->
+    <section id="passo-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">🗺️ Sessão 1, Passo A: Inventário e arquitetura</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> abrir uma sessão dedicada só a entender o <strong>todo</strong>. Output único e curto: ARCHITECTURE.md &lt; 80 linhas. Esse arquivo orienta todas as sessões seguintes e vira parte do handoff permanente do projeto.
+      </p>
+
+      <!-- PROMPT PRONTO -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Prompt pronto para copiar</h3>
+          <span class="text-xs text-teal-400 font-mono">sessão 1A</span>
+        </div>
+        <div class="bg-dark-900 rounded-lg border-l-4 border-teal-500 p-5 font-mono text-sm text-teal-400 leading-relaxed overflow-x-auto">
+<pre>Sessão de inventário. Explore o repo e produza ARCHITECTURE.md
+com: árvore de pastas (principais), responsabilidade de cada módulo
+raiz, fluxo principal (uma linha), tecnologias. Máximo 80 linhas.</pre>
+        </div>
+      </div>
+
+      <!-- O QUE ESPERAR -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📥</span>O que esperar da resposta</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-xs text-neutral-300 overflow-x-auto">
+<pre># ARCHITECTURE.md
+
+## Árvore
+src/
+├── api/        (HTTP, rotas)
+├── auth/       (login, JWT, sessions)
+├── billing/    (Stripe, faturas)
+├── catalog/    (produtos, busca)
+└── orders/     (checkout, fulfillment)
+
+## Módulos
+- api: entrada HTTP, validação, middlewares
+- auth: autenticação e autorização
+- billing: integração Stripe e ciclo de faturas
+- catalog: produtos, categorias, busca full-text
+- orders: carrinho, checkout, processamento
+
+## Fluxo principal
+Usuário → api → orders.checkout → billing → db
+
+## Stack
+Node 20, TypeScript, Fastify, Prisma, PostgreSQL,
+Stripe, Redis.</pre>
+        </div>
+      </div>
+
+      <!-- DICA -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span>Por que 80 linhas é o teto</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          ARCHITECTURE.md precisa caber na memória de quem abrir o projeto pela primeira vez — e no contexto das sessões 2 e 3. Mais que 80 linhas vira ruído. Menos que 40 não entrega informação suficiente. O sweet spot é 60–80 linhas densas.
+        </p>
+      </div>
+
+      <!-- TRANSICAO -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 mb-6 flex items-center gap-4">
+        <span class="text-3xl">→</span>
+        <div><strong class="text-teal-400">Próximo passo:</strong><span class="text-neutral-400 text-sm"> fechar a sessão 1 com handoff e /clear.</span></div>
+      </div>
+    </section>
+
+    <!-- PASSO 2 -->
+    <section id="passo-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">🗺️ Sessão 1, Passo B: Handoff e /clear</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> fim limpo da sessão 1. ARCHITECTURE.md é o handoff principal; o prompt de fechamento só confirma que ele está suficiente. Depois, <code class="text-teal-400 bg-dark-700 px-1.5 py-0.5 rounded">/clear</code> <strong>agora</strong>, não depois.
+      </p>
+
+      <!-- PROMPT PRONTO -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Prompt pronto para copiar</h3>
+          <span class="text-xs text-teal-400 font-mono">sessão 1B</span>
+        </div>
+        <div class="bg-dark-900 rounded-lg border-l-4 border-teal-500 p-5 font-mono text-sm text-teal-400 leading-relaxed overflow-x-auto">
+<pre>Produza handoff estruturado. Vou limpar sessão e abrir nova.</pre>
+        </div>
+      </div>
+
+      <!-- O QUE ESPERAR -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📥</span>O que esperar da resposta</h3>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Confirmação de que ARCHITECTURE.md foi salvo</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Lista de 5 módulos identificados (a base da sessão 2)</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Sugestão explícita: "abra nova sessão lendo apenas ARCHITECTURE.md + lista dos módulos"</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Nada para ser continuado dentro da mesma sessão</span></li>
+        </ul>
+      </div>
+
+      <!-- ALERTA -->
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center"><span class="mr-2">⚠️</span>Faça /clear agora</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          A tentação é continuar "só mais um passinho" na mesma sessão. Resista. Cada turno adicional depois desse ponto carrega toda a exploração do repo (dezenas de arquivos lidos) para uma tarefa que só precisa de 80 linhas de ARCHITECTURE.md. Sessão 2 começa zero, abre apenas ARCHITECTURE.md, e o contexto fica mínimo do início ao fim.
+        </p>
+      </div>
+
+      <!-- TRANSICAO -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 mb-6 flex items-center gap-4">
+        <span class="text-3xl">→</span>
+        <div><strong class="text-teal-400">Próximo passo:</strong><span class="text-neutral-400 text-sm"> sessão 2 — subagentes paralelos escrevendo docs por módulo.</span></div>
+      </div>
+    </section>
+
+    <!-- PASSO 3 -->
+    <section id="passo-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">📖 Sessão 2, Passo A: Docs por módulo (subagentes paralelos)</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> produzir 5 arquivos <code class="text-teal-400 bg-dark-700 px-1.5 py-0.5 rounded">docs/[modulo].md</code> em paralelo. Você é <strong>orquestrador</strong>, não redator. Cada subagente tem sua própria sessão e só devolve o arquivo pronto.
+      </p>
+
+      <!-- PROMPT PRONTO -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Prompt pronto para copiar</h3>
+          <span class="text-xs text-teal-400 font-mono">sessão 2A</span>
+        </div>
+        <div class="bg-dark-900 rounded-lg border-l-4 border-teal-500 p-5 font-mono text-sm text-teal-400 leading-relaxed overflow-x-auto">
+<pre>Com base no ARCHITECTURE.md, dispare 5 subagentes em paralelo —
+um por módulo principal. Cada um produz docs/[modulo].md com:
+o que faz, como usar, exemplos. Você só orquestra, não escreve.</pre>
+        </div>
+      </div>
+
+      <!-- O QUE ESPERAR -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📥</span>O que esperar da resposta</h3>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Confirmação de 5 subagentes disparados, um por módulo (api, auth, billing, catalog, orders)</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>À medida que cada um termina: caminho do arquivo criado e tamanho em linhas</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Resumo final: 5 arquivos em docs/, X linhas totais</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span><strong>Você não deve ver</strong> a exploração completa de cada módulo no contexto principal — só o resumo</span></li>
+        </ul>
+      </div>
+
+      <!-- DICA -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span>Economia real de paralelismo</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Em série: cada módulo carrega contexto novo sobre o anterior → 5× o tempo e qualidade caindo. Em paralelo com subagentes: 5 contextos isolados, cada um fresh, tempo de execução ≈ do módulo mais longo. Contexto principal recebe apenas ~5k tokens (os 5 resumos) em vez dos ~50k que viria da série.
+        </p>
+      </div>
+
+      <!-- TRANSICAO -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 mb-6 flex items-center gap-4">
+        <span class="text-3xl">→</span>
+        <div><strong class="text-teal-400">Próximo passo:</strong><span class="text-neutral-400 text-sm"> revisão consolidada e handoff para sessão 3.</span></div>
+      </div>
+    </section>
+
+    <!-- PASSO 4 -->
+    <section id="passo-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">📖 Sessão 2, Passo B: Revisão e handoff</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> 5 subagentes não se falam, então os arquivos podem ter estilos e lacunas diferentes. Uma revisão curta harmoniza. Depois, handoff para sessão 3.
+      </p>
+
+      <!-- PROMPT PRONTO -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Prompt pronto para copiar</h3>
+          <span class="text-xs text-teal-400 font-mono">sessão 2B</span>
+        </div>
+        <div class="bg-dark-900 rounded-lg border-l-4 border-teal-500 p-5 font-mono text-sm text-teal-400 leading-relaxed overflow-x-auto">
+<pre>Leia os 5 arquivos e me diga: está consistente?
+Falta algo? Depois me dê handoff.</pre>
+        </div>
+      </div>
+
+      <!-- O QUE ESPERAR -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📥</span>O que esperar da resposta</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-xs text-neutral-300 overflow-x-auto">
+<pre>Consistência: OK em 4/5. docs/billing.md usa "fatura"
+enquanto os outros usam "invoice" — padronizo?
+
+Lacunas identificadas:
+- docs/auth.md não tem exemplo de refresh token
+- docs/catalog.md não cobre busca full-text
+
+Handoff:
+- 5 arquivos em docs/ prontos para sessão 3
+- Ajustes menores aplicados inline
+- Próxima sessão: CONTRIBUTING.md + CLAUDE.md</pre>
+        </div>
+      </div>
+
+      <!-- TRANSICAO -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 mb-6 flex items-center gap-4">
+        <span class="text-3xl">→</span>
+        <div><strong class="text-teal-400">Próximo passo:</strong><span class="text-neutral-400 text-sm"> /clear e abrir sessão 3 para os guias de contribuição.</span></div>
+      </div>
+    </section>
+
+    <!-- PASSO 5 -->
+    <section id="passo-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">📘 Sessão 3, Passo A: CONTRIBUTING.md + CLAUDE.md</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> fechar o onboarding. CONTRIBUTING.md para humanos (setup, testes, PR); CLAUDE.md curto (&lt; 100 linhas) para agentes. Ambos herdam vocabulário dos arquivos já prontos.
+      </p>
+
+      <!-- PROMPT PRONTO -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Prompt pronto para copiar</h3>
+          <span class="text-xs text-teal-400 font-mono">sessão 3A</span>
+        </div>
+        <div class="bg-dark-900 rounded-lg border-l-4 border-teal-500 p-5 font-mono text-sm text-teal-400 leading-relaxed overflow-x-auto">
+<pre>Crie CONTRIBUTING.md (como rodar testes, convenções,
+onde achar o quê) e CLAUDE.md curto (&lt; 100 linhas)
+com as convenções e comandos.</pre>
+        </div>
+      </div>
+
+      <!-- O QUE ESPERAR -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📥</span>O que esperar da resposta</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-dark-900 rounded-lg p-4">
+            <div class="text-sm font-semibold text-teal-400 mb-2">CONTRIBUTING.md</div>
+            <ul class="space-y-1 text-xs text-neutral-300">
+              <li>• Pré-requisitos (Node 20, Docker)</li>
+              <li>• Setup em 5 comandos</li>
+              <li>• Como rodar testes (unit, e2e)</li>
+              <li>• Convenções de commit e branch</li>
+              <li>• Onde achar docs por módulo</li>
+              <li>• Como abrir um PR</li>
+            </ul>
+          </div>
+          <div class="bg-dark-900 rounded-lg p-4">
+            <div class="text-sm font-semibold text-teal-400 mb-2">CLAUDE.md (&lt; 100 linhas)</div>
+            <ul class="space-y-1 text-xs text-neutral-300">
+              <li>• Contexto do projeto (3–5 linhas)</li>
+              <li>• Comandos mais usados</li>
+              <li>• Convenções de código</li>
+              <li>• Onde ler (ARCHITECTURE.md, docs/)</li>
+              <li>• Restrições importantes</li>
+              <li>• Estilo de commit</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- DICA -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span>CLAUDE.md enxuto é lei</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          CLAUDE.md é carregado em <strong>toda sessão futura</strong> e re-injetado após compaction. Cada linha é paga muitas vezes. Se tiver 300 linhas, você vai gastar ~300 tokens em toda chamada, para sempre. Mantê-lo &lt; 100 linhas é decisão econômica, não só estética.
+        </p>
+      </div>
+
+      <!-- TRANSICAO -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 mb-6 flex items-center gap-4">
+        <span class="text-3xl">→</span>
+        <div><strong class="text-teal-400">Próximo passo:</strong><span class="text-neutral-400 text-sm"> calcular quanto você economizou e provar o ponto.</span></div>
+      </div>
+    </section>
+
+    <!-- PASSO 6 -->
+    <section id="passo-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">💰 Estimativa de tokens e custo real</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> mostrar o ganho em números concretos. Split de sessão não é capricho — é economia mensurável e qualidade preservada. Usamos preços de Sonnet 4.6 como referência.
+      </p>
+
+      <!-- BOX DE DADOS PRINCIPAL -->
+      <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">📊</span>Comparação lado a lado</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- 3 SESSOES -->
+          <div class="bg-dark-800/50 rounded-lg p-5 border border-teal-500/30">
+            <div class="text-xs uppercase tracking-wider text-teal-400 font-semibold mb-2">Fluxo em 3 sessões</div>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between"><span class="text-neutral-400">Sessão 1 (inventário)</span><span class="font-mono text-teal-400">~40k tokens</span></div>
+              <div class="flex justify-between"><span class="text-neutral-400">Sessão 2 (docs/módulo)</span><span class="font-mono text-teal-400">~80k tokens</span></div>
+              <div class="flex justify-between"><span class="text-neutral-400">Sessão 3 (guias)</span><span class="font-mono text-teal-400">~60k tokens</span></div>
+              <div class="flex justify-between pt-2 border-t border-dark-600"><span class="font-semibold">Input total</span><span class="font-mono text-teal-400">~180k tokens</span></div>
+              <div class="flex justify-between"><span class="text-neutral-400">Custo Sonnet 4.6</span><span class="font-mono text-emerald-400">~US$ 1,20</span></div>
+              <div class="flex justify-between"><span class="text-neutral-400">Qualidade final</span><span class="text-emerald-400">alta ✓</span></div>
+            </div>
+          </div>
+          <!-- 1 SESSAO -->
+          <div class="bg-dark-800/50 rounded-lg p-5 border border-red-500/30">
+            <div class="text-xs uppercase tracking-wider text-red-400 font-semibold mb-2">Fluxo em 1 sessão só</div>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between"><span class="text-neutral-400">Exploração acumulada</span><span class="font-mono text-red-400">cresce a cada turno</span></div>
+              <div class="flex justify-between"><span class="text-neutral-400">Pico de contexto</span><span class="font-mono text-red-400">~500k tokens</span></div>
+              <div class="flex justify-between"><span class="text-neutral-400">Releituras (quadrático)</span><span class="font-mono text-red-400">++</span></div>
+              <div class="flex justify-between pt-2 border-t border-dark-600"><span class="font-semibold">Input total</span><span class="font-mono text-red-400">~900k tokens</span></div>
+              <div class="flex justify-between"><span class="text-neutral-400">Custo Sonnet 4.6</span><span class="font-mono text-red-400">~US$ 6,00</span></div>
+              <div class="flex justify-between"><span class="text-neutral-400">Qualidade final</span><span class="text-red-400">context rot ✗</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-5 p-4 bg-dark-900/60 rounded-lg">
+          <div class="flex justify-between items-center">
+            <span class="font-semibold text-neutral-300">Economia</span>
+            <span class="font-mono text-2xl font-bold text-teal-400">~5×</span>
+          </div>
+          <div class="flex justify-between items-center mt-2">
+            <span class="text-sm text-neutral-400">Custo evitado</span>
+            <span class="font-mono text-teal-400">~US$ 4,80 por projeto</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DICA FINAL -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span>Por que a economia é &gt; 3× mesmo sendo "3 sessões"</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Crescimento de contexto numa sessão única é <strong>quadrático</strong> (releitura a cada turno). Em 3 sessões independentes, cada uma cresce linearmente e parte do zero. Isso é o que transforma <strong class="text-primary">3× mais sessões</strong> em <strong class="text-primary">5× menos tokens</strong>. Bônus: qualidade da última sessão é igual à da primeira, enquanto no fluxo único você entrega um CLAUDE.md pior produzido com contexto poluído.
+        </p>
+      </div>
+
+      <!-- ALERTA -->
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center"><span class="mr-2">⚠️</span>Números são ilustrativos</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Os valores acima são estimativas baseadas em um projeto médio (5 módulos, ~30 arquivos por módulo). O seu caso pode variar — mas a <strong>forma da curva</strong> não muda: fluxo em múltiplas sessões sempre economiza em repos grandes. Meça sua sessão real com <code class="text-red-400 bg-dark-700 px-1.5 py-0.5 rounded">/context</code> para números concretos.
+        </p>
+      </div>
+
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-teal-900/40 via-dark-800 to-dark-800 rounded-xl border border-teal-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">📋</span>Resumo do Módulo</h2>
+
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">Dividir em 3 sessões</strong><span class="text-neutral-400"> — inventário, docs por módulo, guias</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">ARCHITECTURE.md &lt; 80 linhas</strong><span class="text-neutral-400"> — o artefato que orienta tudo</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">Handoff + /clear entre sessões</strong><span class="text-neutral-400"> — limpa o contexto antes da próxima etapa</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">5 subagentes paralelos</strong><span class="text-neutral-400"> — você orquestra, eles escrevem</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">CLAUDE.md &lt; 100 linhas</strong><span class="text-neutral-400"> — pago em toda sessão futura</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">~5× de economia real</strong><span class="text-neutral-400"> — US$ 1,20 vs US$ 6,00 + qualidade preservada</span></div></div>
+        </div>
+
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-teal-400 mb-2">Próxima trilha:</h3>
+          <p class="text-neutral-300">Trilha 6 — 🚀 Expert</p>
+          <p class="text-sm text-neutral-400 mt-1">Nível de maturidade avançada: automações, Claude Code como parte do fluxo, time inteiro produtivo.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-5-2.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Anterior: Debug</a>
+          <a href="../trilha6/index.html" class="flex-1 text-center px-6 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-500 transition-colors">Próxima Trilha: Expert →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>🧠 Mestre em Contexto e Tokens — INEMA.CLUB • 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) { darkIcon.classList.remove('hidden'); html.classList.remove('dark'); } else { lightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => { darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden'); html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+  </script>
+
+</body>
+</html>

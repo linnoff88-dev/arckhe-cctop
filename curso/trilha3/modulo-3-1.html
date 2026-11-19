@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.1 O Resumo Estruturado (Handoff) | Mestre em Contexto e Tokens</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .dark body { background-color: #111827; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #4b5563; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .bg-purple-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+    html:not(.dark) .bg-purple-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .border-purple-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+    html:not(.dark) .hover\:bg-purple-500\/10:hover { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .hover\:text-purple-400:hover { color: #7c3aed; }
+    html:not(.dark) .bg-purple-900\/20 { background-color: rgba(124, 58, 237, 0.06); }
+    html:not(.dark) .bg-purple-900\/40 { background-color: rgba(124, 58, 237, 0.1); }
+
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-900\/20 { background-color: rgba(37, 99, 235, 0.06); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .text-red-400 { color: #dc2626; }
+    html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+    html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.25); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.35); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧠</span>
+            <span class="font-bold text-lg hidden sm:inline">Contexto e Tokens</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Rotina</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-purple-400 bg-purple-500/10"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Handoff</span></a>
+          <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Avançado</span></a>
+          <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">Exemplos</span></a>
+          <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Expert</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-purple-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-purple-400">Trilha 3</a>
+      <span>/</span>
+      <span class="text-purple-400">Módulo 3.1</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-purple-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full mb-4">MÓDULO 3.1</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">📋 O Resumo Estruturado (Handoff)</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Handoff ≠ resumo genérico. É um artefato técnico para que sua próxima sessão continue sem perder nada — caminhos absolutos, comandos exatos, próxima ação em 1 linha.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">30</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">Intermediário</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">Prática</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- TOPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">🎯 Handoff vs resumo genérico</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Muita gente confunde os dois e acaba escrevendo o errado. O <strong class="text-purple-400">resumo genérico</strong> é uma narrativa humana — conta o que aconteceu. O <strong class="text-purple-400">handoff</strong> é um documento operacional — instrui a próxima sessão a continuar. Propósitos diferentes, estruturas diferentes.
+      </p>
+
+      <!-- Comparação lado a lado -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">❌ Resumo genérico (inútil para Claude)</h4>
+          <div class="bg-dark-900 rounded-lg p-4 font-mono text-xs text-neutral-400 leading-relaxed">
+            Hoje trabalhamos no refactor da API. Foi difícil porque o schema estava desatualizado, mas conseguimos arrumar a validação. Aprendi que usar Zod é melhor que Joi. Amanhã continuo.
+          </div>
+          <ul class="mt-4 space-y-1.5 text-xs text-neutral-400">
+            <li>• Narrativa em primeira pessoa</li>
+            <li>• Sem caminhos, sem comandos</li>
+            <li>• "Amanhã continuo" = vazio</li>
+            <li>• Reflexões misturadas com ações</li>
+          </ul>
+        </div>
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Handoff (executável pela nova sessão)</h4>
+          <div class="bg-dark-900 rounded-lg p-4 font-mono text-xs text-neutral-300 leading-relaxed">
+            <span class="text-purple-400"># Objetivo</span><br>
+            Migrar validação de Joi→Zod em /src/api/users.<br><br>
+            <span class="text-purple-400"># Estado</span><br>
+            Branch: refactor/zod-validation · 2/5 rotas feitas<br><br>
+            <span class="text-purple-400"># Próxima ação</span><br>
+            Editar /src/api/users/update.ts aplicando o schema em /src/schemas/user.ts.
+          </div>
+          <ul class="mt-4 space-y-1.5 text-xs text-neutral-400">
+            <li>• Seções fixas e previsíveis</li>
+            <li>• Caminhos absolutos</li>
+            <li>• Próxima ação em 1 linha</li>
+            <li>• Zero subjetividade</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Box conceito -->
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-3 flex items-center"><span class="mr-2">🧠</span>A diferença mental</h3>
+        <p class="text-neutral-300 leading-relaxed mb-3">
+          Pergunte-se antes de escrever: <strong class="text-purple-400">"quem vai ler isso — eu amanhã ou o Claude de amanhã?"</strong>. A resposta define o formato.
+        </p>
+        <p class="text-neutral-300 leading-relaxed">
+          Você precisa da narrativa emocional? Vai no diário. O Claude precisa executar a próxima tarefa? Vai no handoff. Nunca misture.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">📐 Template oficial (7 seções)</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O handoff tem <strong class="text-purple-400">7 seções fixas</strong>. Sempre na mesma ordem. Se você seguir o esqueleto, não precisa decidir o que incluir — só preenche os campos.
+      </p>
+
+      <!-- Template visual -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Esqueleto das 7 seções</h3>
+        <div class="space-y-3">
+          <div class="flex items-start gap-4 bg-dark-700/50 rounded-lg p-4 border-l-4 border-purple-500">
+            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold flex-shrink-0">1</span>
+            <div class="flex-1">
+              <div class="font-semibold text-purple-400">Objetivo</div>
+              <div class="text-sm text-neutral-400">Uma frase: o que o projeto quer alcançar no final.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 bg-dark-700/50 rounded-lg p-4 border-l-4 border-purple-500">
+            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold flex-shrink-0">2</span>
+            <div class="flex-1">
+              <div class="font-semibold text-purple-400">Estado atual</div>
+              <div class="text-sm text-neutral-400">Branch, ambiente, processos rodando, versão, qualquer coisa "viva" agora.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 bg-dark-700/50 rounded-lg p-4 border-l-4 border-purple-500">
+            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold flex-shrink-0">3</span>
+            <div class="flex-1">
+              <div class="font-semibold text-purple-400">O que foi feito</div>
+              <div class="text-sm text-neutral-400">Bullet points curtos. Ação concluída + arquivo onde ficou.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 bg-dark-700/50 rounded-lg p-4 border-l-4 border-purple-500">
+            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold flex-shrink-0">4</span>
+            <div class="flex-1">
+              <div class="font-semibold text-purple-400">Arquivos importantes</div>
+              <div class="text-sm text-neutral-400">Lista com caminhos absolutos. Descrição curta do papel de cada um.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 bg-dark-700/50 rounded-lg p-4 border-l-4 border-purple-500">
+            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold flex-shrink-0">5</span>
+            <div class="flex-1">
+              <div class="font-semibold text-purple-400">Decisões tomadas</div>
+              <div class="text-sm text-neutral-400">Formato "X porque Y". Evita que a nova sessão re-discuta.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 bg-dark-700/50 rounded-lg p-4 border-l-4 border-purple-500">
+            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 font-bold flex-shrink-0">6</span>
+            <div class="flex-1">
+              <div class="font-semibold text-purple-400">O que falta</div>
+              <div class="text-sm text-neutral-400">Lista enumerada de bloqueios/pendências. Sem ordem de execução ainda.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 bg-gradient-to-r from-purple-900/40 to-dark-700/50 rounded-lg p-4 border-l-4 border-purple-400">
+            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-500/30 text-purple-300 font-bold flex-shrink-0">7</span>
+            <div class="flex-1">
+              <div class="font-semibold text-purple-300">Próxima ação <span class="text-xs text-neutral-400 font-normal">· crítica</span></div>
+              <div class="text-sm text-neutral-300">Uma linha. Literal. Executável. "Editar X arquivo aplicando Y".</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exemplo completo -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-4">Exemplo preenchido</h3>
+        <pre class="bg-dark-900 rounded-lg p-4 text-xs text-neutral-300 overflow-x-auto leading-relaxed"><code><span class="text-purple-400"># Objetivo</span>
+Adicionar autenticação OAuth Google ao endpoint /api/login.
+
+<span class="text-purple-400"># Estado atual</span>
+- Branch: feature/google-oauth
+- Node 20.11, pnpm 9.1
+- Servidor dev rodando em http://localhost:3001 (PID 4182)
+- .env.local configurado com GOOGLE_CLIENT_ID e SECRET
+
+<span class="text-purple-400"># O que foi feito</span>
+- Dependência "next-auth" instalada
+- Rota /api/auth/[...nextauth].ts criada
+- Schema User atualizado com providerId em /prisma/schema.prisma
+
+<span class="text-purple-400"># Arquivos importantes</span>
+- /home/dev/app/src/app/api/auth/[...nextauth].ts
+- /home/dev/app/prisma/schema.prisma
+- /home/dev/app/.env.local (NÃO commitar)
+
+<span class="text-purple-400"># Decisões tomadas</span>
+- next-auth v5 beta porque v4 não suporta App Router
+- providerId no User (não em tabela separada) porque 1 provider por user
+
+<span class="text-purple-400"># O que falta</span>
+1. Rodar "npx prisma migrate dev" para aplicar schema
+2. Adicionar middleware de proteção em /src/middleware.ts
+3. Testar fluxo end-to-end
+
+<span class="text-purple-400"># Próxima ação</span>
+Rodar `npx prisma migrate dev --name add-oauth-provider` e validar que a migração aplica sem erros.</code></pre>
+      </div>
+    </section>
+
+    <!-- TOPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">✅ Checklist: o que incluir sempre</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Algumas informações nunca podem faltar — porque a nova sessão começa do zero, sem acesso ao seu terminal ou histórico mental.
+      </p>
+
+      <!-- Tabela checklist -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30">
+          <h3 class="font-semibold">Informações obrigatórias em qualquer handoff</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-dark-700/50">
+              <tr class="text-left">
+                <th class="px-4 py-3 font-semibold text-neutral-400">Tipo</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Formato exigido</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Exemplo bom</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600">
+              <tr>
+                <td class="px-4 py-3 font-semibold">📁 Caminhos</td>
+                <td class="px-4 py-3 text-neutral-400">Absolutos (nunca relativos)</td>
+                <td class="px-4 py-3 font-mono text-xs text-emerald-400">/home/dev/app/src/utils/api.ts</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-semibold">🔢 Processos</td>
+                <td class="px-4 py-3 text-neutral-400">PID + comando que iniciou</td>
+                <td class="px-4 py-3 font-mono text-xs text-emerald-400">PID 4182 · pnpm dev --port 3001</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-semibold">🌐 URLs</td>
+                <td class="px-4 py-3 text-neutral-400">Completa + porta</td>
+                <td class="px-4 py-3 font-mono text-xs text-emerald-400">http://localhost:3001/api/health</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-semibold">⌨️ Comandos</td>
+                <td class="px-4 py-3 text-neutral-400">Literal, com flags</td>
+                <td class="px-4 py-3 font-mono text-xs text-emerald-400">pnpm test -- --watch users.test.ts</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-semibold">📦 Versões</td>
+                <td class="px-4 py-3 text-neutral-400">Exata quando for crítica</td>
+                <td class="px-4 py-3 font-mono text-xs text-emerald-400">next@15.0.2 · prisma@5.18</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-semibold">🌿 Branch / commit</td>
+                <td class="px-4 py-3 text-neutral-400">Nome + último hash</td>
+                <td class="px-4 py-3 font-mono text-xs text-emerald-400">feature/oauth · a1b2c3d</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Dica prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span>Regra do "pronto para copiar"</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Se a nova sessão precisa digitar alguma coisa, ela deve poder <strong>copiar do handoff diretamente</strong>. "Rode o servidor" é péssimo. <code class="text-primary bg-dark-700 px-1.5 py-0.5 rounded">pnpm dev --port 3001</code> é excelente. Reduz a zero a chance de digitação errada.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">❌ O que NÃO colocar</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Cada token no handoff dilui a atenção. Há coisas que parecem úteis mas pioram o resultado — <strong class="text-purple-400">elas roubam o foco da próxima ação</strong>.
+      </p>
+
+      <!-- Lista fora -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ Fora do handoff</h4>
+          <ul class="space-y-3 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span><strong>Retrospectivas</strong> — "foi difícil porque...", "gastamos tempo com..."</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span><strong>Emoções</strong> — "frustrante", "finalmente consegui", "ótimo progresso"</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span><strong>Justificativas longas</strong> — parágrafos explicando por que uma decisão foi certa</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span><strong>"O que aprendi"</strong> — reflexões pessoais sobre a sessão</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span><strong>Histórico de tentativas falhas</strong> — "primeiro tentei A, depois B, depois C"</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span><strong>Agradecimentos</strong> ou cumprimentos</span></li>
+          </ul>
+        </div>
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Equivalente útil (se precisar)</h4>
+          <ul class="space-y-3 text-neutral-300 text-sm">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>"Foi difícil" → <strong>decisão:</strong> "escolhi X porque Y falhou"</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>"Finalmente consegui" → <strong>feito:</strong> "ação + arquivo"</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Justificativa longa → <strong>formato ADR:</strong> 1 linha "X porque Y"</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>"Aprendi Zod" → vai num <strong>notes.md</strong>, não no handoff</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Tentativas falhas → só menciona se for <strong>bloqueio ativo</strong></span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Emocional → <strong>pula completamente</strong></span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Antes e depois -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-4">Antes e depois: a mesma decisão</h3>
+        <div class="space-y-4">
+          <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-4">
+            <div class="text-xs text-red-400 font-semibold mb-2">❌ ANTES (inchado)</div>
+            <p class="text-sm text-neutral-300 italic leading-relaxed">
+              "Passamos bastante tempo debatendo se deveríamos usar TypeScript ou ficar com JavaScript. No começo eu achava JavaScript bastaria, mas depois de ver os problemas de tipagem no módulo de payments, percebi que TypeScript seria melhor. Foi uma boa decisão porque já evitou 2 bugs nos testes. Acho que vai escalar bem."
+            </p>
+            <div class="text-xs text-neutral-500 mt-2 font-mono">~70 palavras · mistura narrativa + reflexão + decisão</div>
+          </div>
+          <div class="bg-emerald-900/20 border border-emerald-500/30 rounded-lg p-4">
+            <div class="text-xs text-emerald-400 font-semibold mb-2">✓ DEPOIS (operacional)</div>
+            <p class="text-sm text-neutral-300 font-mono leading-relaxed">
+              <span class="text-purple-400"># Decisão</span><br>
+              - TypeScript (não JS) porque tipos em /src/payments evitaram bugs de validação
+            </p>
+            <div class="text-xs text-neutral-500 mt-2 font-mono">~15 palavras · fato + justificativa técnica</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">🪄 Prompt mágico — código pronto</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Escrever handoff manualmente dá trabalho. A solução é um <strong class="text-purple-400">prompt pronto</strong> que você cola no final da sessão — o Claude gera o documento seguindo sua estrutura. Cole, revise 30 segundos, salva.
+      </p>
+
+      <!-- Prompt completo -->
+      <div class="bg-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-semibold text-purple-400 uppercase tracking-wider">Prompt oficial de handoff</h3>
+          <span class="text-xs text-neutral-500 font-mono">copie e cole no fim da sessão</span>
+        </div>
+        <pre class="bg-dark-900 rounded-lg p-5 text-sm text-neutral-300 overflow-x-auto leading-relaxed"><code>Crie um handoff estruturado com:
+1. Objetivo do projeto
+2. Estado atual (branch/ambiente/processos rodando)
+3. Arquivos ou dados importantes (caminhos absolutos)
+4. Decisões tomadas (com o porquê)
+5. O que já foi concluído
+6. Problemas pendentes
+7. Próxima ação recomendada (1 linha)</code></pre>
+      </div>
+
+      <!-- Por que funciona -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">🔍</span>Por que esse prompt funciona</h3>
+        <ul class="space-y-2.5 text-sm text-neutral-300">
+          <li class="flex items-start space-x-2"><span class="text-blue-400">→</span><span><strong>Estrutura enumerada:</strong> o modelo segue a ordem literal — sem improviso</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">→</span><span><strong>"caminhos absolutos":</strong> instrução explícita previne paths relativos</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">→</span><span><strong>"com o porquê":</strong> força ADR-style em decisões, não só a decisão</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">→</span><span><strong>"1 linha":</strong> força síntese extrema na próxima ação</span></li>
+        </ul>
+      </div>
+
+      <!-- Variações -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30">
+          <h3 class="font-semibold">Ajustes por tipo de projeto</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-dark-700/50">
+              <tr class="text-left">
+                <th class="px-4 py-3 font-semibold text-neutral-400">Tipo</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Adicione ao prompt</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600">
+              <tr><td class="px-4 py-3 font-semibold">🌐 Web/fullstack</td><td class="px-4 py-3 text-neutral-400 text-xs">"Inclua portas abertas e variáveis .env críticas (sem valores)"</td></tr>
+              <tr><td class="px-4 py-3 font-semibold">📊 Data/ETL</td><td class="px-4 py-3 text-neutral-400 text-xs">"Inclua esquema de tabelas lidas/escritas e IDs de jobs"</td></tr>
+              <tr><td class="px-4 py-3 font-semibold">📝 Documentação</td><td class="px-4 py-3 text-neutral-400 text-xs">"Inclua arquivos editados em bullet com 1 linha cada"</td></tr>
+              <tr><td class="px-4 py-3 font-semibold">🧪 Pesquisa/experimento</td><td class="px-4 py-3 text-neutral-400 text-xs">"Inclua hipóteses testadas e seus resultados (sem comentário)"</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Dica final -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span>Revise os 30 segundos</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          O Claude pode gerar handoff com pequenos desvios — caminho relativo, ação na 2ª linha, justificativa longa. Leia de cabo a rabo antes de salvar. 30 segundos aqui economizam 20 minutos amanhã.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">💾 Onde guardar o handoff</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Handoff perfeito não serve se some quando você fecha o terminal. Existem <strong class="text-purple-400">3 lugares válidos</strong> — e um lugar fatal que muita gente tenta.
+      </p>
+
+      <!-- 3 opções -->
+      <div class="space-y-4 mb-6">
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center"><span class="text-emerald-400 font-bold">1</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-emerald-500/30">
+            <h4 class="font-semibold text-emerald-400 mb-1">Clipboard — uso imediato</h4>
+            <p class="text-sm text-neutral-400 mb-2">Copia o handoff direto, abre nova sessão, cola. Ideal quando a continuação é AGORA.</p>
+            <p class="text-xs text-neutral-500">Risco: perde se copiar outra coisa antes. Use só para retomada imediata.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center"><span class="text-emerald-400 font-bold">2</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-emerald-500/30">
+            <h4 class="font-semibold text-emerald-400 mb-1">Arquivo <code class="text-purple-400">handoff.md</code> no projeto</h4>
+            <p class="text-sm text-neutral-400 mb-2">Salva no repositório, versiona, sobrevive a reboots. Ideal para retomadas em dias diferentes.</p>
+            <p class="text-xs text-neutral-500">Bônus: vira histórico útil quando o projeto tem pausas longas.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center"><span class="text-blue-400 font-bold">3</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-blue-500/30">
+            <h4 class="font-semibold text-blue-400 mb-1">Pasta <code class="text-purple-400">/handoffs/</code> versionada</h4>
+            <p class="text-sm text-neutral-400 mb-2">Um handoff por dia/milestone, arquivados. Exemplo: <code class="text-blue-400">/handoffs/2026-04-21-oauth.md</code>.</p>
+            <p class="text-xs text-neutral-500">Ideal para projetos longos ou times com múltiplas mãos.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center"><span class="text-red-400 font-bold">✗</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-red-500/30">
+            <h4 class="font-semibold text-red-400 mb-1">"Na memória do Claude" — erro fatal</h4>
+            <p class="text-sm text-neutral-400 mb-2">Pedir "lembre disso para amanhã" não funciona. Não existe memória persistente entre sessões. O Claude vai ESQUECER.</p>
+            <p class="text-xs text-red-400">→ Se você não salvar em lugar que VOCÊ controla, o handoff não existe.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dica final -->
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-3 flex items-center"><span class="mr-2">🏆</span>A regra de ouro</h3>
+        <p class="text-neutral-300 leading-relaxed">
+          <strong class="text-purple-400">Se some quando você fecha o terminal, é lugar errado.</strong> Handoff precisa viver em disco — arquivo, commit, qualquer coisa que você possa abrir amanhã sem depender do ambiente da sessão.
+        </p>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-purple-900/40 via-dark-800 to-dark-800 rounded-xl border border-purple-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">📋</span>Resumo do Módulo</h2>
+
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Handoff ≠ resumo genérico</strong><span class="text-neutral-400"> — um é operacional, outro é narrativa</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">7 seções fixas</strong><span class="text-neutral-400"> — Objetivo, Estado, Feito, Arquivos, Decisões, Falta, Próxima ação</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Caminhos absolutos sempre</strong><span class="text-neutral-400"> — idem PIDs, URLs, comandos literais</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Zero narrativa/emoção</strong><span class="text-neutral-400"> — cada token dilui a atenção</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Prompt mágico resolve 80%</strong><span class="text-neutral-400"> — cole, revise 30s, salva</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-white">Salve em disco</strong><span class="text-neutral-400"> — "memória do Claude" não existe</span></div></div>
+        </div>
+
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-purple-400 mb-2">Próximo módulo:</h3>
+          <p class="text-neutral-300">3.2 — 🗂️ Memória Externa: Arquivos de Apoio</p>
+          <p class="text-sm text-neutral-400 mt-1">CLAUDE.md, skills, decisions.md — onde vai cada tipo de informação.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Voltar para Trilha</a>
+          <a href="modulo-3-2.html" class="flex-1 text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition-colors">Próximo: Memória Externa →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>🧠 Mestre em Contexto e Tokens — INEMA.CLUB • 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) { darkIcon.classList.remove('hidden'); html.classList.remove('dark'); } else { lightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => { darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden'); html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+  </script>
+
+</body>
+</html>

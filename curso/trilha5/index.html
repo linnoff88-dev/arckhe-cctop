@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trilha 5 — Exemplos Práticos | Mestre em Contexto e Tokens</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .dark body { background-color: #111827; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    .modal.hidden { display: none; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #4b5563; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-teal-400 { color: #0d9488; }
+    html:not(.dark) .bg-teal-500\/20 { background-color: rgba(13, 148, 136, 0.12); }
+    html:not(.dark) .bg-teal-500\/10 { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .border-teal-500\/30 { border-color: rgba(13, 148, 136, 0.25); }
+    html:not(.dark) .hover\:bg-teal-500\/10:hover { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .hover\:text-teal-400:hover { color: #0d9488; }
+
+    html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .hover\:text-emerald-400:hover { color: #059669; }
+    html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .hover\:text-blue-400:hover { color: #2563eb; }
+    html:not(.dark) .hover\:bg-purple-500\/10:hover { background-color: rgba(147, 51, 234, 0.08); }
+    html:not(.dark) .hover\:text-purple-400:hover { color: #9333ea; }
+    html:not(.dark) .hover\:bg-amber-500\/10:hover { background-color: rgba(180, 83, 9, 0.08); }
+    html:not(.dark) .hover\:text-amber-400:hover { color: #b45309; }
+    html:not(.dark) .hover\:bg-rose-500\/10:hover { background-color: rgba(190, 24, 93, 0.08); }
+    html:not(.dark) .hover\:text-rose-400:hover { color: #be185d; }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧠</span>
+            <span class="font-bold text-lg hidden sm:inline">Contexto e Tokens</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Rotina</span></a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Handoff</span></a>
+          <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Avançado</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-teal-400 bg-teal-500/10"><span class="sm:hidden">T5</span><span class="hidden sm:inline">Exemplos</span></a>
+          <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Expert</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-teal-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-teal-500/20 text-teal-400 text-xs font-semibold rounded-full mb-4">TRILHA 5</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🛠️ Exemplos Práticos</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Cenários reais passo a passo. Prompts prontos para copiar. Execução sem teoria — é sobre o que você faz no terminal amanhã. Refatorar, debugar e documentar aplicando tudo das trilhas anteriores.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">4</div><div class="text-xs text-neutral-400">Módulos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">24</div><div class="text-xs text-neutral-400">Passos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">~2h30</div><div class="text-xs text-neutral-400">Duração</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">Prática</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <div class="mb-8 flex items-center gap-3">
+      <span class="h-px flex-1 bg-dark-600"></span>
+      <h2 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Conteúdo Detalhado</h2>
+      <span class="h-px flex-1 bg-dark-600"></span>
+    </div>
+
+    <!-- MODULO 5.1 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2"><span class="text-teal-400 font-bold">5.1</span><span class="text-xs text-neutral-500">~40 min</span></div>
+        <h3 class="text-2xl font-bold mb-2">🔧 Refatorando Arquivo Grande sem Estourar Contexto</h3>
+        <p class="text-neutral-400 text-sm">Service de 2000 linhas, dividir em regiões, plan mode, checkpoints, /compact entre regiões. 6 passos executáveis com prompts prontos.</p>
+      </div>
+      <div class="divide-y divide-dark-600">
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <span class="text-lg">📋</span>
+            <div><span class="font-medium">Passo 1: Plan mode para entender a arquitetura</span><span class="text-neutral-500 text-sm ml-2">- Ler sem alterar</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Você abre um service.ts de 2000 linhas pela primeira vez. Se começar refatorando direto, vai editar às cegas e estourar sessão.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm">Entra em plan mode, pede leitura estruturada: responsabilidade, blocos lógicos, dependências externas. Lista, não prose.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Mapa mental do arquivo em ~2k tokens de output. Base para todos os passos seguintes sem releituras.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <span class="text-lg">🗺️</span>
+            <div><span class="font-medium">Passo 2: Dividir em regiões de refactor</span><span class="text-neutral-500 text-sm ml-2">- Do menor risco ao maior</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Refatorar o arquivo inteiro numa tacada só é suicídio — estoura contexto, quebra testes, perde trabalho.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm">Pedir ao Claude para propor 4–6 regiões ordenadas por risco crescente, com objetivo e tamanho estimado para cada.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Plano executável em etapas. Você escolhe o ritmo. Risco baixo primeiro = confiança acumulada.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <span class="text-lg">🔨</span>
+            <div><span class="font-medium">Passo 3: Refatorar uma região por vez</span><span class="text-neutral-500 text-sm ml-2">- "Ao terminar, pare"</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Claude tende a "continuar ajudando" além do escopo, tocando em código que não pediu. Isso suja o contexto.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm">Comando explícito: execute a região X, não toque em nada fora dela, ao terminar pare. Checkpoint obrigatório antes da próxima.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Escopo controlado. Cada região vira um commit independente, reversível. Context rot controlado.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span class="text-lg">✅</span>
+            <div><span class="font-medium">Passo 4: Testes entre regiões</span><span class="text-neutral-500 text-sm ml-2">- Verde antes de avançar</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Pular testes entre regiões = descobrir 5 bugs acumulados no final, sem saber qual região quebrou o quê.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm">"Rode os testes. Se passarem, commit. Se falharem, me diga antes de consertar." Mensagem padrão <code class="text-teal-400">refactor(service): região X — descrição</code>.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Reversibilidade garantida. git bisect resolve qualquer regressão em segundos.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+            <span class="text-lg">🗜️</span>
+            <div><span class="font-medium">Passo 5: /compact entre regiões grandes</span><span class="text-neutral-500 text-sm ml-2">- Aliviar o contexto</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Após 2–3 regiões, contexto já está em 40%+ da janela. Se continuar, próximas regiões saem piores por atenção diluída.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm"><code class="text-teal-400">/compact mantenha foco em arquitetura e decisões, pode resumir tentativas</code>. Preserva o que importa, descarta iterações.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Contexto volta a 10–15%. Próximas regiões saem com qualidade igual às primeiras.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+            <span class="text-lg">📦</span>
+            <div><span class="font-medium">Passo 6: Commit final e handoff</span><span class="text-neutral-500 text-sm ml-2">- Fechar a sessão com dignidade</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Acabou a refatoração. Se simplesmente fechar, perde a memória do que foi decidido e por quê.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm">Handoff estruturado (template da Trilha 3), commit final com resumo, <code class="text-teal-400">/clear</code> ou nova sessão para próxima tarefa.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Continuidade — amanhã outra pessoa (ou você) pega o fio sem reconstruir contexto do zero.</p></div>
+          </div></div>
+        </div>
+
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-5-1')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-5-1.html" class="px-4 py-2 text-sm bg-teal-600 hover:bg-teal-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- MODULO 5.2 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2"><span class="text-teal-400 font-bold">5.2</span><span class="text-xs text-neutral-500">~35 min</span></div>
+        <h3 class="text-2xl font-bold mb-2">🐛 Debug em Projeto Que Nunca Vi</h3>
+        <p class="text-neutral-400 text-sm">"O botão X não funciona" num repo desconhecido. Subagentes para explorar, hipóteses ordenadas, fix + teste + docs. 6 passos.</p>
+      </div>
+      <div class="divide-y divide-dark-600">
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <span class="text-lg">🔍</span>
+            <div><span class="font-medium">Passo 1: Explore com subagente</span><span class="text-neutral-500 text-sm ml-2">- Contexto principal limpo</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Explorar código desconhecido na sessão principal polui tudo — dezenas de arquivos lidos antes de você ter uma hipótese.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm">Delega a um subagente Explore: achar onde "botão X" é renderizado e todos os handlers. Só caminhos + resumo de 5 linhas.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Contexto principal recebe apenas o destilado (~500 tokens) em vez de 50k de arquivos brutos.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <span class="text-lg">🔄</span>
+            <div><span class="font-medium">Passo 2: Reproduzir localmente</span><span class="text-neutral-500 text-sm ml-2">- Só a sequência, sem explicação</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Sem reproduzir o bug você está debugando baseado em relato, não em fato. Qualquer fix vira suposição.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm">"Quais comandos rodar para reproduzir o bug localmente? Só a sequência, sem explicação." Roda. Vê o bug com os próprios olhos.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Sinal binário: fix funcionou ou não. Sem ambiguidade.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <span class="text-lg">🎯</span>
+            <div><span class="font-medium">Passo 3: Hipóteses por probabilidade</span><span class="text-neutral-500 text-sm ml-2">- Da mais provável à menos</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Chutar hipóteses aleatórias = mexer em código à toa. Cada tentativa errada suja o contexto e pode introduzir regressão.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm">Lista 3–5 hipóteses ordenadas. Para cada: razão + como testar. Força o Claude a raciocinar antes de agir.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Plano de investigação. Em 80% dos casos, a hipótese 1 acerta — resolve rápido.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span class="text-lg">🧪</span>
+            <div><span class="font-medium">Passo 4: Testar uma hipótese de cada vez</span><span class="text-neutral-500 text-sm ml-2">- Alteração mínima</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Testar duas hipóteses juntas = se resolver, você não sabe qual foi. Se quebrar, idem.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm">"Vamos testar a hipótese 1. Que alteração mínima confirma ou descarta?" Mínima = 1–3 linhas, reversível.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Método científico. Cada iteração produz informação clara, não ruído.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+            <span class="text-lg">🩹</span>
+            <div><span class="font-medium">Passo 5: Fix + teste + commit</span><span class="text-neutral-500 text-sm ml-2">- Fechar o loop</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Identificou a causa. Aplicar o fix sem cobrir com teste = regressão na próxima refatoração.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm">"Aplique o fix. Rode o teste do botão X. Se passar, commit com mensagem descritiva." Teste primeiro, fix depois.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Bug fechado com proteção anti-regressão. Mensagem de commit conta a história.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+            <span class="text-lg">📝</span>
+            <div><span class="font-medium">Passo 6: Docs/memória para o próximo</span><span class="text-neutral-500 text-sm ml-2">- Máximo 10 linhas</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Daqui a 3 meses, alguém vai cair no mesmo bug (ou similar). Sem nota, refaz a investigação inteira.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm">Nota curta em <code class="text-teal-400">docs/debugging.md</code>: onde está o código, o que era o bug, como reconhecer se reaparecer. Máx 10 linhas.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Memória organizacional. Próximo debug começa do passo 3, não do zero.</p></div>
+          </div></div>
+        </div>
+
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-5-2')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-5-2.html" class="px-4 py-2 text-sm bg-teal-600 hover:bg-teal-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- MODULO 5.3 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2"><span class="text-teal-400 font-bold">5.3</span><span class="text-xs text-neutral-500">~40 min</span></div>
+        <h3 class="text-2xl font-bold mb-2">📚 Documentando Código Legado em 3 Sessões</h3>
+        <p class="text-neutral-400 text-sm">Projeto grande sem docs. Divisão em 3 sessões com handoff entre cada uma. Subagentes paralelos, CLAUDE.md, cálculo de custo real.</p>
+      </div>
+      <div class="divide-y divide-dark-600">
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <span class="text-lg">🗺️</span>
+            <div><span class="font-medium">Sessão 1A: Inventário e arquitetura</span><span class="text-neutral-500 text-sm ml-2">- ARCHITECTURE.md</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Repo grande, sem docs. Se tentar documentar tudo numa sessão só, estoura em 30 minutos.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm">Sessão dedicada a inventário: árvore, módulos raiz, fluxo principal, stack. Produto: ARCHITECTURE.md &lt; 80 linhas.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Artefato durável que orienta as próximas 2 sessões. Investigação concentrada em 1 arquivo.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <span class="text-lg">🗺️</span>
+            <div><span class="font-medium">Sessão 1B: Handoff e /clear</span><span class="text-neutral-500 text-sm ml-2">- Fim da sessão 1</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Inventário pronto. Continuar na mesma sessão = carregar toda a exploração do repo para a próxima tarefa.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm">"Produza handoff estruturado. Vou limpar sessão e abrir nova." O ARCHITECTURE.md é o handoff principal.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Sessão 2 começa com contexto zero + 1 arquivo curto. Qualidade máxima para a próxima etapa.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <span class="text-lg">📖</span>
+            <div><span class="font-medium">Sessão 2A: Docs por módulo (subagentes paralelos)</span><span class="text-neutral-500 text-sm ml-2">- Orquestrar, não escrever</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Documentar 5 módulos em série = sessão longa, contexto acumula, qualidade cai no 4º.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm">5 subagentes em paralelo, um por módulo. Cada um produz docs/[modulo].md. Você só orquestra.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Paralelismo real. Tempo de 5× vira 1×. Contexto principal fica ~5k tokens, não 50k.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span class="text-lg">📖</span>
+            <div><span class="font-medium">Sessão 2B: Revisão e handoff</span><span class="text-neutral-500 text-sm ml-2">- Consistência entre módulos</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Subagentes não se falam — podem escrever o mesmo conceito de 5 jeitos diferentes.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm">"Leia os 5 arquivos e me diga: está consistente? Falta algo?" Ajustes rápidos. Handoff para sessão 3.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Docs harmonizados sem reescrever. Sessão 2 fecha limpa.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+            <span class="text-lg">📘</span>
+            <div><span class="font-medium">Sessão 3A: CONTRIBUTING.md + CLAUDE.md</span><span class="text-neutral-500 text-sm ml-2">- Guia de contribuição</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Docs de módulo existem. Falta o "como começar": setup, convenções, onde achar o quê.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm">CONTRIBUTING.md (humanos) + CLAUDE.md curto &lt; 100 linhas (agentes). Convenções consistentes nos dois.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Onboarding de humano e agente resolvido. Próximo contribuidor começa em minutos, não horas.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+            <span class="text-lg">💰</span>
+            <div><span class="font-medium">Passo 6: Estimativa de custo real</span><span class="text-neutral-500 text-sm ml-2">- ~5× de economia</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O cenário:</span><p class="text-neutral-300 text-sm">Fluxo em 3 sessões: ~180k tokens de input. Fluxo em 1 sessão: ~900k com context rot no fim.</p></div>
+            <div><span class="text-teal-400 font-semibold">O passo:</span><p class="text-neutral-300 text-sm">Calcular: US$ 1,20 vs US$ 6,00 com Sonnet 4.6. 5× mais barato e melhor qualidade.</p></div>
+            <div><span class="text-teal-400 font-semibold">O que você ganha:</span><p class="text-neutral-300 text-sm">Prova numérica. Split de sessão não é capricho — é economia mensurável.</p></div>
+          </div></div>
+        </div>
+
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-5-3')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-5-3.html" class="px-4 py-2 text-sm bg-teal-600 hover:bg-teal-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- MODULO 5.4 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2"><span class="text-teal-400 font-bold">5.4</span><span class="text-xs text-neutral-500">~15 min</span></div>
+        <h3 class="text-2xl font-bold mb-2">🌟 Awesome Lists — Bibliotecas Curadas</h3>
+        <p class="text-neutral-400 text-sm">6 repositórios com milhares de skills, plugins, agents e comandos para Claude Code. Mapa do ecossistema — comece aqui quando precisar de algo pronto.</p>
+      </div>
+      <div class="divide-y divide-dark-600">
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <span class="text-lg">⭐</span>
+            <div><span class="font-medium">hesreallyhim/awesome-claude-code</span><span class="text-neutral-500 text-sm ml-2">- O índice oficioso do ecossistema</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">A awesome list mais abrangente de Claude Code. Categorizada por: skills, hooks, slash commands, agent orchestrators, applications e plugins.</p></div>
+            <div><span class="text-teal-400 font-semibold">Quando usar:</span><p class="text-neutral-300 text-sm">Antes de reinventar a roda. Procure aqui primeiro quando pensar "será que já existe um...".</p></div>
+            <div><span class="text-teal-400 font-semibold">Link:</span><p class="text-neutral-300 text-sm"><a href="https://github.com/hesreallyhim/awesome-claude-code" target="_blank" class="text-sky-400 hover:text-sky-300 font-mono text-xs">↗ github.com/hesreallyhim/awesome-claude-code</a></p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <span class="text-lg">🧰</span>
+            <div><span class="font-medium">rohitg00/awesome-claude-code-toolkit</span><span class="text-neutral-500 text-sm ml-2">- Pack gigante: 135 agents, 176+ plugins</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Toolkit extenso: 135 agents, 35 skills curadas (+400k via SkillKit), 42 commands, 176+ plugins, 20 hooks, 15 rules, 7 templates, 14 MCP configs, 26 companion apps.</p></div>
+            <div><span class="text-teal-400 font-semibold">Quando usar:</span><p class="text-neutral-300 text-sm">Quando quiser um "starter pack" robusto pronto para copiar. Ideal para equipes montando um ambiente padrão.</p></div>
+            <div><span class="text-teal-400 font-semibold">Link:</span><p class="text-neutral-300 text-sm"><a href="https://github.com/rohitg00/awesome-claude-code-toolkit" target="_blank" class="text-sky-400 hover:text-sky-300 font-mono text-xs">↗ github.com/rohitg00/awesome-claude-code-toolkit</a></p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <span class="text-lg">✨</span>
+            <div><span class="font-medium">travisvn/awesome-claude-skills</span><span class="text-neutral-500 text-sm ml-2">- Skills curadas para Claude Code</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Lista focada em <em>skills</em> — a mecânica nova que permite empacotar capacidades específicas carregadas sob demanda. Organizada por caso de uso.</p></div>
+            <div><span class="text-teal-400 font-semibold">Quando usar:</span><p class="text-neutral-300 text-sm">Quando <code class="text-teal-400">/skill list</code> parecer vazio. Aqui você encontra skills para formato de docs, revisão, design, automação.</p></div>
+            <div><span class="text-teal-400 font-semibold">Link:</span><p class="text-neutral-300 text-sm"><a href="https://github.com/travisvn/awesome-claude-skills" target="_blank" class="text-sky-400 hover:text-sky-300 font-mono text-xs">↗ github.com/travisvn/awesome-claude-skills</a></p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span class="text-lg">🤖</span>
+            <div><span class="font-medium">VoltAgent/awesome-agent-skills</span><span class="text-neutral-500 text-sm ml-2">- 1000+ skills multi-CLI (Claude, Codex, Gemini)</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Coleção com 1000+ skills compatíveis com Claude Code, Codex, Gemini CLI, Cursor e outros. Inclui skills oficiais de times como Anthropic, Google Labs, Vercel, Stripe, Cloudflare.</p></div>
+            <div><span class="text-teal-400 font-semibold">Quando usar:</span><p class="text-neutral-300 text-sm">Se você alterna entre CLIs, ou quer skills mantidas por empresas (não só comunidade). É o catálogo mais amplo.</p></div>
+            <div><span class="text-teal-400 font-semibold">Link:</span><p class="text-neutral-300 text-sm"><a href="https://github.com/VoltAgent/awesome-agent-skills" target="_blank" class="text-sky-400 hover:text-sky-300 font-mono text-xs">↗ github.com/VoltAgent/awesome-agent-skills</a></p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+            <span class="text-lg">🎨</span>
+            <div><span class="font-medium">ComposioHQ/awesome-claude-skills</span><span class="text-neutral-500 text-sm ml-2">- Skills + ferramentas de workflow</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Lista da Composio focada em skills, recursos e ferramentas para customizar workflows com Claude AI. Foco em integrações com APIs externas.</p></div>
+            <div><span class="text-teal-400 font-semibold">Quando usar:</span><p class="text-neutral-300 text-sm">Quando o caso de uso envolve integração com serviços (Slack, GitHub, Linear, Notion). A Composio mantém conectores nativos.</p></div>
+            <div><span class="text-teal-400 font-semibold">Link:</span><p class="text-neutral-300 text-sm"><a href="https://github.com/ComposioHQ/awesome-claude-skills" target="_blank" class="text-sky-400 hover:text-sky-300 font-mono text-xs">↗ github.com/ComposioHQ/awesome-claude-skills</a></p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+            <span class="text-lg">📊</span>
+            <div><span class="font-medium">quemsah/awesome-claude-plugins</span><span class="text-neutral-500 text-sm ml-2">- Métricas de adoção de plugins</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-teal-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Coleção automatizada de métricas de adoção de plugins Claude Code em repositórios GitHub — atualizada via workflows n8n. Você vê <em>o que a comunidade realmente usa</em>.</p></div>
+            <div><span class="text-teal-400 font-semibold">Quando usar:</span><p class="text-neutral-300 text-sm">Para decidir entre dois plugins com funcionalidade parecida. "Quantas pessoas realmente adotaram?" vira um filtro objetivo.</p></div>
+            <div><span class="text-teal-400 font-semibold">Link:</span><p class="text-neutral-300 text-sm"><a href="https://github.com/quemsah/awesome-claude-plugins" target="_blank" class="text-sky-400 hover:text-sky-300 font-mono text-xs">↗ github.com/quemsah/awesome-claude-plugins</a></p></div>
+          </div></div>
+        </div>
+
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-5-4')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-5-4.html" class="px-4 py-2 text-sm bg-teal-600 hover:bg-teal-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- NAVEGACAO -->
+    <div class="flex flex-col sm:flex-row gap-4 mt-12">
+      <a href="../trilha4/index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Voltar: Trilha 4 Avançado</a>
+      <a href="../trilha6/index.html" class="flex-1 text-center px-6 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-500 transition-colors">Próxima Trilha: Expert →</a>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>🧠 Mestre em Contexto e Tokens — INEMA.CLUB • 2026</p>
+    </div>
+  </footer>
+
+  <!-- MODAIS -->
+  <div id="modal-5-1" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3"><span class="text-teal-400 font-bold">5.1</span><span class="font-semibold">Refatorando Arquivo Grande</span></div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-5-1.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+  <div id="modal-5-2" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3"><span class="text-teal-400 font-bold">5.2</span><span class="font-semibold">Debug em Projeto Que Nunca Vi</span></div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-5-2.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+  <div id="modal-5-3" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3"><span class="text-teal-400 font-bold">5.3</span><span class="font-semibold">Documentando Código Legado</span></div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-5-3.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+  <div id="modal-5-4" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3"><span class="text-teal-400 font-bold">5.4</span><span class="font-semibold">Awesome Lists — Bibliotecas Curadas</span></div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-5-4.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+
+  <script>
+    function toggleTopic(button) {
+      const topicItem = button.closest('.topic-item');
+      const explanation = topicItem.querySelector('.topic-explanation');
+      const moduleCard = button.closest('.bg-dark-800');
+      moduleCard.querySelectorAll('.topic-explanation.active').forEach(exp => { if (exp !== explanation) exp.classList.remove('active'); });
+      explanation.classList.toggle('active');
+    }
+    function openModal(id) { const m = document.getElementById(id); if (m) { m.classList.remove('hidden'); document.body.style.overflow = 'hidden'; } }
+    function closeModal() { document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden')); document.body.style.overflow = 'auto'; }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    const themeToggle = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) { darkIcon.classList.remove('hidden'); html.classList.remove('dark'); } else { lightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => { darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden'); html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+  </script>
+
+</body>
+</html>

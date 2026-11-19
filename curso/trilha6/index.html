@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trilha 6 — Avançado | Mestre em Contexto e Tokens</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .dark body { background-color: #111827; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    .modal.hidden { display: none; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #4b5563; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-rose-400 { color: #9f1239; }
+    html:not(.dark) .bg-rose-500\/20 { background-color: rgba(225, 29, 72, 0.12); }
+    html:not(.dark) .bg-rose-500\/10 { background-color: rgba(225, 29, 72, 0.08); }
+    html:not(.dark) .border-rose-500\/30 { border-color: rgba(225, 29, 72, 0.25); }
+    html:not(.dark) .hover\:bg-rose-500\/10:hover { background-color: rgba(225, 29, 72, 0.08); }
+    html:not(.dark) .hover\:text-rose-400:hover { color: #9f1239; }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧠</span>
+            <span class="font-bold text-lg hidden sm:inline">Contexto e Tokens</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Rotina</span></a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Handoff</span></a>
+          <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Avançado</span></a>
+          <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">Exemplos</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-rose-400 bg-rose-500/10"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Expert</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-rose-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="inline-block px-3 py-1 bg-rose-500/20 text-rose-400 text-xs font-semibold rounded-full">TRILHA 6</span>
+        <span class="inline-block px-3 py-1 bg-rose-500/20 text-rose-400 text-xs font-semibold rounded-full">AVANÇADO</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🚀 Nível Avançado</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Engenharia de prompt caching, orquestração multi-modelo, auditoria profunda com <code class="text-rose-400">/context</code>. Para quem quer extrair 10× do Claude Code.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-rose-400">5</div><div class="text-xs text-neutral-400">Módulos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-rose-400">38</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-rose-400">~3h45</div><div class="text-xs text-neutral-400">Duração</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-rose-400">Avançado</div><div class="text-xs text-neutral-400">Nível</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <div class="mb-8 flex items-center gap-3">
+      <span class="h-px flex-1 bg-dark-600"></span>
+      <h2 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Conteúdo Detalhado</h2>
+      <span class="h-px flex-1 bg-dark-600"></span>
+    </div>
+
+    <!-- MODULO 6.1 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2"><span class="text-rose-400 font-bold">6.1</span><span class="text-xs text-neutral-500">~35 min</span></div>
+        <h3 class="text-2xl font-bold mb-2">💎 Engenharia de Prompt Caching</h3>
+        <p class="text-neutral-400 text-sm">O cache do Claude Code está ativo por padrão — mas você pode potencializar se estruturar o prompt certo.</p>
+      </div>
+      <div class="divide-y divide-dark-600">
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <span class="text-lg">⚙️</span>
+            <div><span class="font-medium">Como funciona tecnicamente</span><span class="text-neutral-500 text-sm ml-2">- Prefixo exato, TTL, preço</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">A Anthropic armazena o prefixo exato do prompt no servidor. TTL padrão 5 min, opcional 1h (sem beta header desde 2025). Escrita custa 1,25× (5min) ou 2× (1h); leitura custa 0,1× do input.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Cache é por modelo — trocar de Sonnet para Opus invalida. Entender o mecanismo é pré-requisito para não quebrá-lo acidentalmente.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Prefixo idêntico, TTL, ratio de 90% desconto na leitura.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <span class="text-lg">💰</span>
+            <div><span class="font-medium">90% de desconto em números</span><span class="text-neutral-500 text-sm ml-2">- A conta da economia real</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Sessão de 50k tokens × 20 turnos sem cache: ~US$ 3,00 em input. Com cache bem usado: ~US$ 0,48. Ratio: 6,25×.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Ver os números concretos dá intuição. Em projetos grandes, a diferença é centenas de dólares por mês.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Tabela comparativa com breakdown de cada cenário.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <span class="text-lg">🏗️</span>
+            <div><span class="font-medium">Estrutura: estático primeiro</span><span class="text-neutral-500 text-sm ml-2">- Pirâmide de cache</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">System prompt (topo, sempre cache) → CLAUDE.md (cache se estável) → arquivos fixos → histórico → mensagem atual (sem cache).</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Ordenação é crítica. Mudar uma vírgula no topo invalida tudo depois. Pense em camadas.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Regra: não edite CLAUDE.md ou skills no meio da sessão.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span class="text-lg">🎯</span>
+            <div><span class="font-medium">Cache checkpoints</span><span class="text-neutral-500 text-sm ml-2">- Até 4 pontos por chamada</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">A API da Anthropic aceita até 4 pontos de cache via <code class="text-rose-400">cache_control: {"type": "ephemeral"}</code>. O Claude Code gerencia automaticamente.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Se você usar a API direto (SDK ou projeto próprio), saber onde marcar checkpoints multiplica a economia.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Exemplo JSON de request com cache_control em 3 pontos.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+            <span class="text-lg">⚠️</span>
+            <div><span class="font-medium">O que invalida o cache</span><span class="text-neutral-500 text-sm ml-2">- Lista completa de armadilhas</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Editar CLAUDE.md em runtime, ativar/desativar MCPs, timestamp dinâmico no system, mudar ordem de arquivos, trocar modelo, TTL expirado.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Você pode estar pagando preço cheio sem saber. Diagnosticar isso economiza muito.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Estabilidade do prefixo = dinheiro no bolso.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+            <span class="text-lg">📊</span>
+            <div><span class="font-medium">ROI em projetos reais</span><span class="text-neutral-500 text-sm ml-2">- US$ 850 → US$ 140</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Caso real: equipe que estruturou projeto com CLAUDE.md estável e arquivos fixos. Custo mensal caiu de US$ 850 para US$ 140, mesmo volume de trabalho.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Números concretos justificam o esforço de configurar bem. É ROI medido, não promessa.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Tabela antes/depois com breakdown por categoria de gasto.</p></div>
+          </div></div>
+        </div>
+
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-6-1')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-6-1.html" class="px-4 py-2 text-sm bg-rose-600 hover:bg-rose-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- MODULO 6.2 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2"><span class="text-rose-400 font-bold">6.2</span><span class="text-xs text-neutral-500">~40 min</span></div>
+        <h3 class="text-2xl font-bold mb-2">🎭 Orquestração Multi-Modelo</h3>
+        <p class="text-neutral-400 text-sm">Opus é caro. Haiku é barato. Se você usar certo, economiza 80% sem perder qualidade.</p>
+      </div>
+      <div class="divide-y divide-dark-600">
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <span class="text-lg">🧠</span>
+            <div><span class="font-medium">Opus planeja, Haiku executa</span><span class="text-neutral-500 text-sm ml-2">- O padrão clássico</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Opus analisa o problema complexo e produz plano detalhado → Haiku executa cada passo em paralelo → Opus revisa o resultado final.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Economiza 5–10× de custo em tarefas repetitivas sem sacrificar qualidade do raciocínio.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Diagrama: Opus (1×) → Haiku × 5 (paralelo) → Opus revisa.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <span class="text-lg">🔀</span>
+            <div><span class="font-medium">Model override em subagentes</span><span class="text-neutral-500 text-sm ml-2">- Frontmatter <code>.claude/agents/</code></span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">No arquivo <code class="text-rose-400">.claude/agents/meu-agente.md</code>, adicione <code class="text-rose-400">model: haiku</code> no frontmatter para forçar o modelo escolhido.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Agentes de busca, formatação e sumarização não precisam de Opus. Force Haiku e economize 15×.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Estrutura completa de agente com name, description, model.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <span class="text-lg">💰</span>
+            <div><span class="font-medium">Tabela de custos por modelo</span><span class="text-neutral-500 text-sm ml-2">- Input / cache / output</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Opus 4.7: US$ 15/1,50/75. Sonnet 4.6: US$ 3/0,30/15. Haiku 4.5: US$ 1/0,10/5. (input/cache-read/output por 1M tokens).</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Opus custa 15× Haiku. Trocar de modelo onde faz sentido é a maior alavanca de custo disponível.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Tabela completa oficial, cache rate, output rate.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span class="text-lg">🎯</span>
+            <div><span class="font-medium">Quando cada modelo brilha</span><span class="text-neutral-500 text-sm ml-2">- Guia de seleção</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Opus: raciocínio complexo, arquitetura, código crítico. Sonnet: uso geral, 90% das tarefas. Haiku: execução repetitiva, formatação, busca, sumarização.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Default Opus é desperdício. Default Haiku é subutilização. Saber escolher é o core da disciplina.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Matriz de decisão: complexidade × repetição × criticidade.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+            <span class="text-lg">🏃</span>
+            <div><span class="font-medium">Haiku paralelo</span><span class="text-neutral-500 text-sm ml-2">- 7,5× mais barato, 5× mais rápido</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Documentar 20 arquivos: Opus sequencial = US$ 6 em 40 min. Haiku paralelo (5 agentes × 4 arquivos) = US$ 0,80 em 8 min.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Paralelização + modelo barato = combinação mais poderosa para tarefas em lote.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Economia de 7,5× em custo, 5× em tempo, mesmo resultado.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+            <span class="text-lg">📈</span>
+            <div><span class="font-medium">Caso real: redução de 80%</span><span class="text-neutral-500 text-sm ml-2">- US$ 2.100 → US$ 420/mês</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Equipe de 5 devs. Antes: tudo em Opus, US$ 2.100/mês. Depois: Opus planos/revisões (20%), Sonnet geral (50%), Haiku execução (30%). Total: US$ 420/mês.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Mesma produtividade. O que mudou foi distribuir trabalho pelo modelo correto.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Breakdown por tipo de chamada com % de uso e custo.</p></div>
+          </div></div>
+        </div>
+
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-6-2')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-6-2.html" class="px-4 py-2 text-sm bg-rose-600 hover:bg-rose-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- MODULO 6.3 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2"><span class="text-rose-400 font-bold">6.3</span><span class="text-xs text-neutral-500">~30 min</span></div>
+        <h3 class="text-2xl font-bold mb-2">🔬 Auditoria de Contexto</h3>
+        <p class="text-neutral-400 text-sm">O que está comendo seu contexto? Descubra e corte.</p>
+      </div>
+      <div class="divide-y divide-dark-600">
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <span class="text-lg">📊</span>
+            <div><span class="font-medium">/context — o mapa</span><span class="text-neutral-500 text-sm ml-2">- Grade colorida + alertas</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Comando oficial que mostra grade visual colorida + sugestões de otimização + alertas de memory bloat. Execute regularmente (ex: ao passar 40% da janela).</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Sem <code class="text-rose-400">/context</code> você otimiza no escuro. Com ele, cada decisão de cortar é informada por dado.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Screenshot ilustrado da saída do comando + interpretação.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <span class="text-lg">📦</span>
+            <div><span class="font-medium">MCP inventory</span><span class="text-neutral-500 text-sm ml-2">- Cada servidor tem overhead</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Cada servidor MCP carregado adiciona definições de tools no contexto, mesmo se você não usar. <code class="text-rose-400">claude mcp list</code> mostra tudo ativo.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Muitas equipes carregam 15–20 MCPs. A maioria não usa 12+. Isso é overhead puro.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Como listar, medir, desabilitar.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <span class="text-lg">🛠️</span>
+            <div><span class="font-medium">Skills — ativas vs necessárias</span><span class="text-neutral-500 text-sm ml-2">- Budget de 25k</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Skills carregam sob demanda (até 5k cada, budget combinado 25k). Liste com <code class="text-rose-400">claude skills</code>. Skills raramente usadas não precisam estar instaladas globalmente.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Skills bem escolhidas potencializam. Muitas skills diluem. Disciplina é essencial.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Skills globais × locais, carga sob demanda, triagem.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span class="text-lg">🔍</span>
+            <div><span class="font-medium">Tool definitions — quanto custam</span><span class="text-neutral-500 text-sm ml-2">- 200–1000 tokens cada</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Cada tool custom usa 200–1000 tokens só de definição. MCPs com muitas tools são os piores ofensores. Regra prática: MCP com &gt;10 tools raramente vale o overhead.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Tools são "invisíveis" mas pesadas. Medir é o primeiro passo para cortar.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Tabela com overhead por tipo de MCP e como medir.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+            <span class="text-lg">🧹</span>
+            <div><span class="font-medium">Como enxugar</span><span class="text-neutral-500 text-sm ml-2">- Checklist prático</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Remover MCPs não usados nos últimos 30 dias. Reduzir CLAUDE.md a &lt;200 linhas. Desinstalar skills duplicadas. Não deixar arquivos grandes abertos "por precaução".</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Lista acionável. Nada teórico. Execute em 15 minutos e ganhe 20% da janela.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Checklist 4 pontos prontos para executar.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+            <span class="text-lg">📋</span>
+            <div><span class="font-medium">Checklist mensal</span><span class="text-neutral-500 text-sm ml-2">- Ritual operacional</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Rodar <code class="text-rose-400">/context</code> no início de sessão típica. Listar MCPs. Revisar CLAUDE.md. Medir custo médio com <code class="text-rose-400">/cost</code>. Documentar mudanças.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Auditar é como escovar dente: precisa ser hábito. Checklist transforma disciplina em rotina.</p></div>
+            <div><span class="text-rose-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Template <code class="text-rose-400">claude-audit-YYYY-MM.md</code> para documentar.</p></div>
+          </div></div>
+        </div>
+
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-6-3')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-6-3.html" class="px-4 py-2 text-sm bg-rose-600 hover:bg-rose-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- MODULO 6.4 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2"><span class="text-rose-400 font-bold">6.4</span><span class="text-xs text-neutral-500">~45 min</span></div>
+        <h3 class="text-2xl font-bold mb-2">🧰 Ecossistema de Redução de Tokens</h3>
+        <p class="text-neutral-400 text-sm">10 repositórios open-source para cortar 60–98% dos tokens em Claude Code. Proxies, MCPs, grafos e skills — cada um com seu nicho.</p>
+      </div>
+      <div class="divide-y divide-dark-600">
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <span class="text-lg">🦀</span>
+            <div><span class="font-medium">RTK — Rust Token Killer</span><span class="text-neutral-500 text-sm ml-2">- Proxy CLI, −60–90% em terminal</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Binário Rust que intercepta a saída de comandos de terminal (git, cargo, docker, pytest…) e entrega versão comprimida antes de virar contexto. Zero dependências.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Saída de build/test são os maiores vilões silenciosos do contexto. RTK corta isso na fonte, sem mudar workflow.</p></div>
+            <div><span class="text-rose-400 font-semibold">Uso típico:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">rtk cargo test</code> — só testes falhados. <code class="text-rose-400">rtk git status</code> — só o essencial. Funciona com Claude Code, Cursor, Copilot.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <span class="text-lg">📦</span>
+            <div><span class="font-medium">Context Mode</span><span class="text-neutral-500 text-sm ml-2">- Sandboxes tool output em SQLite, −98%</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Plugin Claude Code que encapsula saída bruta de MCPs (Playwright, GitHub, logs) em um SQLite com FTS5. Só resumos limpos entram na conversa.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Quando você tem muitos MCPs, cada chamada despeja JSON gigante no contexto. Context Mode isola isso e devolve apenas o que importa.</p></div>
+            <div><span class="text-rose-400 font-semibold">Uso típico:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">/plugin install context-mode</code> — depois peça uma pesquisa em repo gigante e rode <code class="text-rose-400">/context-mode:ctx-stats</code> para auditar ganho.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <span class="text-lg">🌳</span>
+            <div><span class="font-medium">code-review-graph</span><span class="text-neutral-500 text-sm ml-2">- Grafo Tree-sitter, 49× menos tokens</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Constrói grafo local do seu código (imports, chamadas, símbolos) com Tree-sitter. Claude lê apenas o que é relevante para o diff, não o repo inteiro.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Em monorepos, a redução relatada é de 49× em tarefas diárias e 6,8× em revisões. É o "skill do repo grande".</p></div>
+            <div><span class="text-rose-400 font-semibold">Uso típico:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">pip install code-review-graph && code-review-graph build</code> — depois peça ao Claude: "Build the code review graph for this project".</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span class="text-lg">💾</span>
+            <div><span class="font-medium">Token Savior</span><span class="text-neutral-500 text-sm ml-2">- Navegação por símbolos, −97%</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">MCP server que indexa código por símbolos (funções, classes, imports) e serve recortes cirúrgicos em vez de arquivos inteiros. Memória persistente em SQLite.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">69 tools prontas, sem dependências externas. Troca <code class="text-rose-400">Read file inteiro</code> por <code class="text-rose-400">pegue só essa função</code> em toda a sessão.</p></div>
+            <div><span class="text-rose-400 font-semibold">Uso típico:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">uvx token-savior-recall</code> — configure como MCP. Lembra decisões entre sessões, cortando repetição de handoff.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+            <span class="text-lg">🪨</span>
+            <div><span class="font-medium">Caveman Claude</span><span class="text-neutral-500 text-sm ml-2">- Output style caverna, −65–75%</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Skill/plugin que instrui Claude a responder em estilo telegráfico ("caveman speak"). Zero adjetivos, zero preâmbulo. Precisão técnica intacta.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Ataca o lado <em>output</em> da equação — geralmente mais caro que input em Opus/Sonnet. Instalação de uma linha.</p></div>
+            <div><span class="text-rose-400 font-semibold">Uso típico:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">claude plugin install caveman@caveman</code>. Ex.: "novo ref cada render. wrap em useMemo." em vez de parágrafo explicativo.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+            <span class="text-lg">📝</span>
+            <div><span class="font-medium">claude-token-efficient</span><span class="text-neutral-500 text-sm ml-2">- CLAUDE.md drop-in enxuto</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Arquivo <code class="text-rose-400">CLAUDE.md</code> pronto com instruções de concisão. Copia na raiz do projeto e pronto — respostas caem de 120 para 30 palavras.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Zero código, zero plugin. Ideal para quem quer resultado imediato sem tocar no stack.</p></div>
+            <div><span class="text-rose-400 font-semibold">Uso típico:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">curl -o CLAUDE.md https://raw.githubusercontent.com/drona23/claude-token-efficient/main/CLAUDE.md</code>.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">7</span>
+            <span class="text-lg">⚡</span>
+            <div><span class="font-medium">token-optimizer-mcp</span><span class="text-neutral-500 text-sm ml-2">- Cache + compressão, −95%+</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">MCP server que detecta saídas repetidas de tools, cacheia, comprime e serve de volta sem custo de tokens. "Smart tool intelligence" para workflows pesados.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Complementa o cache da Anthropic em um nível acima: cacheia saída de <em>tools</em>, não só prompt.</p></div>
+            <div><span class="text-rose-400 font-semibold">Uso típico:</span><p class="text-neutral-300 text-sm">Clone repo, <code class="text-rose-400">npm install</code>, configurar como MCP. Melhor em sessões longas que repetem consultas.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">8</span>
+            <span class="text-lg">🎯</span>
+            <div><span class="font-medium">claude-token-optimizer</span><span class="text-neutral-500 text-sm ml-2">- Setup em 5 min, 11k→1,3k tokens</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Script que reorganiza documentação do projeto: só 4 arquivos essenciais carregam por padrão (~800 tokens), o resto fica disponível sob demanda.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Caso real: projeto RedwoodJS caiu de 11.000 para 1.300 tokens só de boot. 5 minutos de setup, 90% de redução.</p></div>
+            <div><span class="text-rose-400 font-semibold">Uso típico:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">curl -fsSL .../init.sh | bash</code> na raiz do projeto.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">9</span>
+            <span class="text-lg">👻</span>
+            <div><span class="font-medium">token-optimizer (alexgreensh)</span><span class="text-neutral-500 text-sm ml-2">- Caça "ghost tokens", dashboard</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Detecta "ghost tokens" — desperdício estrutural invisível. Dashboard local em <code class="text-rose-400">localhost:24842</code> acompanha qualidade do contexto ao vivo.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Atende o problema que <code class="text-rose-400">/context</code> só mostra por cima: degradação silenciosa ao longo da sessão, especialmente pós-compactação.</p></div>
+            <div><span class="text-rose-400 font-semibold">Uso típico:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">/plugin install token-optimizer@alexgreensh-token-optimizer</code> → <code class="text-rose-400">/token-optimizer</code> para auditoria com 6 agentes paralelos.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">10</span>
+            <span class="text-lg">🔍</span>
+            <div><span class="font-medium">claude-context (Zilliz)</span><span class="text-neutral-500 text-sm ml-2">- Busca híbrida BM25 + vetores, −40%</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">MCP de busca semântica que indexa a base inteira em Milvus/Zilliz Cloud. Combina BM25 (keyword) com vetores densos (semântica) para retrieval preciso.</p></div>
+            <div><span class="text-rose-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Para bases <em>enormes</em> (milhões de linhas). Transforma "codebase inteira" em contexto sob demanda, com qualidade de retrieval comparável a varredura completa.</p></div>
+            <div><span class="text-rose-400 font-semibold">Uso típico:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">claude mcp add claude-context -- npx @zilliz/claude-context-mcp@latest</code>. Depois: "Find functions that handle user authentication".</p></div>
+          </div></div>
+        </div>
+
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-6-4')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-6-4.html" class="px-4 py-2 text-sm bg-rose-600 hover:bg-rose-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- MODULO 6.5 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2"><span class="text-rose-400 font-bold">6.5</span><span class="text-xs text-neutral-500">~60 min</span></div>
+        <h3 class="text-2xl font-bold mb-2">🔧 Hands-on — Como Usar Cada Repo</h3>
+        <p class="text-neutral-400 text-sm">Guia de bolso: pré-requisitos, comandos exatos, primeiro uso, como verificar que funcionou, pegadinhas comuns. Para os 10 repos do módulo 6.4.</p>
+      </div>
+      <div class="divide-y divide-dark-600">
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <span class="text-lg">🦀</span>
+            <div><span class="font-medium">RTK — proxy de terminal</span><span class="text-neutral-500 text-sm ml-2">- brew install + alias</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">Pré-requisito:</span><p class="text-neutral-300 text-sm">macOS/Linux com Homebrew (ou binário direto do release).</p></div>
+            <div><span class="text-rose-400 font-semibold">Setup:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">brew install rtk</code> → opcionalmente crie alias <code class="text-rose-400">alias cargo='rtk cargo'</code>.</p></div>
+            <div><span class="text-rose-400 font-semibold">Primeiro uso:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">rtk cargo test</code> ou <code class="text-rose-400">rtk npm test</code> dentro da sessão Claude Code.</p></div>
+            <div><span class="text-rose-400 font-semibold">Como saber que funcionou:</span><p class="text-neutral-300 text-sm">Saída compacta (só testes falhados + resumo) em vez da lista inteira.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <span class="text-lg">📦</span>
+            <div><span class="font-medium">Context Mode — instalação como plugin</span><span class="text-neutral-500 text-sm ml-2">- /plugin marketplace</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">Pré-requisito:</span><p class="text-neutral-300 text-sm">Claude Code atualizado (suporte a plugins marketplace).</p></div>
+            <div><span class="text-rose-400 font-semibold">Setup:</span><p class="text-neutral-300 text-sm">Dentro do CC: <code class="text-rose-400">/plugin marketplace add mksglu/context-mode</code> → <code class="text-rose-400">/plugin install context-mode@context-mode</code>.</p></div>
+            <div><span class="text-rose-400 font-semibold">Primeiro uso:</span><p class="text-neutral-300 text-sm">Faça uma pesquisa pesada (ex: "pesquise issues do repo X") → rode <code class="text-rose-400">/context-mode:ctx-stats</code>.</p></div>
+            <div><span class="text-rose-400 font-semibold">Como saber que funcionou:</span><p class="text-neutral-300 text-sm">A saída do MCP vem resumida; o comando de stats mostra tokens poupados.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <span class="text-lg">🌳</span>
+            <div><span class="font-medium">code-review-graph — grafo do repo</span><span class="text-neutral-500 text-sm ml-2">- pip + build</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">Pré-requisito:</span><p class="text-neutral-300 text-sm">Python 3.9+. Repo com estrutura estável (preferencialmente pós-commit).</p></div>
+            <div><span class="text-rose-400 font-semibold">Setup:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">pip install code-review-graph</code> → <code class="text-rose-400">code-review-graph install</code> → <code class="text-rose-400">code-review-graph build</code>.</p></div>
+            <div><span class="text-rose-400 font-semibold">Primeiro uso:</span><p class="text-neutral-300 text-sm">No Claude Code: "Use code review graph to analyze changes in <code class="text-rose-400">src/UserService.ts</code>".</p></div>
+            <div><span class="text-rose-400 font-semibold">Como saber que funcionou:</span><p class="text-neutral-300 text-sm">Claude lista apenas 3–5 arquivos relevantes em vez de tentar abrir o repo inteiro.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span class="text-lg">💾</span>
+            <div><span class="font-medium">Token Savior — MCP de símbolos</span><span class="text-neutral-500 text-sm ml-2">- uvx + config MCP</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">Pré-requisito:</span><p class="text-neutral-300 text-sm">uv instalado (<code class="text-rose-400">curl -LsSf https://astral.sh/uv/install.sh | sh</code>).</p></div>
+            <div><span class="text-rose-400 font-semibold">Setup:</span><p class="text-neutral-300 text-sm">Adicione ao <code class="text-rose-400">~/.claude.json</code> como MCP: <code class="text-rose-400">"command": "uvx", "args": ["token-savior-recall"]</code>.</p></div>
+            <div><span class="text-rose-400 font-semibold">Primeiro uso:</span><p class="text-neutral-300 text-sm">Peça ao Claude: "Find the definition of function <code class="text-rose-400">processPayment</code>" — ele usa símbolo, não grep.</p></div>
+            <div><span class="text-rose-400 font-semibold">Como saber que funcionou:</span><p class="text-neutral-300 text-sm">Claude devolve só o recorte da função, não o arquivo inteiro. Memória persiste no próximo <code class="text-rose-400">/clear</code>.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+            <span class="text-lg">🪨</span>
+            <div><span class="font-medium">Caveman — output style</span><span class="text-neutral-500 text-sm ml-2">- plugin marketplace</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">Pré-requisito:</span><p class="text-neutral-300 text-sm">Claude Code atualizado.</p></div>
+            <div><span class="text-rose-400 font-semibold">Setup:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">claude plugin marketplace add JuliusBrussee/caveman</code> → <code class="text-rose-400">claude plugin install caveman@caveman</code>.</p></div>
+            <div><span class="text-rose-400 font-semibold">Primeiro uso:</span><p class="text-neutral-300 text-sm">Ative (via comando do plugin) e peça qualquer coisa técnica. A resposta vem telegráfica.</p></div>
+            <div><span class="text-rose-400 font-semibold">Como saber que funcionou:</span><p class="text-neutral-300 text-sm">Zero adjetivos, zero "Claro!", zero preâmbulo. Direto ao fato.</p></div>
+            <div><span class="text-rose-400 font-semibold">⚠️ Pegadinha:</span><p class="text-neutral-300 text-sm">Em explicações complexas, pode ficar <em>seco demais</em>. Desative quando quiser tutorial didático.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+            <span class="text-lg">📝</span>
+            <div><span class="font-medium">claude-token-efficient — CLAUDE.md</span><span class="text-neutral-500 text-sm ml-2">- curl + pronto</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">Pré-requisito:</span><p class="text-neutral-300 text-sm">Projeto com sua própria CLAUDE.md? Faça backup antes (vai ser sobrescrita).</p></div>
+            <div><span class="text-rose-400 font-semibold">Setup:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">curl -o CLAUDE.md https://raw.githubusercontent.com/drona23/claude-token-efficient/main/CLAUDE.md</code> na raiz.</p></div>
+            <div><span class="text-rose-400 font-semibold">Primeiro uso:</span><p class="text-neutral-300 text-sm">Recomece sessão (<code class="text-rose-400">/clear</code>) para carregar a nova CLAUDE.md, e peça revisão de código.</p></div>
+            <div><span class="text-rose-400 font-semibold">Como saber que funcionou:</span><p class="text-neutral-300 text-sm">Resposta cai de ~120 para ~30 palavras com mesma qualidade técnica.</p></div>
+            <div><span class="text-rose-400 font-semibold">⚠️ Pegadinha:</span><p class="text-neutral-300 text-sm">Mescle com a sua CLAUDE.md em vez de sobrescrever — senão perde contexto do projeto.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">7</span>
+            <span class="text-lg">⚡</span>
+            <div><span class="font-medium">token-optimizer-mcp — cache de tools</span><span class="text-neutral-500 text-sm ml-2">- git clone + MCP</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">Pré-requisito:</span><p class="text-neutral-300 text-sm">Node 18+, npm.</p></div>
+            <div><span class="text-rose-400 font-semibold">Setup:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">git clone https://github.com/ooples/token-optimizer-mcp && cd token-optimizer-mcp && npm install</code> → configurar como MCP em <code class="text-rose-400">~/.claude.json</code>.</p></div>
+            <div><span class="text-rose-400 font-semibold">Primeiro uso:</span><p class="text-neutral-300 text-sm">Sessão longa com muitas chamadas de tools repetidas (ex: buscas GitHub). A segunda chamada igual vem do cache local.</p></div>
+            <div><span class="text-rose-400 font-semibold">Como saber que funcionou:</span><p class="text-neutral-300 text-sm">Latência cai drasticamente em chamadas repetidas. Logs mostram hits de cache.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">8</span>
+            <span class="text-lg">🎯</span>
+            <div><span class="font-medium">claude-token-optimizer — enxuga docs</span><span class="text-neutral-500 text-sm ml-2">- script init.sh</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">Pré-requisito:</span><p class="text-neutral-300 text-sm">Projeto com documentação inflada no boot (CLAUDE.md longo, README pesado, /docs).</p></div>
+            <div><span class="text-rose-400 font-semibold">Setup:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">curl -fsSL https://raw.githubusercontent.com/nadimtuhin/claude-token-optimizer/main/init.sh | bash</code> na raiz.</p></div>
+            <div><span class="text-rose-400 font-semibold">Primeiro uso:</span><p class="text-neutral-300 text-sm">Recomece a sessão. Rode <code class="text-rose-400">/context</code> e compare com o estado anterior.</p></div>
+            <div><span class="text-rose-400 font-semibold">Como saber que funcionou:</span><p class="text-neutral-300 text-sm">Tokens de boot caem. Docs antigas continuam disponíveis, mas carregam sob demanda.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">9</span>
+            <span class="text-lg">👻</span>
+            <div><span class="font-medium">token-optimizer (ghost) — dashboard</span><span class="text-neutral-500 text-sm ml-2">- plugin + /token-optimizer</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">Pré-requisito:</span><p class="text-neutral-300 text-sm">Sessão com histórico significativo (ou pós-<code class="text-rose-400">/compact</code>) para detectar ghost tokens.</p></div>
+            <div><span class="text-rose-400 font-semibold">Setup:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">/plugin marketplace add alexgreensh/token-optimizer</code> → <code class="text-rose-400">/plugin install token-optimizer@alexgreensh-token-optimizer</code>.</p></div>
+            <div><span class="text-rose-400 font-semibold">Primeiro uso:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">/token-optimizer</code> para auditoria completa, ou <code class="text-rose-400">python3 measure.py quick</code> para check rápido.</p></div>
+            <div><span class="text-rose-400 font-semibold">Como saber que funcionou:</span><p class="text-neutral-300 text-sm">Dashboard em <code class="text-rose-400">localhost:24842</code> mostra ghost tokens detectados e sugestões de corte.</p></div>
+          </div></div>
+        </div>
+
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">10</span>
+            <span class="text-lg">🔍</span>
+            <div><span class="font-medium">claude-context — busca híbrida</span><span class="text-neutral-500 text-sm ml-2">- precisa Zilliz + OpenAI</span></div>
+          </button>
+          <div class="topic-explanation px-6 pb-4"><div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+            <div><span class="text-rose-400 font-semibold">Pré-requisito:</span><p class="text-neutral-300 text-sm">Node 20–22, conta Zilliz Cloud (free tier serve), chave OpenAI (para embeddings).</p></div>
+            <div><span class="text-rose-400 font-semibold">Setup:</span><p class="text-neutral-300 text-sm"><code class="text-rose-400">claude mcp add claude-context -e OPENAI_API_KEY=sk-... -e MILVUS_TOKEN=... -- npx @zilliz/claude-context-mcp@latest</code>.</p></div>
+            <div><span class="text-rose-400 font-semibold">Primeiro uso:</span><p class="text-neutral-300 text-sm">"Index this codebase" (leva minutos em repos grandes) → depois: "Find functions that handle user authentication".</p></div>
+            <div><span class="text-rose-400 font-semibold">Como saber que funcionou:</span><p class="text-neutral-300 text-sm">Claude retorna resultados por relevância semântica em vez de grep literal.</p></div>
+            <div><span class="text-rose-400 font-semibold">⚠️ Pegadinha:</span><p class="text-neutral-300 text-sm">Custo de embeddings na OpenAI (baixo, mas não zero). Monitore uso em repos enormes.</p></div>
+          </div></div>
+        </div>
+
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-6-5')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-6-5.html" class="px-4 py-2 text-sm bg-rose-600 hover:bg-rose-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- NAVEGACAO -->
+    <div class="flex flex-col sm:flex-row gap-4 mt-12">
+      <a href="../trilha5/index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Voltar Trilha 5</a>
+      <a href="../../index.html" class="flex-1 text-center px-6 py-3 bg-rose-600 text-white rounded-lg font-semibold hover:bg-rose-500 transition-colors">Voltar para Landing →</a>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>🧠 Mestre em Contexto e Tokens — INEMA.CLUB • 2026</p>
+    </div>
+  </footer>
+
+  <!-- MODAIS -->
+  <div id="modal-6-1" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3"><span class="text-rose-400 font-bold">6.1</span><span class="font-semibold">Engenharia de Prompt Caching</span></div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-6-1.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+  <div id="modal-6-2" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3"><span class="text-rose-400 font-bold">6.2</span><span class="font-semibold">Orquestração Multi-Modelo</span></div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-6-2.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+  <div id="modal-6-3" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3"><span class="text-rose-400 font-bold">6.3</span><span class="font-semibold">Auditoria de Contexto</span></div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-6-3.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+  <div id="modal-6-4" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3"><span class="text-rose-400 font-bold">6.4</span><span class="font-semibold">Ecossistema de Redução de Tokens</span></div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-6-4.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+  <div id="modal-6-5" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3"><span class="text-rose-400 font-bold">6.5</span><span class="font-semibold">Hands-on — Como Usar Cada Repo</span></div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-6-5.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+
+  <script>
+    function toggleTopic(button) {
+      const topicItem = button.closest('.topic-item');
+      const explanation = topicItem.querySelector('.topic-explanation');
+      const moduleCard = button.closest('.bg-dark-800');
+      moduleCard.querySelectorAll('.topic-explanation.active').forEach(exp => { if (exp !== explanation) exp.classList.remove('active'); });
+      explanation.classList.toggle('active');
+    }
+    function openModal(id) { const m = document.getElementById(id); if (m) { m.classList.remove('hidden'); document.body.style.overflow = 'hidden'; } }
+    function closeModal() { document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden')); document.body.style.overflow = 'auto'; }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    const themeToggle = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) { darkIcon.classList.remove('hidden'); html.classList.remove('dark'); } else { lightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => { darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden'); html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+  </script>
+
+</body>
+</html>

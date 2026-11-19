@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.4 Awesome Lists | Mestre em Contexto e Tokens</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .dark body { background-color: #111827; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #4b5563; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-teal-400 { color: #0d9488; }
+    html:not(.dark) .bg-teal-500\/20 { background-color: rgba(13, 148, 136, 0.12); }
+    html:not(.dark) .bg-teal-500\/10 { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .border-teal-500\/30 { border-color: rgba(13, 148, 136, 0.25); }
+    html:not(.dark) .hover\:bg-teal-500\/10:hover { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .hover\:text-teal-400:hover { color: #0d9488; }
+    html:not(.dark) .bg-teal-900\/20 { background-color: rgba(13, 148, 136, 0.06); }
+    html:not(.dark) .bg-teal-900\/30 { background-color: rgba(13, 148, 136, 0.08); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.35); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+
+    .list-card { transition: transform 0.15s ease, border-color 0.15s ease; }
+    .list-card:hover { transform: translateY(-2px); border-color: rgba(13, 148, 136, 0.5); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧠</span>
+            <span class="font-bold text-lg hidden sm:inline">Contexto e Tokens</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Rotina</span></a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Handoff</span></a>
+          <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Avançado</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-teal-400 bg-teal-500/10"><span class="sm:hidden">T5</span><span class="hidden sm:inline">Exemplos</span></a>
+          <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Expert</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-teal-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-teal-400">Trilha 5</a>
+      <span>/</span>
+      <span class="text-teal-400">Módulo 5.4</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-teal-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="inline-block px-3 py-1 bg-teal-500/20 text-teal-400 text-xs font-semibold rounded-full">MÓDULO 5.4</span>
+        <span class="inline-block px-3 py-1 bg-teal-500/20 text-teal-400 text-xs font-semibold rounded-full">REFERÊNCIA</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🌟 Awesome Lists — Bibliotecas Curadas</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Antes de escrever uma skill, um plugin ou um agent do zero — verifique se alguém já fez. Estas 6 listas cobrem praticamente tudo que existe no ecossistema Claude Code.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">6</div><div class="text-xs text-neutral-400">Listas</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">1000+</div><div class="text-xs text-neutral-400">Skills</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">15 min</div><div class="text-xs text-neutral-400">Leitura</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">Referência</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- INTRO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-8">
+        <h2 class="text-xl font-bold text-teal-400 mb-3 flex items-center"><span class="mr-2">🗺️</span>Por que este módulo existe</h2>
+        <p class="text-neutral-300 leading-relaxed mb-4">
+          Claude Code evolui rápido — skills, plugins, agents, hooks, slash commands — e novas ferramentas aparecem toda semana. Tentar acompanhar tweet a tweet é impossível. <strong class="text-teal-400">Awesome lists são a solução:</strong> alguém está curando, categorizando e mantendo para você.
+        </p>
+        <p class="text-neutral-300 leading-relaxed">
+          As 6 listas abaixo têm <em>focos diferentes</em>. Use como <strong>primeiro lugar onde olhar</strong> quando pensar "será que já existe um...?". Marque os 2 ou 3 que combinam com seu stack e volte sempre que precisar.
+        </p>
+      </div>
+    </section>
+
+    <!-- LISTA 1 — hesreallyhim -->
+    <section id="lista-1" class="mb-12">
+      <div class="bg-dark-800 rounded-xl border border-dark-600 list-card overflow-hidden">
+        <div class="p-6 border-b border-dark-600 bg-gradient-to-br from-teal-900/30 to-dark-800">
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-teal-500/20 text-teal-400 font-bold text-sm">1</span>
+                <h2 class="text-2xl font-bold">⭐ hesreallyhim/awesome-claude-code</h2>
+              </div>
+              <p class="text-neutral-400 text-sm">O índice oficioso do ecossistema Claude Code — mais abrangente e bem mantido da categoria.</p>
+            </div>
+            <a href="https://github.com/hesreallyhim/awesome-claude-code" target="_blank" class="shrink-0 px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-sm font-semibold">↗ Abrir no GitHub</a>
+          </div>
+        </div>
+        <div class="p-6 space-y-4">
+          <div>
+            <h3 class="text-sm font-semibold text-teal-400 uppercase tracking-wider mb-2">O que você encontra</h3>
+            <ul class="space-y-1.5 text-sm text-neutral-300">
+              <li class="flex items-start gap-2"><span class="text-teal-400">▸</span><span><strong>Skills</strong> por domínio (frontend, backend, DevOps, segurança)</span></li>
+              <li class="flex items-start gap-2"><span class="text-teal-400">▸</span><span><strong>Hooks</strong> para validação, formatação, linting automático</span></li>
+              <li class="flex items-start gap-2"><span class="text-teal-400">▸</span><span><strong>Slash commands</strong> customizados</span></li>
+              <li class="flex items-start gap-2"><span class="text-teal-400">▸</span><span><strong>Agent orchestrators</strong> (frameworks para coordenar múltiplos agents)</span></li>
+              <li class="flex items-start gap-2"><span class="text-teal-400">▸</span><span><strong>Applications & plugins</strong> construídos sobre Claude Code</span></li>
+            </ul>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-teal-500">
+            <p class="text-sm text-neutral-300"><strong class="text-teal-400">Quando usar:</strong> como primeiro ponto de busca. Se você pensar "será que já tem um hook pra...?", comece aqui.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LISTA 2 — rohitg00 -->
+    <section id="lista-2" class="mb-12">
+      <div class="bg-dark-800 rounded-xl border border-dark-600 list-card overflow-hidden">
+        <div class="p-6 border-b border-dark-600 bg-gradient-to-br from-teal-900/30 to-dark-800">
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-teal-500/20 text-teal-400 font-bold text-sm">2</span>
+                <h2 class="text-2xl font-bold">🧰 rohitg00/awesome-claude-code-toolkit</h2>
+              </div>
+              <p class="text-neutral-400 text-sm">Toolkit gigante pronto para copiar. Ideal para quem quer um "starter pack" robusto.</p>
+            </div>
+            <a href="https://github.com/rohitg00/awesome-claude-code-toolkit" target="_blank" class="shrink-0 px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-sm font-semibold">↗ Abrir no GitHub</a>
+          </div>
+        </div>
+        <div class="p-6 space-y-4">
+          <div>
+            <h3 class="text-sm font-semibold text-teal-400 uppercase tracking-wider mb-2">Números</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div class="bg-dark-700/50 rounded-lg p-3 text-center"><div class="text-2xl font-bold text-teal-400">135</div><div class="text-xs text-neutral-400">agents</div></div>
+              <div class="bg-dark-700/50 rounded-lg p-3 text-center"><div class="text-2xl font-bold text-teal-400">35</div><div class="text-xs text-neutral-400">skills</div></div>
+              <div class="bg-dark-700/50 rounded-lg p-3 text-center"><div class="text-2xl font-bold text-teal-400">42</div><div class="text-xs text-neutral-400">commands</div></div>
+              <div class="bg-dark-700/50 rounded-lg p-3 text-center"><div class="text-2xl font-bold text-teal-400">176+</div><div class="text-xs text-neutral-400">plugins</div></div>
+              <div class="bg-dark-700/50 rounded-lg p-3 text-center"><div class="text-2xl font-bold text-teal-400">20</div><div class="text-xs text-neutral-400">hooks</div></div>
+              <div class="bg-dark-700/50 rounded-lg p-3 text-center"><div class="text-2xl font-bold text-teal-400">14</div><div class="text-xs text-neutral-400">MCP configs</div></div>
+              <div class="bg-dark-700/50 rounded-lg p-3 text-center"><div class="text-2xl font-bold text-teal-400">7</div><div class="text-xs text-neutral-400">templates</div></div>
+              <div class="bg-dark-700/50 rounded-lg p-3 text-center"><div class="text-2xl font-bold text-teal-400">400k+</div><div class="text-xs text-neutral-400">via SkillKit</div></div>
+            </div>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-teal-500">
+            <p class="text-sm text-neutral-300"><strong class="text-teal-400">Quando usar:</strong> montando ambiente padrão para equipe, onboarding de novos devs, ou quando a awesome-claude-code (item 1) não tem o que você precisa.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LISTA 3 — travisvn -->
+    <section id="lista-3" class="mb-12">
+      <div class="bg-dark-800 rounded-xl border border-dark-600 list-card overflow-hidden">
+        <div class="p-6 border-b border-dark-600 bg-gradient-to-br from-teal-900/30 to-dark-800">
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-teal-500/20 text-teal-400 font-bold text-sm">3</span>
+                <h2 class="text-2xl font-bold">✨ travisvn/awesome-claude-skills</h2>
+              </div>
+              <p class="text-neutral-400 text-sm">Lista focada 100% em skills — a mecânica mais nova e mais poderosa do Claude Code.</p>
+            </div>
+            <a href="https://github.com/travisvn/awesome-claude-skills" target="_blank" class="shrink-0 px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-sm font-semibold">↗ Abrir no GitHub</a>
+          </div>
+        </div>
+        <div class="p-6 space-y-4">
+          <div>
+            <h3 class="text-sm font-semibold text-teal-400 uppercase tracking-wider mb-2">Por que skills importam</h3>
+            <p class="text-sm text-neutral-300 leading-relaxed">Skills carregam <strong class="text-teal-400">sob demanda</strong>, ocupando ~5k tokens quando acionadas — nunca antes. Isso as torna extensões quase gratuitas em termos de contexto. Esta lista organiza skills por caso de uso: docs, revisão, design, automação, pesquisa.</p>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-teal-500">
+            <p class="text-sm text-neutral-300"><strong class="text-teal-400">Quando usar:</strong> quando <code class="text-teal-400">/skill list</code> estiver pobre. Procure aqui por skills que encaixem no seu workflow específico (ex: "revisar PRs React", "formatar docs Markdown").</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LISTA 4 — VoltAgent -->
+    <section id="lista-4" class="mb-12">
+      <div class="bg-dark-800 rounded-xl border border-dark-600 list-card overflow-hidden">
+        <div class="p-6 border-b border-dark-600 bg-gradient-to-br from-teal-900/30 to-dark-800">
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-teal-500/20 text-teal-400 font-bold text-sm">4</span>
+                <h2 class="text-2xl font-bold">🤖 VoltAgent/awesome-agent-skills</h2>
+              </div>
+              <p class="text-neutral-400 text-sm">1000+ skills compatíveis com Claude Code, Codex, Gemini CLI, Cursor e outros.</p>
+            </div>
+            <a href="https://github.com/VoltAgent/awesome-agent-skills" target="_blank" class="shrink-0 px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-sm font-semibold">↗ Abrir no GitHub</a>
+          </div>
+        </div>
+        <div class="p-6 space-y-4">
+          <div>
+            <h3 class="text-sm font-semibold text-teal-400 uppercase tracking-wider mb-2">Times que mantêm skills ali</h3>
+            <div class="flex flex-wrap gap-2 text-xs">
+              <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300">Anthropic</span>
+              <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300">Google Labs</span>
+              <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300">Vercel</span>
+              <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300">Stripe</span>
+              <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300">Cloudflare</span>
+              <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300">Netlify</span>
+              <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300">Trail of Bits</span>
+              <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300">Sentry</span>
+              <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300">Expo</span>
+              <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300">Hugging Face</span>
+              <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300">Figma</span>
+              <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300">+ comunidade</span>
+            </div>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-teal-500">
+            <p class="text-sm text-neutral-300"><strong class="text-teal-400">Quando usar:</strong> se você alterna entre CLIs, ou prefere skills <em>mantidas por empresas</em> (não só comunidade). É o catálogo mais amplo que existe.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LISTA 5 — Composio -->
+    <section id="lista-5" class="mb-12">
+      <div class="bg-dark-800 rounded-xl border border-dark-600 list-card overflow-hidden">
+        <div class="p-6 border-b border-dark-600 bg-gradient-to-br from-teal-900/30 to-dark-800">
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-teal-500/20 text-teal-400 font-bold text-sm">5</span>
+                <h2 class="text-2xl font-bold">🎨 ComposioHQ/awesome-claude-skills</h2>
+              </div>
+              <p class="text-neutral-400 text-sm">Skills + ferramentas focadas em integração com APIs externas (Slack, GitHub, Linear...).</p>
+            </div>
+            <a href="https://github.com/ComposioHQ/awesome-claude-skills" target="_blank" class="shrink-0 px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-sm font-semibold">↗ Abrir no GitHub</a>
+          </div>
+        </div>
+        <div class="p-6 space-y-4">
+          <div>
+            <h3 class="text-sm font-semibold text-teal-400 uppercase tracking-wider mb-2">Foco</h3>
+            <p class="text-sm text-neutral-300 leading-relaxed">A Composio é uma empresa que mantém conectores para serviços SaaS. Esta lista reflete esse viés: você encontra skills para <strong class="text-teal-400">automatizar workflows entre Claude e ferramentas externas</strong> (criar issue no Linear a partir de um bug encontrado, postar resumo no Slack, abrir PR no GitHub).</p>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-teal-500">
+            <p class="text-sm text-neutral-300"><strong class="text-teal-400">Quando usar:</strong> automações cross-tool. Se seu caso de uso é "Claude + SaaS X", comece por aqui.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LISTA 6 — quemsah -->
+    <section id="lista-6" class="mb-12">
+      <div class="bg-dark-800 rounded-xl border border-dark-600 list-card overflow-hidden">
+        <div class="p-6 border-b border-dark-600 bg-gradient-to-br from-teal-900/30 to-dark-800">
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-teal-500/20 text-teal-400 font-bold text-sm">6</span>
+                <h2 class="text-2xl font-bold">📊 quemsah/awesome-claude-plugins</h2>
+              </div>
+              <p class="text-neutral-400 text-sm">Ranking de adoção de plugins via n8n workflows — o que a comunidade <em>realmente</em> usa.</p>
+            </div>
+            <a href="https://github.com/quemsah/awesome-claude-plugins" target="_blank" class="shrink-0 px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-sm font-semibold">↗ Abrir no GitHub</a>
+          </div>
+        </div>
+        <div class="p-6 space-y-4">
+          <div>
+            <h3 class="text-sm font-semibold text-teal-400 uppercase tracking-wider mb-2">O diferencial</h3>
+            <p class="text-sm text-neutral-300 leading-relaxed">Outras listas mostram "o que existe". Esta mostra <strong class="text-teal-400">o que é adotado</strong>. Métricas automatizadas que rastreiam menções, downloads e instalações em repos GitHub. Atualização contínua via workflows n8n.</p>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-teal-500">
+            <p class="text-sm text-neutral-300"><strong class="text-teal-400">Quando usar:</strong> na hora de escolher entre dois plugins com funcionalidade parecida. Métrica de adoção ajuda a evitar plugin abandonado.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMO USAR ESTAS LISTAS -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-8">
+        <h2 class="text-xl font-bold text-teal-400 mb-4 flex items-center"><span class="mr-2">🎯</span>Como incorporar na sua rotina</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-dark-800/50 rounded-lg p-5 border border-dark-600">
+            <div class="text-3xl mb-2">1️⃣</div>
+            <h4 class="font-bold text-teal-400 mb-2 text-sm">Bookmark os 2 principais</h4>
+            <p class="text-xs text-neutral-300 leading-relaxed">Sugestão: <strong>hesreallyhim</strong> (abrangência) + <strong>VoltAgent</strong> (skills corporativas). Cobrem 95% dos casos.</p>
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-5 border border-dark-600">
+            <div class="text-3xl mb-2">2️⃣</div>
+            <h4 class="font-bold text-teal-400 mb-2 text-sm">Antes de codar algo novo</h4>
+            <p class="text-xs text-neutral-300 leading-relaxed">Pense "isso é útil pra outros?" Se sim, alguém provavelmente já fez. <strong>Pesquise antes, crie depois.</strong></p>
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-5 border border-dark-600">
+            <div class="text-3xl mb-2">3️⃣</div>
+            <h4 class="font-bold text-teal-400 mb-2 text-sm">Cheque manutenção</h4>
+            <p class="text-xs text-neutral-300 leading-relaxed">Data do último commit, issues abertas, número de stars. Plugin órfão quebra em silêncio — use <strong>quemsah</strong> como filtro de adoção.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TABELA RESUMO -->
+    <section class="mb-16">
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30">
+          <h3 class="font-semibold">📋 Resumo — quando usar cada uma</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-dark-700/50">
+              <tr class="text-left">
+                <th class="px-4 py-3 font-semibold text-neutral-400">Lista</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Foco</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Use quando</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600">
+              <tr><td class="px-4 py-3 font-semibold"><a href="https://github.com/hesreallyhim/awesome-claude-code" target="_blank" class="text-sky-400 hover:text-sky-300">hesreallyhim</a></td><td class="px-4 py-3 text-neutral-400">Abrangência total</td><td class="px-4 py-3 text-neutral-300">primeiro lugar a olhar</td></tr>
+              <tr><td class="px-4 py-3 font-semibold"><a href="https://github.com/rohitg00/awesome-claude-code-toolkit" target="_blank" class="text-sky-400 hover:text-sky-300">rohitg00</a></td><td class="px-4 py-3 text-neutral-400">Starter pack completo</td><td class="px-4 py-3 text-neutral-300">montando ambiente da equipe</td></tr>
+              <tr><td class="px-4 py-3 font-semibold"><a href="https://github.com/travisvn/awesome-claude-skills" target="_blank" class="text-sky-400 hover:text-sky-300">travisvn</a></td><td class="px-4 py-3 text-neutral-400">Só skills</td><td class="px-4 py-3 text-neutral-300">precisa estender sem inflar contexto</td></tr>
+              <tr><td class="px-4 py-3 font-semibold"><a href="https://github.com/VoltAgent/awesome-agent-skills" target="_blank" class="text-sky-400 hover:text-sky-300">VoltAgent</a></td><td class="px-4 py-3 text-neutral-400">Multi-CLI + corporativo</td><td class="px-4 py-3 text-neutral-300">usa Claude + Cursor + Gemini</td></tr>
+              <tr><td class="px-4 py-3 font-semibold"><a href="https://github.com/ComposioHQ/awesome-claude-skills" target="_blank" class="text-sky-400 hover:text-sky-300">ComposioHQ</a></td><td class="px-4 py-3 text-neutral-400">Integrações SaaS</td><td class="px-4 py-3 text-neutral-300">automações entre Claude + ferramenta X</td></tr>
+              <tr><td class="px-4 py-3 font-semibold"><a href="https://github.com/quemsah/awesome-claude-plugins" target="_blank" class="text-sky-400 hover:text-sky-300">quemsah</a></td><td class="px-4 py-3 text-neutral-400">Métricas de adoção</td><td class="px-4 py-3 text-neutral-300">escolhendo entre opções parecidas</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- NAVEGACAO -->
+    <div class="flex flex-col sm:flex-row gap-4 mt-12">
+      <a href="modulo-5-3.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Módulo 5.3</a>
+      <a href="index.html" class="flex-1 text-center px-6 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-500 transition-colors">Voltar para Trilha 5 →</a>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>🧠 Mestre em Contexto e Tokens — INEMA.CLUB • 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) { darkIcon.classList.remove('hidden'); html.classList.remove('dark'); } else { lightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => { darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden'); html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+  </script>
+
+</body>
+</html>

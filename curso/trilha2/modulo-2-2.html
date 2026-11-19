@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.2 Trabalhe em Blocos | Mestre em Contexto e Tokens</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .dark body { background-color: #111827; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #4b5563; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .bg-blue-900\/20 { background-color: rgba(37, 99, 235, 0.06); }
+    html:not(.dark) .bg-blue-900\/30 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .hover\:text-blue-400:hover { color: #2563eb; }
+
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+    html:not(.dark) .bg-emerald-900\/40 { background-color: rgba(5, 150, 105, 0.1); }
+    html:not(.dark) .text-red-400 { color: #dc2626; }
+    html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+    html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.25); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.35); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧠</span>
+            <span class="font-bold text-lg hidden sm:inline">Contexto e Tokens</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-blue-400 bg-blue-500/10"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Rotina</span></a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Handoff</span></a>
+          <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Avançado</span></a>
+          <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">Exemplos</span></a>
+          <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Expert</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-blue-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-blue-400">Trilha 2</a>
+      <span>/</span>
+      <span class="text-blue-400">Módulo 2.2</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-blue-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full mb-4">MÓDULO 2.2</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🧱 Trabalhe em Blocos</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Conversa infinita é anti-padrão. Um passo por vez, checkpoint claro entre cada um, contexto limpo. Mais turnos &gt; turnos gigantes.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">30</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">Básico</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">Prática</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- TOPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">🚫 Anti-padrão "tudo de uma vez"</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O pedido gigante parece eficiente. Um prompt, uma resposta, pronto. Na prática é onde a maioria dos desastres começa. Três problemas estruturais <strong class="text-blue-400">sempre</strong> aparecem.
+      </p>
+
+      <!-- 3 problemas -->
+      <div class="space-y-4 mb-6">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 border-l-4 border-l-red-500">
+          <div class="flex items-start gap-4">
+            <span class="text-3xl">🚫</span>
+            <div class="flex-1">
+              <h4 class="font-bold text-red-400 mb-1">Problema 1 — Checkpoint ausente</h4>
+              <p class="text-sm text-neutral-400 mb-2">Quando o Claude termina "tudo", não há ponto intermediário salvo. Se algo no meio saiu errado, o único rollback é voltar para antes de começar — perdendo também as partes corretas.</p>
+              <p class="text-xs text-neutral-500"><strong class="text-neutral-300">Exemplo:</strong> Você pediu 5 coisas; 4 saíram certas, 1 errada. Não dá para reverter só a errada sem mexer nas outras.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 border-l-4 border-l-red-500">
+          <div class="flex items-start gap-4">
+            <span class="text-3xl">🔀</span>
+            <div class="flex-1">
+              <h4 class="font-bold text-red-400 mb-1">Problema 2 — Difícil reverter parte</h4>
+              <p class="text-sm text-neutral-400 mb-2">Mudanças entrelaçadas: o passo 2 importa função criada no passo 1, que usa tipo do passo 3. Reverter um força cascata.</p>
+              <p class="text-xs text-neutral-500"><strong class="text-neutral-300">Exemplo:</strong> Refactor grande: desfazer a mudança de nomes quebra os imports e os testes gerados juntos.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 border-l-4 border-l-red-500">
+          <div class="flex items-start gap-4">
+            <span class="text-3xl">📦</span>
+            <div class="flex-1">
+              <h4 class="font-bold text-red-400 mb-1">Problema 3 — Contexto satura</h4>
+              <p class="text-sm text-neutral-400 mb-2">Um turno gigante lê muitos arquivos, gera muito output, produz muitos logs. Tudo isso fica no contexto do próximo turno. Você entra no turno 2 já com 40k de "bagagem".</p>
+              <p class="text-xs text-neutral-500"><strong class="text-neutral-300">Exemplo:</strong> Primeiro turno: lê 8 arquivos, gera 600 linhas. Já consumiu 25k tokens.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Box dado -->
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center"><span class="mr-2">⚠️</span>Sinal de que você está no anti-padrão</h3>
+        <p class="text-neutral-300 text-sm mb-3">Se o seu primeiro prompt começa com qualquer um destes:</p>
+        <ul class="text-sm text-neutral-300 space-y-1">
+          <li class="flex items-start gap-2"><span class="text-red-400">•</span><span>"implementa X, Y e Z"</span></li>
+          <li class="flex items-start gap-2"><span class="text-red-400">•</span><span>"faz o refactor completo de ..."</span></li>
+          <li class="flex items-start gap-2"><span class="text-red-400">•</span><span>"agora só precisa fazer tudo que está no plano"</span></li>
+          <li class="flex items-start gap-2"><span class="text-red-400">•</span><span>"faz o que achar melhor"</span></li>
+        </ul>
+        <p class="text-xs text-neutral-400 mt-3">Todos provocam um turno gigante. Todos geram os 3 problemas acima.</p>
+      </div>
+    </section>
+
+    <!-- TOPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">⚡ Um passo por vez é mais rápido</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Contra-intuitivo: <strong class="text-blue-400">mais turnos = menos custo</strong>. O motivo é o prompt caching. Cada turno pequeno reutiliza o prefixo cacheado do anterior (0,1× do preço). Um turno gigante não.
+      </p>
+
+      <!-- Por que cache favorece blocos -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Por que blocos curtos casam com cache</h3>
+        <div class="space-y-3">
+          <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-blue-500">
+            <div class="font-semibold text-blue-400 text-sm mb-1">1. Prefixo estável</div>
+            <div class="text-xs text-neutral-400">System + CLAUDE.md + histórico até aqui — não muda entre blocos. Tudo cacheado.</div>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-blue-500">
+            <div class="font-semibold text-blue-400 text-sm mb-1">2. Só o novo é dinâmico</div>
+            <div class="text-xs text-neutral-400">"Faça o passo 3" = poucos tokens novos. Leitura dele custa ~0,1× do preço.</div>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-blue-500">
+            <div class="font-semibold text-blue-400 text-sm mb-1">3. Output por bloco é curto</div>
+            <div class="text-xs text-neutral-400">Output custa 5× mais que input. Output enxuto por turno &gt; explosão gigante.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparação de custo -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30">
+          <h3 class="font-semibold">Custo estimado para a mesma entrega</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-dark-700/50">
+              <tr class="text-left">
+                <th class="px-4 py-3 font-semibold text-neutral-400">Abordagem</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Turnos</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Input total</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Output total</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Custo</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600">
+              <tr><td class="px-4 py-3 font-semibold text-red-400">Tudo de uma vez</td><td class="px-4 py-3 font-mono">1</td><td class="px-4 py-3 font-mono">80k (sem cache útil)</td><td class="px-4 py-3 font-mono text-rose-400">~8k</td><td class="px-4 py-3 font-mono text-rose-400">US$ 0,36</td></tr>
+              <tr><td class="px-4 py-3 font-semibold text-blue-400">5 blocos</td><td class="px-4 py-3 font-mono">5</td><td class="px-4 py-3 font-mono">20k + 4 × cache reads</td><td class="px-4 py-3 font-mono text-emerald-400">~8k total</td><td class="px-4 py-3 font-mono text-emerald-400">US$ 0,15</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-neutral-500 p-4">Valores ilustrativos em Sonnet 4.6. Blocos curtos custam metade.</p>
+      </div>
+
+      <!-- Box paradoxo -->
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">🧠</span>O paradoxo em uma frase</h3>
+        <p class="text-neutral-300 leading-relaxed">
+          <em>"Conversar mais, gastar menos."</em> Cada turno curto aproveita o trabalho de caching já feito. O turno gigante reescreve contexto do zero.
+        </p>
+      </div>
+
+      <!-- Dica -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span>Não tenha medo de "ser chato"</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Entrar com "faça o passo 1" parece micromanagement. Não é. É o padrão que otimiza cache, reduz retrabalho e mantém checkpoint. Claude não reclama — na verdade responde melhor com escopo estreito.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">🛑 Checkpoints entre etapas</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Um checkpoint é uma pausa explícita entre blocos onde você <strong class="text-blue-400">confirma estado</strong> e <strong class="text-blue-400">libera o próximo</strong>. Sem checkpoint, blocos viram uma avalanche.
+      </p>
+
+      <!-- Exemplo de diálogo -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Como um checkpoint soa na prática</h3>
+        <div class="space-y-3 font-mono text-sm">
+          <div class="bg-dark-900 rounded-lg p-3 border-l-2 border-neutral-600">
+            <div class="text-xs text-neutral-500 mb-1">você</div>
+            <div class="text-neutral-200">faça o passo 1 do plano</div>
+          </div>
+          <div class="bg-dark-900 rounded-lg p-3 border-l-2 border-blue-500">
+            <div class="text-xs text-blue-400 mb-1">claude</div>
+            <div class="text-neutral-300">[executa, edita arquivos]<br>Passo 1 concluído. Criei <code class="text-blue-400">src/auth/jwt.ts</code>, adicionei testes. Posso seguir?</div>
+          </div>
+          <div class="bg-dark-900 rounded-lg p-3 border-l-2 border-emerald-500">
+            <div class="text-xs text-emerald-400 mb-1">você</div>
+            <div class="text-neutral-200">rodei os testes, passaram. siga para o passo 2</div>
+          </div>
+        </div>
+        <p class="text-xs text-neutral-500 mt-4">Três turnos mínimos para um bloco. Mas cada um rápido e barato.</p>
+      </div>
+
+      <!-- Como pedir -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">🗣️</span>Frases que provocam checkpoints</h3>
+        <div class="space-y-2.5 text-sm">
+          <div class="bg-dark-800/50 rounded-lg p-3 font-mono text-blue-400 text-xs">
+            "faça apenas o passo 1 e pare para eu revisar"
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-3 font-mono text-blue-400 text-xs">
+            "depois de cada edição, me mostre o diff e pergunte se pode seguir"
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-3 font-mono text-blue-400 text-xs">
+            "me dê um resumo em 2 linhas do que fez antes de avançar"
+          </div>
+        </div>
+        <p class="text-xs text-neutral-500 mt-4">Ou coloque no CLAUDE.md: "Sempre aguardar confirmação entre passos do plano."</p>
+      </div>
+
+      <!-- Checkpoint + rewind -->
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-3 flex items-center"><span class="mr-2">⏪</span>Checkpoint + <code class="ml-2 text-emerald-400">/rewind</code> = segurança real</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed mb-3">
+          Cada checkpoint é automaticamente um candidato para <code class="text-emerald-400">/rewind</code>. Se o passo 3 der ruim, você volta para o estado após o passo 2 — sem perder os 1 e 2.
+        </p>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-xs text-neutral-300">
+          <div><span class="text-emerald-400">checkpoint 1</span> → passo 1 ok ✓</div>
+          <div><span class="text-emerald-400">checkpoint 2</span> → passo 2 ok ✓ <span class="text-neutral-500">← alvo do rewind se passo 3 falhar</span></div>
+          <div><span class="text-red-400">passo 3</span> → ??? 🎯</div>
+        </div>
+      </div>
+
+      <!-- Fazer vs evitar -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Checkpoint bom</h4>
+          <ul class="space-y-2.5 text-sm text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Claude resume o que fez</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Você valida (rodou teste, abriu arquivo)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Confirmação explícita para o próximo</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ Checkpoint ruim</h4>
+          <ul class="space-y-2.5 text-sm text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>"feito" sem especificar o quê</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Você não valida, só responde "ok"</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>"continua" sem revisar nada</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">🔀 Separar dúvidas de execução</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Não misture <strong class="text-blue-400">perguntas</strong> com <strong class="text-blue-400">execução</strong>. Quando você pede "implementa X e me explica Y", o output vira uma salada: explicação longa + código + explicação + próximos passos. Cada turno deve ter um propósito.
+      </p>
+
+      <!-- Lado a lado -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-3">✗ Misturado</h4>
+          <div class="bg-dark-800/50 rounded-lg p-3 text-sm text-neutral-300 mb-3">
+            "adiciona o middleware de auth e me explica como o Claude Code escolhe entre Bash e Read"
+          </div>
+          <p class="text-xs text-neutral-500">Output: 400 linhas de explicação + 50 de código. Cache não ajuda. Leitura demora. Difícil revisar.</p>
+        </div>
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-3">✓ Separado</h4>
+          <div class="space-y-2 mb-3">
+            <div class="bg-dark-800/50 rounded-lg p-3 text-sm text-neutral-300">
+              <span class="text-xs text-emerald-400 font-semibold">Turno A:</span> "adiciona o middleware de auth"
+            </div>
+            <div class="bg-dark-800/50 rounded-lg p-3 text-sm text-neutral-300">
+              <span class="text-xs text-emerald-400 font-semibold">Turno B (ou nova sessão):</span> "me explica como o Claude Code escolhe entre Bash e Read"
+            </div>
+          </div>
+          <p class="text-xs text-emerald-400">Cada turno enxuto. Output focado. Revisar rápido.</p>
+        </div>
+      </div>
+
+      <!-- Categorias -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30">
+          <h3 class="font-semibold">4 tipos de turno — não misture entre si</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-dark-700/50">
+              <tr class="text-left">
+                <th class="px-4 py-3 font-semibold text-neutral-400">Tipo</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Exemplo</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Output esperado</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600">
+              <tr><td class="px-4 py-3 font-semibold text-blue-400">Execução</td><td class="px-4 py-3 text-neutral-400">"faz o passo 2"</td><td class="px-4 py-3 text-neutral-400">Código + diff curto</td></tr>
+              <tr><td class="px-4 py-3 font-semibold text-emerald-400">Pergunta</td><td class="px-4 py-3 text-neutral-400">"por que escolheu bcrypt?"</td><td class="px-4 py-3 text-neutral-400">Explicação</td></tr>
+              <tr><td class="px-4 py-3 font-semibold text-amber-400">Decisão</td><td class="px-4 py-3 text-neutral-400">"Redis ou in-memory?"</td><td class="px-4 py-3 text-neutral-400">Trade-offs</td></tr>
+              <tr><td class="px-4 py-3 font-semibold text-rose-400">Investigação</td><td class="px-4 py-3 text-neutral-400">"onde está o middleware de CORS?"</td><td class="px-4 py-3 text-neutral-400">Referência + leitura</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Dica -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">🎯</span>Regra rápida</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Se o seu prompt tem <strong>"e"</strong> juntando duas ações, prove que é a mesma categoria. "<em>implementa X e testa X</em>" pode ser 1 turno. "<em>implementa X e explica Y</em>" são 2 turnos.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">📏 Tamanho ideal do bloco</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Um bloco ideal: <strong class="text-blue-400">5–10 minutos de trabalho real</strong>, toca <strong class="text-blue-400">1–2 arquivos</strong>, produz algo testável. Se demora mais ou mexe em mais, você tem dois blocos.
+      </p>
+
+      <!-- Régua visual -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Régua: tamanho de bloco por dimensão</h3>
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between text-sm mb-1.5"><span class="font-semibold">⏱️ Tempo de execução</span><span class="text-neutral-400 font-mono">5–10 min</span></div>
+            <div class="w-full bg-dark-700 rounded-full h-3 relative">
+              <div class="bg-red-500/40 h-3 rounded-l-full absolute left-0" style="width: 15%"></div>
+              <div class="bg-emerald-500 h-3 absolute" style="left: 15%; width: 35%"></div>
+              <div class="bg-amber-500/40 h-3 absolute" style="left: 50%; width: 25%"></div>
+              <div class="bg-red-500/40 h-3 rounded-r-full absolute" style="left: 75%; width: 25%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-neutral-500 mt-1 font-mono">
+              <span>&lt;2min</span><span>5min</span><span>10min</span><span>20min</span><span>40min+</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-sm mb-1.5"><span class="font-semibold">📄 Arquivos tocados</span><span class="text-neutral-400 font-mono">1–2</span></div>
+            <div class="w-full bg-dark-700 rounded-full h-3 relative">
+              <div class="bg-emerald-500 h-3 rounded-l-full absolute left-0" style="width: 40%"></div>
+              <div class="bg-amber-500/40 h-3 absolute" style="left: 40%; width: 30%"></div>
+              <div class="bg-red-500/40 h-3 rounded-r-full absolute" style="left: 70%; width: 30%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-neutral-500 mt-1 font-mono">
+              <span>1</span><span>2</span><span>3</span><span>5</span><span>10+</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-sm mb-1.5"><span class="font-semibold">🎯 Conceitos envolvidos</span><span class="text-neutral-400 font-mono">1</span></div>
+            <div class="w-full bg-dark-700 rounded-full h-3 relative">
+              <div class="bg-emerald-500 h-3 rounded-l-full absolute left-0" style="width: 50%"></div>
+              <div class="bg-amber-500/40 h-3 absolute" style="left: 50%; width: 25%"></div>
+              <div class="bg-red-500/40 h-3 rounded-r-full absolute" style="left: 75%; width: 25%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-neutral-500 mt-1 font-mono">
+              <span>1</span><span>2</span><span>3+</span><span>muitos</span><span>mix</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exemplos -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-3">✓ Blocos bem dimensionados</h4>
+          <ul class="space-y-2 text-sm text-neutral-300">
+            <li class="flex items-start gap-2"><span class="text-emerald-400">•</span><span>Adicionar validação zod em 1 endpoint</span></li>
+            <li class="flex items-start gap-2"><span class="text-emerald-400">•</span><span>Criar teste para 1 função</span></li>
+            <li class="flex items-start gap-2"><span class="text-emerald-400">•</span><span>Migrar 1 componente para TypeScript</span></li>
+            <li class="flex items-start gap-2"><span class="text-emerald-400">•</span><span>Corrigir 1 bug específico</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-3">✗ Blocos inchados</h4>
+          <ul class="space-y-2 text-sm text-neutral-300">
+            <li class="flex items-start gap-2"><span class="text-red-400">•</span><span>"Adicionar validação em todos os endpoints"</span></li>
+            <li class="flex items-start gap-2"><span class="text-red-400">•</span><span>"Criar testes para todos os services"</span></li>
+            <li class="flex items-start gap-2"><span class="text-red-400">•</span><span>"Migrar o projeto inteiro para TS"</span></li>
+            <li class="flex items-start gap-2"><span class="text-red-400">•</span><span>"Resolver todos os bugs da sprint"</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Dica -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">🧪</span>Teste de testabilidade</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Se o bloco tem um teste/check claro que comprova conclusão (teste passa, endpoint responde 200, migration aplica) — é um bloco. Se termina em "acho que está pronto" — era dois blocos.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">📊 Exemplo: refactor de 4 blocos</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Caso real: refatorar um serviço de autenticação (<code class="text-blue-400">AuthService</code> — 600 linhas, múltiplas responsabilidades). Vamos comparar as duas abordagens com números.
+      </p>
+
+      <!-- Tabela comparativa -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30">
+          <h3 class="font-semibold">1 bloco vs 4 blocos — mesmo trabalho</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-dark-700/50">
+              <tr class="text-left">
+                <th class="px-4 py-3 font-semibold text-neutral-400">Métrica</th>
+                <th class="px-4 py-3 font-semibold text-red-400">1 bloco (tudo)</th>
+                <th class="px-4 py-3 font-semibold text-emerald-400">4 blocos</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600">
+              <tr><td class="px-4 py-3 font-semibold">Turnos totais</td><td class="px-4 py-3 font-mono">~18 (com correções)</td><td class="px-4 py-3 font-mono">~14</td></tr>
+              <tr><td class="px-4 py-3 font-semibold">Input acumulado</td><td class="px-4 py-3 font-mono text-rose-400">~1,1M tokens</td><td class="px-4 py-3 font-mono text-emerald-400">~420k tokens</td></tr>
+              <tr><td class="px-4 py-3 font-semibold">Cache hit rate</td><td class="px-4 py-3 font-mono text-rose-400">~20%</td><td class="px-4 py-3 font-mono text-emerald-400">~75%</td></tr>
+              <tr><td class="px-4 py-3 font-semibold">Tempo humano</td><td class="px-4 py-3 font-mono">~60 min (muito revisão)</td><td class="px-4 py-3 font-mono">~40 min</td></tr>
+              <tr><td class="px-4 py-3 font-semibold">Retrabalho</td><td class="px-4 py-3 font-mono text-rose-400">2 passos refeitos</td><td class="px-4 py-3 font-mono text-emerald-400">0</td></tr>
+              <tr><td class="px-4 py-3 font-semibold">Qualidade final</td><td class="px-4 py-3"><span class="text-amber-400">Média (precisou ajuste)</span></td><td class="px-4 py-3"><span class="text-emerald-400">Alta (testes ok de cara)</span></td></tr>
+              <tr><td class="px-4 py-3 font-semibold text-lg">Custo (Sonnet 4.6)</td><td class="px-4 py-3 font-mono text-rose-400 text-lg">~US$ 4,20</td><td class="px-4 py-3 font-mono text-emerald-400 text-lg">~US$ 1,10</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Economia -->
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6 text-center">
+        <div class="text-sm text-blue-400 font-semibold mb-1">Diferença total</div>
+        <div class="text-5xl font-bold text-blue-400 mb-2">~4×</div>
+        <p class="text-neutral-300 text-sm">menor custo, menos tempo humano, melhor qualidade. O mesmo refactor.</p>
+      </div>
+
+      <!-- Os 4 blocos -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Como os 4 blocos foram estruturados</h3>
+        <div class="space-y-3">
+          <div class="flex items-start gap-4 bg-dark-700/50 rounded-lg p-4 border-l-4 border-emerald-500">
+            <div class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold flex-shrink-0">1</div>
+            <div class="flex-1">
+              <div class="font-semibold text-emerald-400 mb-1">Extrair TokenService</div>
+              <div class="text-xs text-neutral-400">Tocou 2 arquivos, 7 min, teste passou. Checkpoint.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 bg-dark-700/50 rounded-lg p-4 border-l-4 border-blue-500">
+            <div class="w-10 h-10 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold flex-shrink-0">2</div>
+            <div class="flex-1">
+              <div class="font-semibold text-blue-400 mb-1">Extrair PasswordService</div>
+              <div class="text-xs text-neutral-400">Tocou 2 arquivos, 6 min, teste passou. Checkpoint.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 bg-dark-700/50 rounded-lg p-4 border-l-4 border-amber-500">
+            <div class="w-10 h-10 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold flex-shrink-0">3</div>
+            <div class="flex-1">
+              <div class="font-semibold text-amber-400 mb-1">AuthService agora delega</div>
+              <div class="text-xs text-neutral-400">Tocou 1 arquivo, 8 min, testes de integração passaram. Checkpoint.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 bg-dark-700/50 rounded-lg p-4 border-l-4 border-rose-500">
+            <div class="w-10 h-10 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold flex-shrink-0">4</div>
+            <div class="flex-1">
+              <div class="font-semibold text-rose-400 mb-1">Remover código morto do AuthService</div>
+              <div class="text-xs text-neutral-400">Tocou 1 arquivo, 4 min, linting passou. Fim.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Regra de ouro -->
+      <div class="bg-gradient-to-br from-primary/10 via-dark-800 to-dark-800 rounded-xl border border-primary/40 p-8 text-center mb-6">
+        <div class="text-sm font-semibold text-primary uppercase tracking-wider mb-3">Regra de ouro</div>
+        <p class="text-2xl sm:text-3xl font-bold leading-tight mb-3">
+          Blocos pequenos fecham. Turnos gigantes <span class="text-primary">arrastam</span>.
+        </p>
+        <p class="text-neutral-400 text-sm">Menos ambição por turno = mais entrega por sessão.</p>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-blue-900/40 via-dark-800 to-dark-800 rounded-xl border border-blue-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">📋</span>Resumo do Módulo</h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">"Tudo de uma vez" é anti-padrão</strong><span class="text-neutral-400"> — sem checkpoint, difícil reverter, satura contexto</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Mais turnos = mais barato</strong><span class="text-neutral-400"> — cache reutilizado, output focado</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Checkpoint entre etapas</strong><span class="text-neutral-400"> — confirma estado, libera próximo, habilita rewind</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Um propósito por turno</strong><span class="text-neutral-400"> — execução ≠ pergunta ≠ decisão ≠ investigação</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Régua: 5–10 min, 1–2 arquivos</strong><span class="text-neutral-400"> — bloco que cabe, fecha</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">4× de economia no exemplo real</strong><span class="text-neutral-400"> — mesmo refactor, 1/4 do custo</span></div></div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-blue-400 mb-2">Próximo módulo:</h3>
+          <p class="text-neutral-300">2.3 — 🧹 /clear, /rewind, /compact — Reset Cedo</p>
+          <p class="text-sm text-neutral-400 mt-1">Três ferramentas oficiais para quando resetar, voltar, ou compactar.</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-2-1.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Módulo Anterior</a>
+          <a href="modulo-2-3.html" class="flex-1 text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors">Próximo: Reset Cedo →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>🧠 Mestre em Contexto e Tokens — INEMA.CLUB • 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) { darkIcon.classList.remove('hidden'); html.classList.remove('dark'); } else { lightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => { darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden'); html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+  </script>
+</body>
+</html>

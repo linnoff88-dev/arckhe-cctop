@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6.5 Hands-on — Como Usar Cada Repo | Mestre em Contexto e Tokens</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .dark body { background-color: #111827; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #4b5563; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-rose-400 { color: #9f1239; }
+    html:not(.dark) .bg-rose-500\/20 { background-color: rgba(225, 29, 72, 0.12); }
+    html:not(.dark) .bg-rose-500\/10 { background-color: rgba(225, 29, 72, 0.08); }
+    html:not(.dark) .border-rose-500\/30 { border-color: rgba(225, 29, 72, 0.25); }
+    html:not(.dark) .bg-rose-900\/20 { background-color: rgba(225, 29, 72, 0.06); }
+    html:not(.dark) .bg-rose-900\/30 { background-color: rgba(225, 29, 72, 0.08); }
+    html:not(.dark) .hover\:bg-rose-500\/10:hover { background-color: rgba(225, 29, 72, 0.08); }
+    html:not(.dark) .hover\:text-rose-400:hover { color: #9f1239; }
+
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .text-amber-400 { color: #b45309; }
+    html:not(.dark) .bg-amber-900\/20 { background-color: rgba(180, 83, 9, 0.06); }
+    html:not(.dark) .border-amber-500\/30 { border-color: rgba(180, 83, 9, 0.25); }
+    html:not(.dark) .text-red-400 { color: #dc2626; }
+    html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+    html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.25); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.35); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+
+    .step-num { flex-shrink: 0; }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧠</span>
+            <span class="font-bold text-lg hidden sm:inline">Contexto e Tokens</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Rotina</span></a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Handoff</span></a>
+          <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Avançado</span></a>
+          <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">Exemplos</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-rose-400 bg-rose-500/10"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Expert</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-rose-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-rose-400">Trilha 6</a>
+      <span>/</span>
+      <span class="text-rose-400">Módulo 6.5</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-rose-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="inline-block px-3 py-1 bg-rose-500/20 text-rose-400 text-xs font-semibold rounded-full">MÓDULO 6.5</span>
+        <span class="inline-block px-3 py-1 bg-rose-500/20 text-rose-400 text-xs font-semibold rounded-full">HANDS-ON</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🔧 Hands-on — Como Usar Cada Repo</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">O módulo 6.4 apresentou <em>o que</em> cada repo faz. Aqui você aprende <em>como usar</em> — pré-requisitos, comandos exatos, primeiro uso, como verificar que funcionou, e as pegadinhas que fazem as pessoas desistirem na metade.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-rose-400">10</div><div class="text-xs text-neutral-400">Tutoriais</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-rose-400">60</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-rose-400">Avançado</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-rose-400">Prático</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- COMO LER ESTE MÓDULO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6">
+        <h2 class="text-lg font-bold text-rose-400 mb-3 flex items-center"><span class="mr-2">📖</span>Como ler este módulo</h2>
+        <p class="text-neutral-300 text-sm leading-relaxed mb-4">
+          Cada repo segue o mesmo formato de 5 passos:
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-2 text-xs">
+          <div class="bg-dark-700/50 rounded p-3 border-l-4 border-rose-500"><div class="font-bold text-rose-400">1. Pré-req</div><div class="text-neutral-400 mt-1">o que precisa antes</div></div>
+          <div class="bg-dark-700/50 rounded p-3 border-l-4 border-rose-500"><div class="font-bold text-rose-400">2. Setup</div><div class="text-neutral-400 mt-1">comandos exatos</div></div>
+          <div class="bg-dark-700/50 rounded p-3 border-l-4 border-rose-500"><div class="font-bold text-rose-400">3. Uso</div><div class="text-neutral-400 mt-1">primeiro comando real</div></div>
+          <div class="bg-dark-700/50 rounded p-3 border-l-4 border-rose-500"><div class="font-bold text-rose-400">4. Verificar</div><div class="text-neutral-400 mt-1">como saber que funcionou</div></div>
+          <div class="bg-dark-700/50 rounded p-3 border-l-4 border-rose-500"><div class="font-bold text-rose-400">5. ⚠️ Pegadinha</div><div class="text-neutral-400 mt-1">erro comum</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPO 1 — RTK -->
+    <section id="rtk" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl step-num">1</span>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 flex-wrap">
+            <h2 class="text-2xl font-bold">🦀 RTK — Rust Token Killer</h2>
+            <a href="https://github.com/rtk-ai/rtk" target="_blank" class="text-sm text-sky-400 hover:text-sky-300 font-mono">↗ github.com/rtk-ai/rtk</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">1</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Pré-requisito</h4>
+              <p class="text-sm text-neutral-300">macOS ou Linux com Homebrew. Se não tiver brew, baixe o binário direto da página de <a href="https://github.com/rtk-ai/rtk/releases" target="_blank" class="text-sky-400 hover:text-sky-300">releases</a>.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">2</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Setup</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto mb-3"><code class="text-rose-400">brew install rtk
+
+# opcional: alias permanente no shell
+echo "alias cargo='rtk cargo'" >> ~/.zshrc
+echo "alias pytest='rtk pytest'" >> ~/.zshrc</code></pre>
+              <p class="text-xs text-neutral-500">Sem alias, você precisa prefixar <code class="text-rose-400">rtk</code> a cada comando. Com alias, vira transparente.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">3</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Primeiro uso</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-neutral-300"># dentro do Claude Code, peça:
+"Rode os testes do projeto e me mostre só os que falharam"
+
+# Claude executa:
+rtk npm test</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center shrink-0">4</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-emerald-400 mb-2">Como saber que funcionou</h4>
+              <p class="text-sm text-neutral-300">Saída do terminal vira compacta: só testes falhados + resumo. Se você ver 200 linhas de "✓ test passed", <strong>não funcionou</strong> — verifique se o alias está ativo.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-amber-900/20 rounded-xl border border-amber-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 text-sm font-bold flex items-center justify-center shrink-0">⚠️</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-amber-400 mb-2">Pegadinha comum</h4>
+              <p class="text-sm text-neutral-300">RTK filtra <em>stdout</em> mas não <em>stderr</em>. Se seu comando loga erro em stderr, ele passa direto. Use <code class="text-amber-400">rtk comando 2&gt;&amp;1</code> para capturar os dois.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPO 2 — Context Mode -->
+    <section id="context-mode" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl step-num">2</span>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 flex-wrap">
+            <h2 class="text-2xl font-bold">📦 Context Mode</h2>
+            <a href="https://github.com/mksglu/context-mode" target="_blank" class="text-sm text-sky-400 hover:text-sky-300 font-mono">↗ github.com/mksglu/context-mode</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">1</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Pré-requisito</h4>
+              <p class="text-sm text-neutral-300">Claude Code com suporte a marketplace de plugins (versão recente). Teste com <code class="text-rose-400">claude --version</code>.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">2</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Setup</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-rose-400"># dentro de uma sessão Claude Code
+/plugin marketplace add mksglu/context-mode
+/plugin install context-mode@context-mode
+
+# verifique que está ativo
+/plugin list</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">3</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Primeiro uso</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-neutral-300">Você: "Research https://github.com/modelcontextprotocol/servers —
+       arquitetura, stack tech, contribuidores, issues abertas."
+
+[Claude usa MCPs pesados; Context Mode intercepta]
+
+Você: /context-mode:ctx-stats</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center shrink-0">4</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-emerald-400 mb-2">Como saber que funcionou</h4>
+              <p class="text-sm text-neutral-300">O comando <code class="text-emerald-400">ctx-stats</code> mostra quantos tokens foram <em>interceptados vs. entregues</em>. Redução &gt; 80% é o esperado.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-amber-900/20 rounded-xl border border-amber-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 text-sm font-bold flex items-center justify-center shrink-0">⚠️</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-amber-400 mb-2">Pegadinha comum</h4>
+              <p class="text-sm text-neutral-300">Se o MCP original não foi configurado direito, Context Mode não tem o que sandboxar. Confirme que MCPs alvo (Playwright, GitHub...) respondem via <code class="text-amber-400">claude mcp list</code>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPO 3 — code-review-graph -->
+    <section id="code-review-graph" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl step-num">3</span>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 flex-wrap">
+            <h2 class="text-2xl font-bold">🌳 code-review-graph</h2>
+            <a href="https://github.com/tirth8205/code-review-graph" target="_blank" class="text-sm text-sky-400 hover:text-sky-300 font-mono">↗ github.com/tirth8205/code-review-graph</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">1</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Pré-requisito</h4>
+              <p class="text-sm text-neutral-300">Python 3.9+. Repositório em estado estável (idealmente pós-commit). Linguagens suportadas via Tree-sitter: JS/TS, Python, Go, Rust, Java, C/C++.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">2</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Setup</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-rose-400">pip install code-review-graph
+
+# registra como MCP
+code-review-graph install
+
+# indexa o repo (rode na raiz)
+code-review-graph build</code></pre>
+              <p class="text-xs text-neutral-500 mt-2">O build leva 1–3 min em repos médios. Re-rode após mudanças estruturais grandes.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">3</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Primeiro uso</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-neutral-300">Você: "Build the code review graph for this project"
+Claude: [carrega o grafo]
+
+Você: "Quais arquivos são afetados se eu mudar
+       a assinatura de UserService.updateProfile?"
+Claude: [lê apenas os 4 arquivos que chamam updateProfile]</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center shrink-0">4</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-emerald-400 mb-2">Como saber que funcionou</h4>
+              <p class="text-sm text-neutral-300">Claude menciona arquivos específicos <em>antes</em> de lê-los, e lê só alguns — não tenta explorar o repo inteiro via Glob.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-amber-900/20 rounded-xl border border-amber-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 text-sm font-bold flex items-center justify-center shrink-0">⚠️</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-amber-400 mb-2">Pegadinha comum</h4>
+              <p class="text-sm text-neutral-300">O grafo é estático — não atualiza automaticamente. Depois de refatoração grande, rode <code class="text-amber-400">code-review-graph build</code> de novo ou o Claude vai apontar para arquivos que não existem mais.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPO 4 — Token Savior -->
+    <section id="token-savior" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl step-num">4</span>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 flex-wrap">
+            <h2 class="text-2xl font-bold">💾 Token Savior</h2>
+            <a href="https://github.com/Mibayy/token-savior" target="_blank" class="text-sm text-sky-400 hover:text-sky-300 font-mono">↗ github.com/Mibayy/token-savior</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">1</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Pré-requisito</h4>
+              <p class="text-sm text-neutral-300"><code class="text-rose-400">uv</code> instalado — instalador Python ultrarrápido da Astral.</p>
+              <pre class="bg-dark-900 rounded-lg p-3 text-xs overflow-x-auto mt-2"><code class="text-rose-400">curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">2</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Setup</h4>
+              <p class="text-sm text-neutral-300 mb-2">Adicione ao <code class="text-rose-400">~/.claude.json</code>:</p>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-neutral-300">{
+  "mcpServers": {
+    "token-savior": {
+      "command": "uvx",
+      "args": ["token-savior-recall"]
+    }
+  }
+}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">3</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Primeiro uso</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-neutral-300">Você: "Find the definition of processPayment function"
+Claude: [usa symbol search do Token Savior —
+         não lê o arquivo inteiro]
+
+# sessão seguinte (após /clear ou reinicialização)
+Você: "Lembra do processPayment que analisamos?"
+Claude: [recupera da memória persistente]</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center shrink-0">4</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-emerald-400 mb-2">Como saber que funcionou</h4>
+              <p class="text-sm text-neutral-300">Claude devolve recortes cirúrgicos (só a função, não o arquivo). Em <code class="text-emerald-400">claude mcp list</code> o servidor aparece com status ativo.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-amber-900/20 rounded-xl border border-amber-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 text-sm font-bold flex items-center justify-center shrink-0">⚠️</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-amber-400 mb-2">Pegadinha comum</h4>
+              <p class="text-sm text-neutral-300">As 69 tools entram no contexto <em>por definição</em> — custando ~2–3k tokens só de schema. Vale se você usa bastante; não vale se só queria uma dessas features.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPO 5 — Caveman -->
+    <section id="caveman" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl step-num">5</span>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 flex-wrap">
+            <h2 class="text-2xl font-bold">🪨 Caveman Claude</h2>
+            <a href="https://github.com/JuliusBrussee/caveman" target="_blank" class="text-sm text-sky-400 hover:text-sky-300 font-mono">↗ github.com/JuliusBrussee/caveman</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">1</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Pré-requisito</h4>
+              <p class="text-sm text-neutral-300">Claude Code com suporte a plugins marketplace. Nada de Python/Node — é uma skill pura.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">2</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Setup</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-rose-400">claude plugin marketplace add JuliusBrussee/caveman
+claude plugin install caveman@caveman</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">3</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Primeiro uso</h4>
+              <p class="text-sm text-neutral-300 mb-2">Ative a skill (comando do plugin) e peça qualquer coisa técnica:</p>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-neutral-300">Você: "Por que meu componente React re-renderiza?"
+
+Claude normal: "A razão pela qual seu componente está
+sofrendo re-renderizações é provavelmente porque você
+está criando uma nova referência de objeto a cada
+render. Quando você passa um objeto inline como prop,
+o React interpreta isso como uma mudança..."
+
+Claude caveman: "Novo ref cada render. Inline obj prop
+= novo ref = re-render. Wrap em useMemo."</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center shrink-0">4</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-emerald-400 mb-2">Como saber que funcionou</h4>
+              <p class="text-sm text-neutral-300">Zero adjetivos. Zero "Claro! Vou te explicar...". Zero preâmbulo. Se a primeira palavra for "Claro" ou "Certamente", não ativou.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-amber-900/20 rounded-xl border border-amber-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 text-sm font-bold flex items-center justify-center shrink-0">⚠️</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-amber-400 mb-2">Pegadinha comum</h4>
+              <p class="text-sm text-neutral-300">Em tutoriais didáticos o caveman fica <em>seco demais</em>. Quando estiver explicando conceito novo para um time, desative temporariamente.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPO 6 — claude-token-efficient -->
+    <section id="claude-token-efficient" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl step-num">6</span>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 flex-wrap">
+            <h2 class="text-2xl font-bold">📝 claude-token-efficient</h2>
+            <a href="https://github.com/drona23/claude-token-efficient" target="_blank" class="text-sm text-sky-400 hover:text-sky-300 font-mono">↗ github.com/drona23/claude-token-efficient</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">1</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Pré-requisito</h4>
+              <p class="text-sm text-neutral-300">Se você já tem uma <code class="text-rose-400">CLAUDE.md</code> no projeto, <strong>faça backup antes</strong>. O comando abaixo sobrescreve.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">2</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Setup</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-rose-400"># backup primeiro (se tiver algo)
+cp CLAUDE.md CLAUDE.md.bak 2>/dev/null
+
+# baixa o template
+curl -o CLAUDE.md \
+  https://raw.githubusercontent.com/drona23/claude-token-efficient/main/CLAUDE.md
+
+# opcional: mescle com o antigo
+cat CLAUDE.md.bak >> CLAUDE.md</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">3</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Primeiro uso</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-neutral-300"># dentro do Claude Code
+/clear   # recomeça a sessão para carregar nova CLAUDE.md
+
+# pede algo com resposta tipicamente longa
+"Revise este componente e aponte problemas"</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center shrink-0">4</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-emerald-400 mb-2">Como saber que funcionou</h4>
+              <p class="text-sm text-neutral-300">Resposta de revisão vem em ~30 palavras em vez de 120. Sem preâmbulo "aqui está o que encontrei...".</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-amber-900/20 rounded-xl border border-amber-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 text-sm font-bold flex items-center justify-center shrink-0">⚠️</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-amber-400 mb-2">Pegadinha comum</h4>
+              <p class="text-sm text-neutral-300">Sobrescrever a CLAUDE.md existente apaga contexto <em>específico do projeto</em> (convenções, arquitetura). Sempre mescle.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPO 7 — token-optimizer-mcp -->
+    <section id="token-optimizer-mcp" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl step-num">7</span>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 flex-wrap">
+            <h2 class="text-2xl font-bold">⚡ token-optimizer-mcp</h2>
+            <a href="https://github.com/ooples/token-optimizer-mcp" target="_blank" class="text-sm text-sky-400 hover:text-sky-300 font-mono">↗ github.com/ooples/token-optimizer-mcp</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">1</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Pré-requisito</h4>
+              <p class="text-sm text-neutral-300">Node 18+ e npm. Espaço em disco para cache (~100MB para sessões longas).</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">2</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Setup</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-rose-400">git clone https://github.com/ooples/token-optimizer-mcp
+cd token-optimizer-mcp
+npm install
+npm run build
+
+# registra como MCP
+claude mcp add token-optimizer -- node /caminho/completo/dist/server.js</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">3</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Primeiro uso</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-neutral-300">Você: "Busque issues abertas no repo X com label 'bug'"
+Claude: [chama tool GitHub — resultado grande]
+
+Você: "Mesma busca, mas com label 'enhancement'"
+Claude: [chama tool GitHub; segunda chamada
+         com argumentos similares vem do cache]</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center shrink-0">4</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-emerald-400 mb-2">Como saber que funcionou</h4>
+              <p class="text-sm text-neutral-300">Segunda chamada de tool idêntica ou similar volta em &lt; 100ms. Logs do MCP mostram "cache hit".</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-amber-900/20 rounded-xl border border-amber-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 text-sm font-bold flex items-center justify-center shrink-0">⚠️</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-amber-400 mb-2">Pegadinha comum</h4>
+              <p class="text-sm text-neutral-300">Cache pode servir resposta desatualizada (ex: issue já foi fechada). Configure TTL curto em tools voláteis.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPO 8 — claude-token-optimizer -->
+    <section id="claude-token-optimizer" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl step-num">8</span>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 flex-wrap">
+            <h2 class="text-2xl font-bold">🎯 claude-token-optimizer</h2>
+            <a href="https://github.com/nadimtuhin/claude-token-optimizer" target="_blank" class="text-sm text-sky-400 hover:text-sky-300 font-mono">↗ github.com/nadimtuhin/claude-token-optimizer</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">1</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Pré-requisito</h4>
+              <p class="text-sm text-neutral-300">Projeto com documentação inflada: CLAUDE.md &gt; 200 linhas, múltiplos READMEs, pasta <code class="text-rose-400">/docs</code> grande.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">2</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Setup</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-rose-400"># na raiz do projeto
+curl -fsSL https://raw.githubusercontent.com/nadimtuhin/claude-token-optimizer/main/init.sh | bash</code></pre>
+              <p class="text-xs text-neutral-500 mt-2">O script reorganiza: 4 arquivos essenciais (~800 tokens) sempre carregam; o resto vira "carregável sob demanda".</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">3</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Primeiro uso</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-neutral-300"># antes
+/context
+# "CLAUDE.md: 11.200 tokens"
+
+# rodar init.sh, depois /clear
+
+# depois
+/context
+# "CLAUDE.md: 1.300 tokens"</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center shrink-0">4</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-emerald-400 mb-2">Como saber que funcionou</h4>
+              <p class="text-sm text-neutral-300">Comparação do <code class="text-emerald-400">/context</code> antes/depois mostra queda grande em "project memory". Docs antigas continuam disponíveis (Claude pede quando precisar).</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-amber-900/20 rounded-xl border border-amber-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 text-sm font-bold flex items-center justify-center shrink-0">⚠️</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-amber-400 mb-2">Pegadinha comum</h4>
+              <p class="text-sm text-neutral-300">Rode <code class="text-amber-400">git diff</code> depois para ver o que o script mudou. Algumas reorganizações podem quebrar links internos nas docs.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPO 9 — ghost token-optimizer -->
+    <section id="ghost-optimizer" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl step-num">9</span>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 flex-wrap">
+            <h2 class="text-2xl font-bold">👻 token-optimizer (ghost tokens)</h2>
+            <a href="https://github.com/alexgreensh/token-optimizer" target="_blank" class="text-sm text-sky-400 hover:text-sky-300 font-mono">↗ github.com/alexgreensh/token-optimizer</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">1</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Pré-requisito</h4>
+              <p class="text-sm text-neutral-300">Sessão com <strong>histórico significativo</strong> — idealmente pós-<code class="text-rose-400">/compact</code>. Ghost tokens aparecem só em contexto maduro.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">2</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Setup</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-rose-400">/plugin marketplace add alexgreensh/token-optimizer
+/plugin install token-optimizer@alexgreensh-token-optimizer</code></pre>
+              <p class="text-xs text-neutral-500 mt-2">Alternativa via bash: <code class="text-rose-400">git clone</code> + <code class="text-rose-400">bash install.sh</code>.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">3</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Primeiro uso</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-rose-400"># auditoria completa (6 agentes em paralelo)
+/token-optimizer
+
+# ou check rápido via Python
+python3 measure.py quick
+
+# dashboard live
+open http://localhost:24842</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center shrink-0">4</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-emerald-400 mb-2">Como saber que funcionou</h4>
+              <p class="text-sm text-neutral-300">Dashboard mostra ghost tokens identificados com recomendações <em>específicas</em> (ex: "skill X está carregada mas não foi usada em 30 turnos — desabilite").</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-amber-900/20 rounded-xl border border-amber-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 text-sm font-bold flex items-center justify-center shrink-0">⚠️</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-amber-400 mb-2">Pegadinha comum</h4>
+              <p class="text-sm text-neutral-300">Rodar em sessão curta (&lt; 10 turnos) dá falso positivo. Use depois que o contexto estiver "denso" (~40% da janela).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPO 10 — claude-context -->
+    <section id="claude-context" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl step-num">10</span>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 flex-wrap">
+            <h2 class="text-2xl font-bold">🔍 claude-context (Zilliz)</h2>
+            <a href="https://github.com/zilliztech/claude-context" target="_blank" class="text-sm text-sky-400 hover:text-sky-300 font-mono">↗ github.com/zilliztech/claude-context</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">1</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Pré-requisito</h4>
+              <ul class="text-sm text-neutral-300 space-y-1">
+                <li>• Node.js 20 ou 22 (23 não funciona no momento)</li>
+                <li>• Conta Zilliz Cloud (free tier suporta ~1M vetores)</li>
+                <li>• Chave OpenAI (para gerar embeddings — custo baixo)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">2</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Setup</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-rose-400">claude mcp add claude-context \
+  -e OPENAI_API_KEY=sk-proj-... \
+  -e MILVUS_TOKEN=... \
+  -- npx @zilliz/claude-context-mcp@latest
+
+# confirme
+claude mcp list</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center shrink-0">3</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-rose-400 mb-2">Primeiro uso</h4>
+              <pre class="bg-dark-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="text-neutral-300">Você: "Index this codebase"
+Claude: [indexa — pode levar 5–20 min em repo grande]
+
+Você: "Find functions that handle user authentication"
+Claude: [retorna 5 arquivos relevantes por similaridade
+         semântica, não por grep literal]
+
+Você: "Find code related to rate limiting"
+Claude: [encontra middleware mesmo que nunca use
+         exatamente a palavra 'rate limit']</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center shrink-0">4</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-emerald-400 mb-2">Como saber que funcionou</h4>
+              <p class="text-sm text-neutral-300">Claude encontra código relevante mesmo sem a palavra exata — é o sinal de que a busca semântica está ativa (e não só keyword matching).</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-amber-900/20 rounded-xl border border-amber-500/30 p-5">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 text-sm font-bold flex items-center justify-center shrink-0">⚠️</span>
+            <div class="flex-1">
+              <h4 class="font-semibold text-amber-400 mb-2">Pegadinha comum</h4>
+              <p class="text-sm text-neutral-300">Custo de embeddings OpenAI não é zero. Indexar 1M linhas = ~US$ 2–5. Para repos enormes, considere modelos locais (config avançada no README).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHECKLIST FINAL -->
+    <section class="mb-16">
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-8">
+        <h2 class="text-xl font-bold text-primary mb-4 flex items-center"><span class="mr-2">✅</span>Checklist antes de sair do módulo</h2>
+        <ul class="space-y-2 text-sm text-neutral-300">
+          <li class="flex items-start gap-3"><span class="text-primary">□</span><span>Rodei <code class="text-primary">/context</code> em uma sessão fresca e anotei o baseline</span></li>
+          <li class="flex items-start gap-3"><span class="text-primary">□</span><span>Identifiquei meu <strong>gargalo principal</strong> (terminal? MCPs? output? docs?)</span></li>
+          <li class="flex items-start gap-3"><span class="text-primary">□</span><span>Escolhi 2 repos que atacam esse gargalo (não 10)</span></li>
+          <li class="flex items-start gap-3"><span class="text-primary">□</span><span>Instalei o primeiro seguindo os 5 passos</span></li>
+          <li class="flex items-start gap-3"><span class="text-primary">□</span><span>Confirmei que funcionou (passo 4 de cada tutorial)</span></li>
+          <li class="flex items-start gap-3"><span class="text-primary">□</span><span>Medi o ganho com novo <code class="text-primary">/context</code> e comparei</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- NAVEGACAO -->
+    <div class="flex flex-col sm:flex-row gap-4 mt-12">
+      <a href="modulo-6-4.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Módulo 6.4</a>
+      <a href="index.html" class="flex-1 text-center px-6 py-3 bg-rose-600 text-white rounded-lg font-semibold hover:bg-rose-500 transition-colors">Voltar para Trilha 6 →</a>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>🧠 Mestre em Contexto e Tokens — INEMA.CLUB • 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) { darkIcon.classList.remove('hidden'); html.classList.remove('dark'); } else { lightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => { darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden'); html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+  </script>
+
+</body>
+</html>

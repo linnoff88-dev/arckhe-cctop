@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.3 Context Rot | Mestre em Contexto e Tokens</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .dark body { background-color: #111827; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #4b5563; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .hover\:text-emerald-400:hover { color: #059669; }
+
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-900\/20 { background-color: rgba(37, 99, 235, 0.06); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .text-red-400 { color: #dc2626; }
+    html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+    html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.25); }
+    html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+    html:not(.dark) .bg-emerald-900\/40 { background-color: rgba(5, 150, 105, 0.1); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.35); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧠</span><span class="font-bold text-lg hidden sm:inline">Contexto e Tokens</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Rotina</span></a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Handoff</span></a>
+          <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Avançado</span></a>
+          <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">Exemplos</span></a>
+          <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Expert</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-emerald-400">Início</a><span>/</span>
+      <a href="index.html" class="hover:text-emerald-400">Trilha 1</a><span>/</span>
+      <span class="text-emerald-400">Módulo 1.3</span>
+    </div>
+  </nav>
+
+  <header class="bg-gradient-to-br from-emerald-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-full mb-4">MÓDULO 1.3</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🍂 Context Rot — O Apodrecimento</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">A qualidade do modelo cai antes do limite da janela. Não é opinião — é dado medido em 18 modelos frontier. Aprenda os sintomas, as causas, e como se defender.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-emerald-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-emerald-400">25</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-emerald-400">Básico</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-emerald-400">Teoria</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- TOPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">🧪 A pesquisa da Chroma</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Em 2025, a Chroma Research publicou um estudo formal: <strong class="text-emerald-400">"Context Rot: How Increasing Input Tokens Impacts LLM Performance"</strong>. Testaram 18 LLMs frontier — incluindo Claude Opus 4 — e descobriram degradação mensurável e consistente conforme o contexto cresce.
+      </p>
+
+      <!-- Card da pesquisa -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">📊</span>O que a Chroma mediu</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center mb-4">
+          <div class="bg-dark-800/50 rounded-lg p-4">
+            <div class="text-3xl font-bold text-blue-400">18</div>
+            <div class="text-xs text-neutral-400 mt-1">modelos<br>testados</div>
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-4">
+            <div class="text-3xl font-bold text-blue-400">8</div>
+            <div class="text-xs text-neutral-400 mt-1">benchmarks<br>diferentes</div>
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-4">
+            <div class="text-3xl font-bold text-blue-400">100%</div>
+            <div class="text-xs text-neutral-400 mt-1">apresentaram<br>degradação</div>
+          </div>
+        </div>
+        <p class="text-sm text-neutral-300 leading-relaxed">
+          Resultado central: <strong>nenhum modelo mantém qualidade uniforme ao longo da janela</strong>. Performance cai progressivamente muito antes do limite máximo, mesmo em modelos com 1M de contexto.
+        </p>
+        <p class="text-xs text-neutral-500 mt-4">Fonte: trychroma.com/research/context-rot (2025)</p>
+      </div>
+
+      <!-- Atribuição correta -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">📝</span>Crédito onde é devido</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          O termo <strong>"context rot"</strong> é da Chroma, não da Anthropic. A Anthropic descreve o mesmo fenômeno com outras palavras ("instructions from early in the conversation can get lost"), mas não usa esse termo na documentação oficial. O fenômeno é real; o rótulo é da comunidade.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">🚨 Os 5 sintomas clássicos</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Como você sabe que a sessão está apodrecendo? Estes são os sinais em ordem de gravidade. Se reconhecer <strong class="text-red-400">um ou mais</strong>, pare — não empurre.
+      </p>
+
+      <div class="space-y-4 mb-6">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 border-l-4 border-l-yellow-500">
+          <div class="flex items-start gap-4">
+            <span class="text-3xl">🔁</span>
+            <div class="flex-1">
+              <h4 class="font-bold text-yellow-400 mb-1">1. Repetição</h4>
+              <p class="text-sm text-neutral-400 mb-2">O modelo refaz um passo que já foi concluído, ou repete uma sugestão que já deu.</p>
+              <p class="text-xs text-neutral-500"><strong class="text-neutral-300">Exemplo:</strong> "Vou criar o arquivo config.js..." quando o arquivo já foi criado há 5 turnos.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 border-l-4 border-l-orange-500">
+          <div class="flex items-start gap-4">
+            <span class="text-3xl">🤔</span>
+            <div class="flex-1">
+              <h4 class="font-bold text-orange-400 mb-1">2. Esquecimento</h4>
+              <p class="text-sm text-neutral-400 mb-2">Ignora uma decisão ou restrição que você deu mais cedo na conversa.</p>
+              <p class="text-xs text-neutral-500"><strong class="text-neutral-300">Exemplo:</strong> Você disse "não use TypeScript" no turno 3; no turno 15 o modelo adiciona types.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 border-l-4 border-l-red-500">
+          <div class="flex items-start gap-4">
+            <span class="text-3xl">↔️</span>
+            <div class="flex-1">
+              <h4 class="font-bold text-red-400 mb-1">3. Contradição</h4>
+              <p class="text-sm text-neutral-400 mb-2">Afirma algo que contradiz direta e explicitamente o que disse antes — sem admitir o conflito.</p>
+              <p class="text-xs text-neutral-500"><strong class="text-neutral-300">Exemplo:</strong> "Este método é thread-safe" quando turnos antes disse o oposto sobre o mesmo método.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 border-l-4 border-l-rose-500">
+          <div class="flex items-start gap-4">
+            <span class="text-3xl">🎯</span>
+            <div class="flex-1">
+              <h4 class="font-bold text-rose-400 mb-1">4. Decisões ruins</h4>
+              <p class="text-sm text-neutral-400 mb-2">Começa a escolher as opções piores entre alternativas claras. Perde o "gosto" técnico.</p>
+              <p class="text-xs text-neutral-500"><strong class="text-neutral-300">Exemplo:</strong> Sugere copy-paste onde antes recomendaria refactor.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 border-l-4 border-l-purple-500">
+          <div class="flex items-start gap-4">
+            <span class="text-3xl">🎭</span>
+            <div class="flex-1">
+              <h4 class="font-bold text-purple-400 mb-1">5. Tom quebrado</h4>
+              <p class="text-sm text-neutral-400 mb-2">Muda de estilo sem aviso. Fica vago, excessivamente longo, ou defensivo.</p>
+              <p class="text-xs text-neutral-500"><strong class="text-neutral-300">Exemplo:</strong> Começa a explicar básico quando antes ia direto ao ponto.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center"><span class="mr-2">⚠️</span>Regra única</h3>
+        <p class="text-neutral-300 leading-relaxed text-sm">
+          Se ver <strong>qualquer um</strong> destes sintomas: <strong class="text-red-400">pare imediatamente</strong>. Não tente "consertar" o output com mais instruções. O problema não é o último prompt — é o contexto inteiro.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">📉 Por que cai antes do limite</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Entender o <strong class="text-emerald-400">mecanismo</strong> ajuda a explicar por que o problema é estrutural — não "Claude preguiçoso" — e justifica as defesas que o curso ensina.
+      </p>
+
+      <!-- Três causas -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="w-10 h-10 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-xl font-bold mb-3">🎯</div>
+          <h4 class="font-bold mb-2">Atenção diluída</h4>
+          <p class="text-xs text-neutral-400">Transformers distribuem atenção por todos os tokens. Mais tokens = cada um recebe menos peso relativo.</p>
+        </div>
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="w-10 h-10 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl font-bold mb-3">📍</div>
+          <h4 class="font-bold mb-2">Viés de posição</h4>
+          <p class="text-xs text-neutral-400">Tokens próximos do fim recebem atenção desproporcional. Instruções iniciais "afundam" no meio.</p>
+        </div>
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="w-10 h-10 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-xl font-bold mb-3">🌊</div>
+          <h4 class="font-bold mb-2">Ruído acumulado</h4>
+          <p class="text-xs text-neutral-400">Cada tentativa errada, cada desvio, cada correção — tudo vira contexto competindo pela atenção.</p>
+        </div>
+      </div>
+
+      <!-- Box conceito -->
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-3 flex items-center"><span class="mr-2">🧠</span>Analogia</h3>
+        <p class="text-neutral-300 leading-relaxed mb-3">
+          Imagine pedir algo a alguém lendo um livro em voz alta. Nas primeiras páginas é fácil se lembrar. Na página 300, com mais 299 páginas para manter em mente, o leitor confunde detalhes, esquece nomes, mistura capítulos.
+        </p>
+        <p class="text-neutral-300 leading-relaxed">
+          O transformer não "cansa" — mas funciona com restrições similares de atenção distribuída.
+        </p>
+      </div>
+
+      <!-- Dica prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span>Por isso o CLAUDE.md funciona</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          A Anthropic recomenda colocar regras persistentes no <strong>CLAUDE.md</strong> (não na conversa) exatamente por isso: o CLAUDE.md é re-injetado após compaction e fica em posição estável. Instruções soltas na conversa somem na poeira.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">🛠️ Detectar em tempo real</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Prevenção &gt; remediação. Estes são 3 rituais curtos que te avisam <strong class="text-emerald-400">antes do colapso</strong>.
+      </p>
+
+      <!-- Ritual 1 -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-4">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg font-bold">1</div>
+          <div class="flex-1">
+            <h4 class="font-bold text-emerald-400 mb-2">Check de 10 em 10 turnos</h4>
+            <p class="text-sm text-neutral-400 mb-3">A cada ~10 mensagens, peça:</p>
+            <div class="bg-dark-900 rounded-lg p-3 font-mono text-xs text-emerald-400 mb-3">
+              Resuma em 2 linhas: qual é o objetivo atual e em que passo estamos?
+            </div>
+            <p class="text-xs text-neutral-500">Se a resposta divergir do que você lembra, é sinal de rot — reset cedo.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ritual 2 -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-4">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg font-bold">2</div>
+          <div class="flex-1">
+            <h4 class="font-bold text-blue-400 mb-2">Use <code class="text-blue-400 bg-dark-700 px-2 py-0.5 rounded">/context</code> regularmente</h4>
+            <p class="text-sm text-neutral-400 mb-3">O comando oficial mostra:</p>
+            <ul class="text-xs text-neutral-400 space-y-1 mb-3">
+              <li>• Mapa visual em grade colorida do consumo</li>
+              <li>• Sugestões de otimização para tools com muito uso</li>
+              <li>• Alertas de "memory bloat"</li>
+              <li>• Avisos de capacidade</li>
+            </ul>
+            <p class="text-xs text-neutral-500">Use quando perceber qualquer lentidão ou acima de 50% da janela.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ritual 3 -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg font-bold">3</div>
+          <div class="flex-1">
+            <h4 class="font-bold text-purple-400 mb-2">Observe o seu próprio desconforto</h4>
+            <p class="text-sm text-neutral-400 mb-3">Se você se pegar:</p>
+            <ul class="text-xs text-neutral-400 space-y-1 mb-3">
+              <li>• Re-explicando algo pela terceira vez</li>
+              <li>• Frustrado com a resposta</li>
+              <li>• Corrigindo "detalhezinhos" a cada turno</li>
+            </ul>
+            <p class="text-xs text-neutral-500">→ Não é o Claude. É o contexto. <strong class="text-purple-400">Reset.</strong></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">🔄 O que fazer quando acontece</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Três ferramentas oficiais, em ordem crescente de intervenção. Use a <strong class="text-emerald-400">menos drástica</strong> que resolva.
+      </p>
+
+      <!-- Fluxograma -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Quando usar cada ferramenta</h3>
+
+        <div class="space-y-4">
+          <!-- Compact -->
+          <div class="bg-gradient-to-r from-emerald-900/30 to-dark-800 rounded-lg border border-emerald-500/30 p-5">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+                <code class="text-emerald-400 font-bold text-xs">/compact</code>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-emerald-400 mb-1">Mais leve — resume mantendo sessão</h4>
+                <p class="text-sm text-neutral-400 mb-2">Condensa histórico em resumo, libera espaço, preserva contexto. Ideal quando o trabalho está bom mas está ficando longo.</p>
+                <div class="bg-dark-900 rounded-md p-2 font-mono text-xs text-emerald-400">/compact foco em decisões de arquitetura</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rewind -->
+          <div class="bg-gradient-to-r from-amber-900/30 to-dark-800 rounded-lg border border-amber-500/30 p-5">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                <code class="text-amber-400 font-bold text-xs">/rewind</code>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-amber-400 mb-1">Médio — voltar no tempo</h4>
+                <p class="text-sm text-neutral-400 mb-2">Retorna a conversa E os arquivos a um ponto anterior. Ideal quando uma tentativa deu ruim e quer recomeçar daquele ponto.</p>
+                <p class="text-xs text-neutral-500">Alias: <code class="text-amber-400">/checkpoint</code>, <code class="text-amber-400">/undo</code></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Clear -->
+          <div class="bg-gradient-to-r from-rose-900/30 to-dark-800 rounded-lg border border-rose-500/30 p-5">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-rose-500/20 flex items-center justify-center">
+                <code class="text-rose-400 font-bold text-xs">/clear</code>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-rose-400 mb-1">Mais drástico — reset total</h4>
+                <p class="text-sm text-neutral-400 mb-2">Começa sessão nova e vazia. Sessão anterior fica acessível via <code class="text-rose-400">/resume</code>. Use com handoff estruturado.</p>
+                <p class="text-xs text-neutral-500">Alias: <code class="text-rose-400">/reset</code>, <code class="text-rose-400">/new</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">🎯</span>Decisão rápida</h3>
+        <ul class="space-y-2 text-sm text-neutral-300">
+          <li><strong class="text-emerald-400">/compact</strong> → sessão boa, só grande demais</li>
+          <li><strong class="text-amber-400">/rewind</strong> → erro pontual, quer voltar</li>
+          <li><strong class="text-rose-400">/clear</strong> → contexto "infectado", precisa recomeçar</li>
+        </ul>
+      </div>
+
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📚</span>Trilha 2 destrincha cada um</h3>
+        <p class="text-neutral-300 text-sm">
+          Na próxima trilha, cada comando ganha um tópico com exemplos, variações e quando evitar. Por ora, basta saber que eles existem — e escolher o menos drástico que resolva.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">🏆 A melhor defesa — ciclos curtos</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        A melhor forma de lidar com context rot é <strong class="text-emerald-400">não deixar acontecer</strong>. Isso se faz com uma rotina: ciclos curtos de trabalho, resumos frequentes, reset preventivo.
+      </p>
+
+      <!-- Comparação reativo vs proativo -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">❌ Abordagem reativa</h4>
+          <ul class="space-y-2 text-sm text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400">•</span><span>Empurra a sessão até dar problema</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">•</span><span>Luta com o modelo quando ele confunde</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">•</span><span>Só limpa quando a qualidade despenca</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">•</span><span>Resultado: retrabalho e custo alto</span></li>
+          </ul>
+        </div>
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Abordagem proativa</h4>
+          <ul class="space-y-2 text-sm text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">•</span><span>Trabalha em blocos de 20–30 turnos</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">•</span><span>Resume antes do problema aparecer</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">•</span><span>Reseta com handoff estruturado</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">•</span><span>Resultado: qualidade constante, custo baixo</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Regra de ouro -->
+      <div class="bg-gradient-to-br from-primary/10 via-dark-800 to-dark-800 rounded-xl border border-primary/40 p-8 text-center mb-6">
+        <div class="text-sm font-semibold text-primary uppercase tracking-wider mb-3">Regra de ouro</div>
+        <p class="text-2xl sm:text-3xl font-bold leading-tight mb-3">
+          Contexto não é memória — é <span class="text-primary">carga</span>.
+        </p>
+        <p class="text-neutral-400 text-sm">Você não perde ao limpar. Você ganha performance.</p>
+      </div>
+
+      <!-- Preview T2 -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">🚀</span>O que vem a seguir (Trilha 2)</h3>
+        <p class="text-neutral-300 text-sm mb-3">Na <strong>Trilha 2 — Rotina Prática</strong>, você vai aprender:</p>
+        <ul class="space-y-1.5 text-sm text-neutral-400">
+          <li>→ Como abrir toda sessão com um bom plano (plan mode)</li>
+          <li>→ Trabalhar em blocos: um passo por vez, checkpoint entre</li>
+          <li>→ Usar <code class="text-blue-400 bg-dark-700 px-1.5 py-0.5 rounded">/clear</code>, <code class="text-blue-400 bg-dark-700 px-1.5 py-0.5 rounded">/rewind</code>, <code class="text-blue-400 bg-dark-700 px-1.5 py-0.5 rounded">/compact</code> com confiança</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-emerald-900/40 via-dark-800 to-dark-800 rounded-xl border border-emerald-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">📋</span>Resumo do Módulo</h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-emerald-400 mt-1">✓</span><div><strong class="text-white">Context rot é medido</strong><span class="text-neutral-400"> — Chroma 2025, 18 modelos, todos degradam</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-emerald-400 mt-1">✓</span><div><strong class="text-white">5 sintomas clássicos</strong><span class="text-neutral-400"> — repetição, esquecimento, contradição, decisões ruins, tom</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-emerald-400 mt-1">✓</span><div><strong class="text-white">Causas estruturais</strong><span class="text-neutral-400"> — atenção diluída, viés de posição, ruído</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-emerald-400 mt-1">✓</span><div><strong class="text-white">3 rituais de detecção</strong><span class="text-neutral-400"> — check de 10 em 10, <code class="text-emerald-400">/context</code>, desconforto</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-emerald-400 mt-1">✓</span><div><strong class="text-white">3 ferramentas oficiais</strong><span class="text-neutral-400"> — <code class="text-emerald-400">/compact</code> → <code class="text-amber-400">/rewind</code> → <code class="text-rose-400">/clear</code></span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-emerald-400 mt-1">✓</span><div><strong class="text-white">Ciclos curtos são a defesa</strong><span class="text-neutral-400"> — proativo, não reativo</span></div></div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-emerald-400 mb-2">Próxima trilha:</h3>
+          <p class="text-neutral-300">T2 — ⚙️ Rotina Prática</p>
+          <p class="text-sm text-neutral-400 mt-1">A teoria acabou. Agora é sobre o hábito diário que corta custos pela metade.</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-1-2.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Módulo Anterior</a>
+          <a href="../trilha2/index.html" class="flex-1 text-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition-colors">Trilha 2: Rotina Prática →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>🧠 Mestre em Contexto e Tokens — INEMA.CLUB • 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) { darkIcon.classList.remove('hidden'); html.classList.remove('dark'); } else { lightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => { darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden'); html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+  </script>
+</body>
+</html>

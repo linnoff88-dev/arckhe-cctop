@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.2 Debug em Projeto Que Nunca Vi | Mestre em Contexto e Tokens</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .dark body { background-color: #111827; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #4b5563; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-teal-400 { color: #0d9488; }
+    html:not(.dark) .bg-teal-500\/20 { background-color: rgba(13, 148, 136, 0.12); }
+    html:not(.dark) .bg-teal-500\/10 { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .bg-teal-900\/20 { background-color: rgba(13, 148, 136, 0.06); }
+    html:not(.dark) .bg-teal-900\/30 { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .bg-teal-900\/40 { background-color: rgba(13, 148, 136, 0.1); }
+    html:not(.dark) .border-teal-500\/30 { border-color: rgba(13, 148, 136, 0.25); }
+    html:not(.dark) .border-teal-500\/40 { border-color: rgba(13, 148, 136, 0.35); }
+    html:not(.dark) .border-teal-500 { border-color: #0d9488; }
+    html:not(.dark) .hover\:bg-teal-500\/10:hover { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .hover\:text-teal-400:hover { color: #0d9488; }
+
+    html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .hover\:text-emerald-400:hover { color: #059669; }
+    html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .hover\:text-blue-400:hover { color: #2563eb; }
+    html:not(.dark) .hover\:bg-purple-500\/10:hover { background-color: rgba(147, 51, 234, 0.08); }
+    html:not(.dark) .hover\:text-purple-400:hover { color: #9333ea; }
+    html:not(.dark) .hover\:bg-amber-500\/10:hover { background-color: rgba(180, 83, 9, 0.08); }
+    html:not(.dark) .hover\:text-amber-400:hover { color: #b45309; }
+    html:not(.dark) .hover\:bg-rose-500\/10:hover { background-color: rgba(190, 24, 93, 0.08); }
+    html:not(.dark) .hover\:text-rose-400:hover { color: #be185d; }
+
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-900\/20 { background-color: rgba(37, 99, 235, 0.06); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .text-red-400 { color: #dc2626; }
+    html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+    html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.25); }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.35); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧠</span>
+            <span class="font-bold text-lg hidden sm:inline">Contexto e Tokens</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Rotina</span></a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Handoff</span></a>
+          <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Avançado</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-teal-400 bg-teal-500/10"><span class="sm:hidden">T5</span><span class="hidden sm:inline">Exemplos</span></a>
+          <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Expert</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-teal-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-teal-400">Trilha 5</a>
+      <span>/</span>
+      <span class="text-teal-400">Módulo 5.2</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-teal-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-teal-500/20 text-teal-400 text-xs font-semibold rounded-full mb-4">MÓDULO 5.2</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🐛 Debug em Projeto Que Nunca Vi</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">6 passos para investigar um bug em código desconhecido sem saturar contexto. Subagentes para explorar, hipóteses ordenadas, fix + teste + docs. Cada passo com prompt pronto.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">6</div><div class="text-xs text-neutral-400">Passos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">~35</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">Prática</div><div class="text-xs text-neutral-400">Tipo</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">6</div><div class="text-xs text-neutral-400">Prompts</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- CENARIO DE ABERTURA -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6">
+        <h2 class="text-lg font-semibold text-teal-400 mb-3 flex items-center"><span class="mr-2">🎬</span>O cenário</h2>
+        <p class="text-neutral-300 leading-relaxed">
+          Um colega te passa um repositório e diz: <em class="text-teal-400">"o botão X não funciona, dá uma olhada?"</em>. Você nunca viu o código. O instinto ruim é abrir tudo, ler aleatoriamente e adivinhar. Em 10 minutos o contexto está lotado de arquivos irrelevantes e você ainda não tem hipótese nenhuma. A saída é <strong class="text-teal-400">investigar como cientista</strong>: delegar a exploração, reproduzir o bug, hipóteses ordenadas, testar uma de cada vez. 6 passos.
+        </p>
+      </div>
+    </section>
+
+    <!-- PASSO 1 -->
+    <section id="passo-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">🔍 Explore com subagente</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> achar o código do "botão X" sem poluir o contexto principal. O subagente Explore lê arquivos numa sessão isolada e te devolve só o destilado. Seu contexto recebe ~500 tokens em vez de 50k de código bruto.
+      </p>
+
+      <!-- PROMPT PRONTO -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Prompt pronto para copiar</h3>
+          <span class="text-xs text-teal-400 font-mono">passo 1</span>
+        </div>
+        <div class="bg-dark-900 rounded-lg border-l-4 border-teal-500 p-5 font-mono text-sm text-teal-400 leading-relaxed overflow-x-auto">
+<pre>Delegue para um subagente Explore: encontre onde o 'botão X'
+é renderizado e todos os handlers envolvidos. Me traga
+só os caminhos dos arquivos e um resumo de 5 linhas.</pre>
+        </div>
+      </div>
+
+      <!-- O QUE ESPERAR -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📥</span>O que esperar da resposta</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-xs text-neutral-300 overflow-x-auto">
+<pre>Arquivos:
+- src/components/CheckoutButton.tsx (render)
+- src/hooks/useCheckout.ts (handler principal)
+- src/api/checkout.ts (chamada de backend)
+- src/store/cart.slice.ts (estado relacionado)
+
+Resumo:
+Botão renderizado em CheckoutButton. onClick chama
+useCheckout().submit, que valida carrinho via cart.slice,
+monta payload e chama api/checkout. Loading e erro
+controlados no hook. Não há retry configurado.</pre>
+        </div>
+        <p class="text-sm text-neutral-400 mt-3">Pronto: você tem o <strong class="text-blue-400">mapa</strong> do problema sem os 2000 linhas de implementação no contexto.</p>
+      </div>
+
+      <!-- DICA -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span>Por que subagente em vez de ler direto</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Ler na sessão principal significa que todo arquivo inspecionado fica no contexto <strong>até o fim</strong>. Com subagente, a exploração acontece em memória separada — você recebe só o resumo. Para um repo grande, isso pode significar a diferença entre 10% e 60% de janela usada.
+        </p>
+      </div>
+
+      <!-- TRANSICAO -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 mb-6 flex items-center gap-4">
+        <span class="text-3xl">→</span>
+        <div><strong class="text-teal-400">Próximo passo:</strong><span class="text-neutral-400 text-sm"> reproduzir o bug localmente antes de qualquer fix.</span></div>
+      </div>
+    </section>
+
+    <!-- PASSO 2 -->
+    <section id="passo-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">🔄 Reproduzir localmente</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> ver o bug com os próprios olhos. Sem reprodução, qualquer fix é suposição. Aqui você quer comandos, não explicação — a intenção é rodar em 30 segundos.
+      </p>
+
+      <!-- PROMPT PRONTO -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Prompt pronto para copiar</h3>
+          <span class="text-xs text-teal-400 font-mono">passo 2</span>
+        </div>
+        <div class="bg-dark-900 rounded-lg border-l-4 border-teal-500 p-5 font-mono text-sm text-teal-400 leading-relaxed overflow-x-auto">
+<pre>Quais comandos rodar para reproduzir o bug localmente?
+Só me dê a sequência, sem explicação.</pre>
+        </div>
+      </div>
+
+      <!-- O QUE ESPERAR -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📥</span>O que esperar da resposta</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-xs text-neutral-300 overflow-x-auto">
+<pre>1. npm install
+2. cp .env.example .env
+3. docker compose up -d db
+4. npm run migrate
+5. npm run seed
+6. npm run dev
+7. Abrir http://localhost:3000/checkout
+8. Clicar em "Finalizar compra"
+9. Observar: console mostra "Uncaught TypeError"</pre>
+        </div>
+        <p class="text-sm text-neutral-400 mt-3">Comandos enumerados, último item descrevendo o sintoma esperado. Se vier prosa, peça: "Só comandos numerados, sem explicações."</p>
+      </div>
+
+      <!-- ALERTA -->
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center"><span class="mr-2">⚠️</span>Não pule este passo</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Debugar sem reproduzir = trabalhar baseado em relato. Você e o Claude podem passar 1h discutindo um bug que é <strong>outro</strong>. Reprodução te dá um <strong class="text-red-400">sinal binário</strong>: depois do fix, o mesmo passo-a-passo ou quebra ou funciona. Sem ambiguidade.
+        </p>
+      </div>
+
+      <!-- TRANSICAO -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 mb-6 flex items-center gap-4">
+        <span class="text-3xl">→</span>
+        <div><strong class="text-teal-400">Próximo passo:</strong><span class="text-neutral-400 text-sm"> gerar hipóteses ordenadas por probabilidade.</span></div>
+      </div>
+    </section>
+
+    <!-- PASSO 3 -->
+    <section id="passo-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">🎯 Hipóteses em ordem de probabilidade</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> forçar o Claude a raciocinar antes de mexer no código. Uma lista ordenada com razão e teste dá plano de investigação — e em ~80% dos casos a hipótese 1 acerta.
+      </p>
+
+      <!-- PROMPT PRONTO -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Prompt pronto para copiar</h3>
+          <span class="text-xs text-teal-400 font-mono">passo 3</span>
+        </div>
+        <div class="bg-dark-900 rounded-lg border-l-4 border-teal-500 p-5 font-mono text-sm text-teal-400 leading-relaxed overflow-x-auto">
+<pre>Com base no código que viu, liste 3–5 hipóteses para o bug,
+da mais provável à menos. Para cada: razão + como testar.</pre>
+        </div>
+      </div>
+
+      <!-- O QUE ESPERAR -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📥</span>O que esperar da resposta</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-xs text-neutral-300 overflow-x-auto">
+<pre>H1 (mais provável): payload montado com cart vazio
+  Razão: useCheckout não checa cart.items.length
+  Testar: console.log(payload) antes do fetch
+
+H2: API retorna 400 que não é tratado
+  Razão: handler só captura network error, não HTTP 4xx
+  Testar: inspecionar Network tab ao clicar
+
+H3: Token expirado silenciosamente
+  Razão: não há refresh antes do submit
+  Testar: limpar localStorage e tentar de novo
+
+H4 (menos provável): race condition no cart.slice
+  Razão: submit pode disparar antes de hydrate
+  Testar: adicionar timeout 500ms e tentar</pre>
+        </div>
+      </div>
+
+      <!-- DICA -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span>"Razão + como testar" é a chave</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Hipóteses sem teste são opinião. Ao exigir <strong>como testar</strong>, você força o modelo a pensar em sinal observável — e te dá o próximo comando executável. "Vai lá no código e vê" não é teste; <code class="text-primary bg-dark-700 px-1.5 py-0.5 rounded">console.log(payload)</code> é.
+        </p>
+      </div>
+
+      <!-- TRANSICAO -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 mb-6 flex items-center gap-4">
+        <span class="text-3xl">→</span>
+        <div><strong class="text-teal-400">Próximo passo:</strong><span class="text-neutral-400 text-sm"> testar a hipótese 1 com alteração mínima.</span></div>
+      </div>
+    </section>
+
+    <!-- PASSO 4 -->
+    <section id="passo-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">🧪 Testar a hipótese mais provável</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> confirmar ou descartar H1 com a <strong>menor</strong> alteração possível. Menor alteração = mais fácil de reverter, menor risco de introduzir outro bug, sinal mais claro.
+      </p>
+
+      <!-- PROMPT PRONTO -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Prompt pronto para copiar</h3>
+          <span class="text-xs text-teal-400 font-mono">passo 4</span>
+        </div>
+        <div class="bg-dark-900 rounded-lg border-l-4 border-teal-500 p-5 font-mono text-sm text-teal-400 leading-relaxed overflow-x-auto">
+<pre>Vamos testar a hipótese 1. Que alteração mínima
+confirma ou descarta?</pre>
+        </div>
+      </div>
+
+      <!-- O QUE ESPERAR -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📥</span>O que esperar da resposta</h3>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Proposta de 1–3 linhas a adicionar (console.log, breakpoint, guard clause)</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Explicação do sinal esperado: "Se logar <code class="text-blue-400">payload.items = []</code>, H1 confirmada."</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Comando para rodar novamente (normalmente igual ao passo 2)</span></li>
+        </ul>
+      </div>
+
+      <!-- ALERTA -->
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center"><span class="mr-2">⚠️</span>Uma hipótese por vez</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Testar H1 + H2 juntas é suicídio epistêmico. Se o bug sumir, você não sabe qual foi a causa. Se persistir, idem. <strong class="text-red-400">Cada iteração = um sinal limpo.</strong> Se H1 falhar, volte ao prompt com "H1 descartada (razão: X), vamos para H2".
+        </p>
+      </div>
+
+      <!-- TRANSICAO -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 mb-6 flex items-center gap-4">
+        <span class="text-3xl">→</span>
+        <div><strong class="text-teal-400">Próximo passo:</strong><span class="text-neutral-400 text-sm"> identificada a causa, fix + teste + commit.</span></div>
+      </div>
+    </section>
+
+    <!-- PASSO 5 -->
+    <section id="passo-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">🩹 Fix + teste + commit</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> aplicar o fix real (não mais o debug log), cobrir com teste automatizado e commitar. Teste primeiro garante proteção anti-regressão — ninguém reintroduz o bug "sem querer" daqui a 2 meses.
+      </p>
+
+      <!-- PROMPT PRONTO -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Prompt pronto para copiar</h3>
+          <span class="text-xs text-teal-400 font-mono">passo 5</span>
+        </div>
+        <div class="bg-dark-900 rounded-lg border-l-4 border-teal-500 p-5 font-mono text-sm text-teal-400 leading-relaxed overflow-x-auto">
+<pre>Confirmada a hipótese 1. Aplique o fix.
+Rode o teste do botão X. Se passar, commit
+com mensagem descritiva.</pre>
+        </div>
+      </div>
+
+      <!-- O QUE ESPERAR -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📥</span>O que esperar da resposta</h3>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Diff do fix (guarda ou validação nova)</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Teste novo cobrindo o caso do bug (ex: <code class="text-blue-400">test("submit bloqueado com carrinho vazio")</code>)</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Output da suite: "X testes ok, 0 falhas"</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Commit: <code class="text-blue-400">fix(checkout): bloquear submit com carrinho vazio</code></span></li>
+        </ul>
+      </div>
+
+      <!-- CONVENCAO DE COMMIT -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-4">Convenção de commit para fix</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-sm text-teal-400">fix(escopo): o que foi corrigido</div>
+        <ul class="space-y-1 text-sm text-neutral-300 mt-3 font-mono">
+          <li>fix(checkout): bloquear submit com carrinho vazio</li>
+          <li>fix(auth): refresh token antes de submit crítico</li>
+          <li>fix(cart): hydrate antes de renderizar total</li>
+        </ul>
+      </div>
+
+      <!-- TRANSICAO -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 mb-6 flex items-center gap-4">
+        <span class="text-3xl">→</span>
+        <div><strong class="text-teal-400">Próximo passo:</strong><span class="text-neutral-400 text-sm"> deixar uma nota curta para quem vier depois.</span></div>
+      </div>
+    </section>
+
+    <!-- PASSO 6 -->
+    <section id="passo-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">📝 Docs/memória para o próximo</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> transformar debug pontual em memória organizacional. 10 linhas em <code class="text-teal-400 bg-dark-700 px-1.5 py-0.5 rounded">docs/debugging.md</code> podem economizar horas a um colega ou ao futuro você.
+      </p>
+
+      <!-- PROMPT PRONTO -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Prompt pronto para copiar</h3>
+          <span class="text-xs text-teal-400 font-mono">passo 6</span>
+        </div>
+        <div class="bg-dark-900 rounded-lg border-l-4 border-teal-500 p-5 font-mono text-sm text-teal-400 leading-relaxed overflow-x-auto">
+<pre>Adicione uma nota em docs/debugging.md sobre: onde está
+o código do botão X, o que era o bug, como reconhecer
+se aparecer de novo. Máximo 10 linhas.</pre>
+        </div>
+      </div>
+
+      <!-- O QUE ESPERAR -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📥</span>O que esperar da resposta</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-xs text-neutral-300 overflow-x-auto">
+<pre>## Botão "Finalizar compra"
+
+Código: src/components/CheckoutButton.tsx
+Handler: src/hooks/useCheckout.ts
+
+Bug conhecido (abril 2026): submit disparava com
+carrinho vazio, API retornava 400 silencioso.
+Fix: guard em useCheckout.submit().
+
+Como reconhecer se voltar: "Uncaught TypeError" no
+console ao clicar com cart.items.length === 0.
+Ver commit fix(checkout): bloquear submit ...</pre>
+        </div>
+      </div>
+
+      <!-- DICA -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span>"Máximo 10 linhas" é importante</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Docs longas não são lidas. 10 linhas com o essencial (<strong>onde</strong>, <strong>o que era</strong>, <strong>como reconhecer</strong>) cabem num scroll e sobrevivem a busca. Também cabem no CLAUDE.md sem inflar o contexto em sessões futuras.
+        </p>
+      </div>
+
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-teal-900/40 via-dark-800 to-dark-800 rounded-xl border border-teal-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">📋</span>Resumo do Módulo</h2>
+
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">Subagente Explore para mapear código</strong><span class="text-neutral-400"> — contexto principal fica limpo</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">Reproduzir antes de consertar</strong><span class="text-neutral-400"> — sinal binário, sem ambiguidade</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">Hipóteses ordenadas com razão + teste</strong><span class="text-neutral-400"> — raciocínio antes de ação</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">Uma hipótese por vez</strong><span class="text-neutral-400"> — sinais limpos, menor alteração</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">Fix + teste + commit juntos</strong><span class="text-neutral-400"> — proteção anti-regressão</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">Docs curtas no fim</strong><span class="text-neutral-400"> — memória durável de ~10 linhas</span></div></div>
+        </div>
+
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-teal-400 mb-2">Próximo módulo:</h3>
+          <p class="text-neutral-300">5.3 — 📚 Documentando Código Legado em 3 Sessões</p>
+          <p class="text-sm text-neutral-400 mt-1">Projeto grande sem docs. 3 sessões encadeadas, subagentes paralelos e economia real de ~5×.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-5-1.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Anterior: Refactor</a>
+          <a href="modulo-5-3.html" class="flex-1 text-center px-6 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-500 transition-colors">Próximo: Documentação →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>🧠 Mestre em Contexto e Tokens — INEMA.CLUB • 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) { darkIcon.classList.remove('hidden'); html.classList.remove('dark'); } else { lightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => { darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden'); html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+  </script>
+
+</body>
+</html>

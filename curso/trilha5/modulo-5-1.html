@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.1 Refatorando Arquivo Grande | Mestre em Contexto e Tokens</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .dark body { background-color: #111827; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #4b5563; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-teal-400 { color: #0d9488; }
+    html:not(.dark) .bg-teal-500\/20 { background-color: rgba(13, 148, 136, 0.12); }
+    html:not(.dark) .bg-teal-500\/10 { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .bg-teal-900\/20 { background-color: rgba(13, 148, 136, 0.06); }
+    html:not(.dark) .bg-teal-900\/30 { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .bg-teal-900\/40 { background-color: rgba(13, 148, 136, 0.1); }
+    html:not(.dark) .border-teal-500\/30 { border-color: rgba(13, 148, 136, 0.25); }
+    html:not(.dark) .border-teal-500\/40 { border-color: rgba(13, 148, 136, 0.35); }
+    html:not(.dark) .border-teal-500 { border-color: #0d9488; }
+    html:not(.dark) .hover\:bg-teal-500\/10:hover { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .hover\:text-teal-400:hover { color: #0d9488; }
+
+    html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .hover\:text-emerald-400:hover { color: #059669; }
+    html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .hover\:text-blue-400:hover { color: #2563eb; }
+    html:not(.dark) .hover\:bg-purple-500\/10:hover { background-color: rgba(147, 51, 234, 0.08); }
+    html:not(.dark) .hover\:text-purple-400:hover { color: #9333ea; }
+    html:not(.dark) .hover\:bg-amber-500\/10:hover { background-color: rgba(180, 83, 9, 0.08); }
+    html:not(.dark) .hover\:text-amber-400:hover { color: #b45309; }
+    html:not(.dark) .hover\:bg-rose-500\/10:hover { background-color: rgba(190, 24, 93, 0.08); }
+    html:not(.dark) .hover\:text-rose-400:hover { color: #be185d; }
+
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-900\/20 { background-color: rgba(37, 99, 235, 0.06); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .text-red-400 { color: #dc2626; }
+    html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+    html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.25); }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.35); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧠</span>
+            <span class="font-bold text-lg hidden sm:inline">Contexto e Tokens</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Rotina</span></a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Handoff</span></a>
+          <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Avançado</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-teal-400 bg-teal-500/10"><span class="sm:hidden">T5</span><span class="hidden sm:inline">Exemplos</span></a>
+          <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Expert</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-teal-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-teal-400">Trilha 5</a>
+      <span>/</span>
+      <span class="text-teal-400">Módulo 5.1</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-teal-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-teal-500/20 text-teal-400 text-xs font-semibold rounded-full mb-4">MÓDULO 5.1</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🔧 Refatorando Arquivo Grande sem Estourar Contexto</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">6 passos executáveis com prompts prontos para copiar. Do plan mode ao handoff final — refatore 2000 linhas sem perder qualidade nem dinheiro.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">6</div><div class="text-xs text-neutral-400">Passos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">~40</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">Prática</div><div class="text-xs text-neutral-400">Tipo</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-teal-400">6</div><div class="text-xs text-neutral-400">Prompts</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- CENARIO DE ABERTURA -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6">
+        <h2 class="text-lg font-semibold text-teal-400 mb-3 flex items-center"><span class="mr-2">🎬</span>O cenário</h2>
+        <p class="text-neutral-300 leading-relaxed">
+          Você tem um arquivo de <strong class="text-teal-400">2000 linhas</strong> — por exemplo, um <code class="text-teal-400 bg-dark-700 px-1.5 py-0.5 rounded">service.ts</code> bagunçado que foi crescendo sem freio. Precisa refatorar. Se abrir tudo no Claude e começar a pedir mudanças, em 30 minutos a janela estoura, a qualidade cai, e você fica brigando com context rot. A saída não é "refatorar mais rápido" — é <strong class="text-teal-400">fatiar</strong>. O que vem a seguir são os 6 passos que funcionam na prática.
+        </p>
+      </div>
+    </section>
+
+    <!-- PASSO 1 -->
+    <section id="passo-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">📋 Plan mode — entender arquitetura</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> mapear o arquivo sem alterar nada. Plan mode força o Claude a ler e raciocinar, não executar. O output é um diagnóstico estruturado que vira base de todos os próximos passos.
+      </p>
+
+      <!-- PROMPT PRONTO -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Prompt pronto para copiar</h3>
+          <span class="text-xs text-teal-400 font-mono">passo 1</span>
+        </div>
+        <div class="bg-dark-900 rounded-lg border-l-4 border-teal-500 p-5 font-mono text-sm text-teal-400 leading-relaxed overflow-x-auto">
+<pre>Estou em plan mode. Abra o arquivo service.ts.
+Não altere nada. Me responda:
+1. Qual a responsabilidade principal?
+2. Quais são os blocos lógicos (regiões)?
+3. Quais dependências externas ele tem?
+Formato: lista, não prose.</pre>
+        </div>
+      </div>
+
+      <!-- O QUE ESPERAR -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📥</span>O que esperar da resposta</h3>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>1 frase curta para a responsabilidade principal (ex: "orquestra criação e cobrança de pedidos")</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Lista com 4–8 blocos lógicos (ex: validação, persistência, notificações, cobrança, logs)</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Dependências externas nomeadas: APIs, serviços, libs de terceiros, banco</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Output total ~1–2k tokens. Se vier longo demais, peça "mais conciso"</span></li>
+        </ul>
+      </div>
+
+      <!-- DICA -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span>Por que "formato: lista, não prose"</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Prose dobra os tokens e mistura análise com narrativa. Lista entrega só o essencial, cabe no contexto de turnos seguintes e é fácil de citar ("volte à região 3 da sua lista"). Essa instrução sozinha corta ~30% do output.
+        </p>
+      </div>
+
+      <!-- TRANSICAO -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 mb-6 flex items-center gap-4">
+        <span class="text-3xl">→</span>
+        <div><strong class="text-teal-400">Próximo passo:</strong><span class="text-neutral-400 text-sm"> com o mapa na mão, pedir a divisão em regiões ordenadas por risco.</span></div>
+      </div>
+    </section>
+
+    <!-- PASSO 2 -->
+    <section id="passo-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">🗺️ Dividir em regiões</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> transformar o mapa do passo 1 em um <strong>plano de execução</strong> com 4–6 regiões independentes, ordenadas do menor risco ao maior. Cada região vira um checkpoint — um commit reversível.
+      </p>
+
+      <!-- PROMPT PRONTO -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Prompt pronto para copiar</h3>
+          <span class="text-xs text-teal-400 font-mono">passo 2</span>
+        </div>
+        <div class="bg-dark-900 rounded-lg border-l-4 border-teal-500 p-5 font-mono text-sm text-teal-400 leading-relaxed overflow-x-auto">
+<pre>Com base no que leu, proponha 4–6 regiões de refactor,
+em ordem de menor risco → maior risco.
+Para cada: objetivo, tamanho estimado (linhas), dependências.</pre>
+        </div>
+      </div>
+
+      <!-- O QUE ESPERAR -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📥</span>O que esperar da resposta</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-xs text-neutral-300 mb-3 overflow-x-auto">
+<pre>Região 1: Extrair validadores (baixo risco)
+  Objetivo: mover funções de validação para validators.ts
+  Tamanho: ~200 linhas
+  Dependências: nenhuma
+
+Região 2: Isolar logger (baixo risco)
+  Objetivo: centralizar logs em logger.ts
+  Tamanho: ~80 linhas
+  Dependências: nenhuma
+
+Região 3: Separar repositório (médio risco)
+  Objetivo: mover queries de DB para repository.ts
+  Tamanho: ~400 linhas
+  Dependências: prisma
+
+Região 4: Extrair cobrança (alto risco)
+  Objetivo: service de billing isolado
+  Tamanho: ~500 linhas
+  Dependências: Stripe API, DB</pre>
+        </div>
+        <p class="text-sm text-neutral-400">Se as dependências forem "intra-arquivo", sinalize como risco alto — refactor vai quebrar o que está ao redor.</p>
+      </div>
+
+      <!-- DICA -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span>Regra de ouro da ordem</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Comece pelo que <strong class="text-primary">não quebra nada</strong>: extração de funções puras, constantes, utilitários. Deixa para o final o que toca I/O, efeitos colaterais ou controle de fluxo principal. Em 90% dos casos isso casa naturalmente com "menor → maior risco".
+        </p>
+      </div>
+
+      <!-- TRANSICAO -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 mb-6 flex items-center gap-4">
+        <span class="text-3xl">→</span>
+        <div><strong class="text-teal-400">Próximo passo:</strong><span class="text-neutral-400 text-sm"> executar a região 1, e só a região 1.</span></div>
+      </div>
+    </section>
+
+    <!-- PASSO 3 -->
+    <section id="passo-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">🔨 Refatorar uma região por vez</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> executar exatamente uma região, sem transbordar. O "pare" explícito no final é o que cria o <strong>checkpoint</strong> — sem ele, o Claude tende a "continuar ajudando" e mexer em código que você ainda não revisou.
+      </p>
+
+      <!-- PROMPT PRONTO -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Prompt pronto para copiar</h3>
+          <span class="text-xs text-teal-400 font-mono">passo 3</span>
+        </div>
+        <div class="bg-dark-900 rounded-lg border-l-4 border-teal-500 p-5 font-mono text-sm text-teal-400 leading-relaxed overflow-x-auto">
+<pre>Execute a região 1. Não toque em nada fora dela.
+Ao terminar, pare.</pre>
+        </div>
+      </div>
+
+      <!-- O QUE ESPERAR -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📥</span>O que esperar da resposta</h3>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Arquivos criados/editados com o escopo exato da região (nenhuma linha fora dela)</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Resumo curto do que foi feito (3–5 linhas)</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Parada limpa — sem "quer que eu continue com a região 2?"</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Se sugerir algo fora do escopo, <strong>ignore</strong> e siga para o passo 4</span></li>
+        </ul>
+      </div>
+
+      <!-- ALERTA -->
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center"><span class="mr-2">⚠️</span>Por que "pare" é crítico</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Sem o "pare", o Claude frequentemente continua para a próxima região "de brinde". Isso pula o passo de teste, acumula mudanças não verificadas no contexto e se algo quebrar você não sabe qual região foi culpada. <strong class="text-red-400">Checkpoint entre regiões evita context rot e dá reversibilidade.</strong>
+        </p>
+      </div>
+
+      <!-- TRANSICAO -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 mb-6 flex items-center gap-4">
+        <span class="text-3xl">→</span>
+        <div><strong class="text-teal-400">Próximo passo:</strong><span class="text-neutral-400 text-sm"> rodar testes antes de tocar na próxima região.</span></div>
+      </div>
+    </section>
+
+    <!-- PASSO 4 -->
+    <section id="passo-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">✅ Testes entre regiões</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> verde antes de avançar. Se os testes falharem, você quer saber <strong>antes</strong> do Claude "consertar" algo — porque às vezes o fix é piorar um teste (comentar, relaxar assert). Você decide.
+      </p>
+
+      <!-- PROMPT PRONTO -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Prompt pronto para copiar</h3>
+          <span class="text-xs text-teal-400 font-mono">passo 4</span>
+        </div>
+        <div class="bg-dark-900 rounded-lg border-l-4 border-teal-500 p-5 font-mono text-sm text-teal-400 leading-relaxed overflow-x-auto">
+<pre>Rode os testes. Se passarem, commit.
+Se falharem, me diga antes de consertar.</pre>
+        </div>
+      </div>
+
+      <!-- O QUE ESPERAR -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📥</span>O que esperar da resposta</h3>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span><strong>Caso verde:</strong> "Testes passaram (X ok). Commit feito: <code class="text-blue-400">refactor(service): região 1 — extrair validadores</code>"</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span><strong>Caso vermelho:</strong> nome do teste que falhou + output do erro + hipótese de causa. Sem patch aplicado.</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Se Claude aplicar patch mesmo assim, peça rollback e repita o prompt acima</span></li>
+        </ul>
+      </div>
+
+      <!-- TEMPLATE DE COMMIT -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-4">Template de commit message</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-sm text-teal-400">refactor(service): região X — [descrição curta]</div>
+        <p class="text-sm text-neutral-400 mt-3">Exemplos reais:</p>
+        <ul class="space-y-1 text-sm text-neutral-300 mt-2 font-mono">
+          <li>refactor(service): região 1 — extrair validadores</li>
+          <li>refactor(service): região 2 — centralizar logger</li>
+          <li>refactor(service): região 3 — isolar repository</li>
+        </ul>
+        <p class="text-sm text-neutral-400 mt-3"><code class="text-teal-400">git bisect</code> entre commits assim resolve qualquer regressão em segundos.</p>
+      </div>
+
+      <!-- TRANSICAO -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 mb-6 flex items-center gap-4">
+        <span class="text-3xl">→</span>
+        <div><strong class="text-teal-400">Próximo passo:</strong><span class="text-neutral-400 text-sm"> após 2–3 regiões, aliviar o contexto com /compact.</span></div>
+      </div>
+    </section>
+
+    <!-- PASSO 5 -->
+    <section id="passo-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">🗜️ /compact entre regiões grandes</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> se após 2–3 regiões o contexto já está em <strong>40%+ da janela</strong> (confira com <code class="text-teal-400 bg-dark-700 px-1.5 py-0.5 rounded">/context</code>), comprima o histórico antes de atacar a próxima região. Qualidade das próximas saídas depende disso.
+      </p>
+
+      <!-- PROMPT PRONTO -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Prompt pronto para copiar</h3>
+          <span class="text-xs text-teal-400 font-mono">passo 5</span>
+        </div>
+        <div class="bg-dark-900 rounded-lg border-l-4 border-teal-500 p-5 font-mono text-sm text-teal-400 leading-relaxed overflow-x-auto">
+<pre>/compact mantenha foco em arquitetura e decisões,
+pode resumir tentativas</pre>
+        </div>
+      </div>
+
+      <!-- QUANDO USAR -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-4">Quando rodar /compact</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-emerald-900/20 rounded-lg p-4 border border-emerald-500/30">
+            <div class="text-2xl font-bold text-emerald-400 mb-1">&lt; 30%</div>
+            <div class="text-xs text-neutral-400">Contexto OK. Continue refatorando normalmente.</div>
+          </div>
+          <div class="bg-primary/10 rounded-lg p-4 border border-primary/40">
+            <div class="text-2xl font-bold text-primary mb-1">30–50%</div>
+            <div class="text-xs text-neutral-400">Zona de atenção. /compact se faltarem &gt;3 regiões.</div>
+          </div>
+          <div class="bg-red-900/20 rounded-lg p-4 border border-red-500/30">
+            <div class="text-2xl font-bold text-red-400 mb-1">&gt; 50%</div>
+            <div class="text-xs text-neutral-400">/compact obrigatório antes de seguir.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- O QUE ESPERAR -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📥</span>O que esperar da resposta</h3>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Resumo preservando o plano, decisões e regiões já feitas</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Descarte de iterações (tentativas, revisões de código, outputs de teste antigos)</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Contexto volta para ~10–15% da janela</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Próximas regiões saem com qualidade igual às primeiras</span></li>
+        </ul>
+      </div>
+
+      <!-- TRANSICAO -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-5 mb-6 flex items-center gap-4">
+        <span class="text-3xl">→</span>
+        <div><strong class="text-teal-400">Próximo passo:</strong><span class="text-neutral-400 text-sm"> ao terminar todas as regiões, commit final + handoff.</span></div>
+      </div>
+    </section>
+
+    <!-- PASSO 6 -->
+    <section id="passo-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">📦 Commit + handoff final</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <strong class="text-teal-400">Objetivo:</strong> fechar a sessão com dignidade. Handoff estruturado (mesmo template da Trilha 3) garante que amanhã qualquer pessoa (você ou um colega) possa continuar sem reconstruir contexto do zero.
+      </p>
+
+      <!-- PROMPT PRONTO -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Prompt pronto para copiar</h3>
+          <span class="text-xs text-teal-400 font-mono">passo 6</span>
+        </div>
+        <div class="bg-dark-900 rounded-lg border-l-4 border-teal-500 p-5 font-mono text-sm text-teal-400 leading-relaxed overflow-x-auto">
+<pre>Todas as regiões foram refatoradas.
+Produza um handoff estruturado com:
+- Objetivo original
+- O que foi feito (por região)
+- Decisões arquiteturais tomadas
+- O que ficou pendente (se houver)
+- Próximos passos sugeridos
+Depois posso limpar a sessão.</pre>
+        </div>
+      </div>
+
+      <!-- O QUE ESPERAR -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📥</span>O que esperar da resposta</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-xs text-neutral-300 mb-3 overflow-x-auto">
+<pre># Handoff — Refactor service.ts
+
+## Objetivo
+Dividir service.ts (2000 linhas) em módulos
+coesos, preservando comportamento.
+
+## Feito
+- Região 1: validadores → validators.ts
+- Região 2: logs → logger.ts
+- Região 3: queries → repository.ts
+- Região 4: billing → billing.service.ts
+
+## Decisões
+- Mantido nome original de service.ts
+  como fachada pública
+- Injeção via construtor em todas as
+  novas classes
+
+## Pendente
+- Nenhum
+
+## Próximos passos
+- Rodar cobertura de testes
+- Revisar logs em staging antes de prod</pre>
+        </div>
+      </div>
+
+      <!-- CHECKLIST FINAL -->
+      <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">🏁</span>Checklist antes de /clear</h3>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li class="flex items-start space-x-2"><span class="text-teal-400 mt-0.5">☐</span><span>Todos os commits estão verdes (<code class="text-teal-400 bg-dark-700 px-1.5 py-0.5 rounded">git log --oneline</code>)</span></li>
+          <li class="flex items-start space-x-2"><span class="text-teal-400 mt-0.5">☐</span><span>Handoff salvo como <code class="text-teal-400 bg-dark-700 px-1.5 py-0.5 rounded">docs/handoff-refactor-service.md</code></span></li>
+          <li class="flex items-start space-x-2"><span class="text-teal-400 mt-0.5">☐</span><span>Push para remoto (se PR aberto, link anexado)</span></li>
+          <li class="flex items-start space-x-2"><span class="text-teal-400 mt-0.5">☐</span><span><code class="text-teal-400 bg-dark-700 px-1.5 py-0.5 rounded">/clear</code> agora, não depois</span></li>
+        </ul>
+      </div>
+
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-teal-900/40 via-dark-800 to-dark-800 rounded-xl border border-teal-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">📋</span>Resumo do Módulo</h2>
+
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">Plan mode primeiro</strong><span class="text-neutral-400"> — entenda antes de mexer; output em lista, não prose</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">4–6 regiões ordenadas por risco</strong><span class="text-neutral-400"> — começar pelo fácil, deixar I/O para o fim</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">"Ao terminar, pare"</strong><span class="text-neutral-400"> — checkpoint obrigatório entre regiões</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">Testes + commit entre regiões</strong><span class="text-neutral-400"> — reversibilidade garantida</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">/compact aos 40%+</strong><span class="text-neutral-400"> — mantenha atenção do modelo em pico</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-teal-400 mt-1">✓</span><div><strong class="text-white">Handoff estruturado no fim</strong><span class="text-neutral-400"> — continuidade sem custo de reconstrução</span></div></div>
+        </div>
+
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-teal-400 mb-2">Próximo módulo:</h3>
+          <p class="text-neutral-300">5.2 — 🐛 Debug em Projeto Que Nunca Vi</p>
+          <p class="text-sm text-neutral-400 mt-1">Como investigar um bug num repo desconhecido usando subagentes e hipóteses ordenadas.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Voltar para Trilha</a>
+          <a href="modulo-5-2.html" class="flex-1 text-center px-6 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-500 transition-colors">Próximo: Debug →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>🧠 Mestre em Contexto e Tokens — INEMA.CLUB • 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) { darkIcon.classList.remove('hidden'); html.classList.remove('dark'); } else { lightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => { darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden'); html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+  </script>
+
+</body>
+</html>

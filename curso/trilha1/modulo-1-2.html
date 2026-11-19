@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.2 A Releitura a Cada Mensagem | Mestre em Contexto e Tokens</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .dark body { background-color: #111827; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #4b5563; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .hover\:text-emerald-400:hover { color: #059669; }
+
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-900\/20 { background-color: rgba(37, 99, 235, 0.06); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .text-red-400 { color: #dc2626; }
+    html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+    html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.25); }
+    html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+    html:not(.dark) .bg-emerald-900\/40 { background-color: rgba(5, 150, 105, 0.1); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.35); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧠</span>
+            <span class="font-bold text-lg hidden sm:inline">Contexto e Tokens</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Rotina</span></a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Handoff</span></a>
+          <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Avançado</span></a>
+          <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">Exemplos</span></a>
+          <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Expert</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-emerald-400">Início</a><span>/</span>
+      <a href="index.html" class="hover:text-emerald-400">Trilha 1</a><span>/</span>
+      <span class="text-emerald-400">Módulo 1.2</span>
+    </div>
+  </nav>
+
+  <header class="bg-gradient-to-br from-emerald-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-full mb-4">MÓDULO 1.2</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🔄 A Releitura a Cada Mensagem</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Por que o custo cresce em curva e não em linha reta. Como o prompt caching muda o jogo (economia de até 10×), e o que você precisa fazer para não quebrá-lo.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-emerald-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-emerald-400">35</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-emerald-400">Básico</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-emerald-400">Teoria</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- TOPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">🏗️ Transformers não têm memória</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Entre uma chamada e outra, o Claude <strong class="text-emerald-400">esquece tudo</strong>. Não existe estado persistente interno — cada requisição é autossuficiente. Para "continuar a conversa", a aplicação (Claude Code) envia <strong>todo o histórico de volta</strong>, toda vez.
+      </p>
+
+      <!-- Diagrama de requisições -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Como o Claude recebe 3 turnos consecutivos</h3>
+
+        <div class="space-y-4">
+          <!-- Turno 1 -->
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-emerald-400">TURNO 1</span>
+              <span class="text-xs text-neutral-500 font-mono">~5k tokens</span>
+            </div>
+            <div class="font-mono text-xs bg-dark-900 rounded p-3 text-neutral-300">
+              [system] + [CLAUDE.md] + <span class="text-emerald-400">[user_1]</span>
+            </div>
+          </div>
+
+          <!-- Turno 2 -->
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-amber-400">TURNO 2</span>
+              <span class="text-xs text-neutral-500 font-mono">~11k tokens (+6k)</span>
+            </div>
+            <div class="font-mono text-xs bg-dark-900 rounded p-3 text-neutral-300">
+              [system] + [CLAUDE.md] + [user_1] + <span class="text-amber-400">[assistant_1] + [user_2]</span>
+            </div>
+          </div>
+
+          <!-- Turno 3 -->
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-rose-400">TURNO 3</span>
+              <span class="text-xs text-neutral-500 font-mono">~18k tokens (+7k)</span>
+            </div>
+            <div class="font-mono text-xs bg-dark-900 rounded p-3 text-neutral-300">
+              [system] + [CLAUDE.md] + [user_1] + [assistant_1] + [user_2] + <span class="text-rose-400">[assistant_2] + [user_3]</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-sm text-neutral-400 mt-5">Cada turno processa <strong>tudo que veio antes</strong> mais o novo par user/assistant. Essa é a razão estrutural do crescimento do custo.</p>
+      </div>
+
+      <!-- Box conceito -->
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-3 flex items-center"><span class="mr-2">🧠</span>Implicação prática</h3>
+        <p class="text-neutral-300 leading-relaxed mb-3">
+          "Lembrar" para o Claude significa <strong class="text-emerald-400">anexar de volta no próximo turno</strong>. Pedir "lembre-se disso" sem que "isso" esteja visível é pedido vazio.
+        </p>
+        <p class="text-neutral-300 leading-relaxed">
+          É por isso que o <strong>CLAUDE.md</strong> funciona: ele é re-carregado automaticamente. É por isso que um <strong>handoff estruturado</strong> funciona: ele reanexa o essencial em nova sessão.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">📈 A curva de custo</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Se cada turno relê tudo que veio antes, o custo de input cresce como uma <strong class="text-emerald-400">soma progressiva</strong>. Isso produz uma curva que desarma muita gente.
+      </p>
+
+      <!-- Tabela cumulativa -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30">
+          <h3 class="font-semibold">Input acumulado por turno (sessão média, sem cache)</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-dark-700/50">
+              <tr class="text-left">
+                <th class="px-4 py-3 font-semibold text-neutral-400">Turno</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Enviado</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Acumulado</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Custo turno (Sonnet)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600">
+              <tr><td class="px-4 py-3 font-mono">1</td><td class="px-4 py-3 font-mono">5k</td><td class="px-4 py-3 font-mono">5k</td><td class="px-4 py-3 font-mono text-emerald-400">US$ 0,015</td></tr>
+              <tr><td class="px-4 py-3 font-mono">5</td><td class="px-4 py-3 font-mono">20k</td><td class="px-4 py-3 font-mono">60k</td><td class="px-4 py-3 font-mono text-emerald-400">US$ 0,060</td></tr>
+              <tr><td class="px-4 py-3 font-mono">10</td><td class="px-4 py-3 font-mono">40k</td><td class="px-4 py-3 font-mono">225k</td><td class="px-4 py-3 font-mono text-amber-400">US$ 0,120</td></tr>
+              <tr><td class="px-4 py-3 font-mono">20</td><td class="px-4 py-3 font-mono">80k</td><td class="px-4 py-3 font-mono">850k</td><td class="px-4 py-3 font-mono text-rose-400">US$ 0,240</td></tr>
+              <tr><td class="px-4 py-3 font-mono">30</td><td class="px-4 py-3 font-mono">130k</td><td class="px-4 py-3 font-mono">1,95M</td><td class="px-4 py-3 font-mono text-rose-400">US$ 0,390</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-neutral-500 p-4">Os últimos 10 turnos custam mais que os primeiros 20 somados.</p>
+      </div>
+
+      <!-- Box pesquisa -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">📊</span>Regra quadrática</h3>
+        <p class="text-neutral-300 text-sm mb-4">
+          O custo total de uma sessão é ~proporcional ao <strong>quadrado do número de turnos</strong>, não linear. Dobrar o tamanho da sessão quadruplica o custo.
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+          <div class="bg-dark-800/50 rounded-lg p-3">
+            <div class="text-xs text-neutral-400 mb-1">Sessão de 10 turnos</div>
+            <div class="text-xl font-bold text-emerald-400">~US$ 0,50</div>
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-3">
+            <div class="text-xs text-neutral-400 mb-1">Sessão de 20 turnos</div>
+            <div class="text-xl font-bold text-amber-400">~US$ 2,00</div>
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-3">
+            <div class="text-xs text-neutral-400 mb-1">Sessão de 40 turnos</div>
+            <div class="text-xl font-bold text-rose-400">~US$ 8,00</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span>Moral</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Duas sessões de 15 turnos custam <strong>menos da metade</strong> de uma de 30. Esta é a base matemática para a regra de ciclos curtos da Trilha 2.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">💾 Prompt caching — o alívio</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        A Anthropic sabe que a releitura é cara. A resposta oficial é o <strong class="text-emerald-400">prompt caching</strong>: quando partes do prompt se repetem, o servidor armazena o resultado do processamento e cobra apenas <strong>10% do preço</strong> ao reutilizar.
+      </p>
+
+      <!-- Comparação cache ON vs OFF -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">❌ Sem cache (preço cheio)</h4>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-neutral-400">50k tokens de base</span><span class="font-mono">US$ 0,15</span></div>
+            <div class="flex justify-between"><span class="text-neutral-400">× 20 turnos</span><span class="font-mono">—</span></div>
+            <div class="flex justify-between pt-3 border-t border-red-500/30"><span class="font-semibold">Total de input</span><span class="font-mono text-rose-400">US$ 3,00</span></div>
+          </div>
+        </div>
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✅ Com cache bem usado</h4>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-neutral-400">1ª escrita (1,25×)</span><span class="font-mono">US$ 0,19</span></div>
+            <div class="flex justify-between"><span class="text-neutral-400">19 reads (0,1×)</span><span class="font-mono">US$ 0,29</span></div>
+            <div class="flex justify-between pt-3 border-t border-emerald-500/30"><span class="font-semibold">Total de input</span><span class="font-mono text-emerald-400">US$ 0,48</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6 text-center">
+        <div class="text-sm text-primary font-semibold mb-1">Economia</div>
+        <div class="text-4xl font-bold text-primary">~6×</div>
+        <div class="text-sm text-neutral-400 mt-2">no mesmo exemplo de 20 turnos sobre 50k de base</div>
+      </div>
+
+      <!-- Tabela de preços cache -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30">
+          <h3 class="font-semibold">Preço do cache oficial (Anthropic)</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-dark-700/50">
+              <tr class="text-left">
+                <th class="px-4 py-3 font-semibold text-neutral-400">Operação</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">TTL 5 min</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">TTL 1h</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600">
+              <tr><td class="px-4 py-3">Escrever no cache</td><td class="px-4 py-3 font-mono text-amber-400">1,25× input</td><td class="px-4 py-3 font-mono text-amber-400">2,0× input</td></tr>
+              <tr><td class="px-4 py-3">Ler do cache</td><td class="px-4 py-3 font-mono text-emerald-400">0,1× input</td><td class="px-4 py-3 font-mono text-emerald-400">0,1× input</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-neutral-500 p-4">5 min é o padrão. 1h funciona sem beta header desde 2025.</p>
+      </div>
+
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">✅</span>Boa notícia: o Claude Code faz sozinho</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Você não precisa configurar nada manualmente. O Claude Code já aplica caching automaticamente no system prompt e histórico. Sua responsabilidade é <strong>não quebrar o cache</strong> — e é disso que falam os próximos tópicos.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">🎯 Como maximizar cache hits</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O cache funciona por <strong class="text-emerald-400">prefixo exato</strong>. Qualquer mudança no meio invalida tudo depois. A estratégia é simples: <strong>estático primeiro, dinâmico por último</strong>.
+      </p>
+
+      <!-- Estrutura correta -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-4">Estrutura de prompt que maximiza cache</h3>
+        <div class="space-y-2">
+          <div class="flex items-center gap-4 bg-emerald-500/10 border-l-4 border-emerald-500 rounded-r-lg p-3">
+            <span class="text-xl">🧱</span>
+            <div class="flex-1">
+              <div class="font-semibold text-emerald-400 text-sm">1. System prompt (muito estável)</div>
+              <div class="text-xs text-neutral-500">Raramente muda entre turnos</div>
+            </div>
+            <span class="text-[10px] text-emerald-400 font-mono">cache ✓</span>
+          </div>
+          <div class="flex items-center gap-4 bg-emerald-500/10 border-l-4 border-emerald-500 rounded-r-lg p-3">
+            <span class="text-xl">📘</span>
+            <div class="flex-1">
+              <div class="font-semibold text-emerald-400 text-sm">2. CLAUDE.md + skills estáveis</div>
+              <div class="text-xs text-neutral-500">Mudam entre sessões, não no meio</div>
+            </div>
+            <span class="text-[10px] text-emerald-400 font-mono">cache ✓</span>
+          </div>
+          <div class="flex items-center gap-4 bg-blue-500/10 border-l-4 border-blue-500 rounded-r-lg p-3">
+            <span class="text-xl">📄</span>
+            <div class="flex-1">
+              <div class="font-semibold text-blue-400 text-sm">3. Arquivos do projeto</div>
+              <div class="text-xs text-neutral-500">Estáveis enquanto não forem editados</div>
+            </div>
+            <span class="text-[10px] text-blue-400 font-mono">cache ~</span>
+          </div>
+          <div class="flex items-center gap-4 bg-amber-500/10 border-l-4 border-amber-500 rounded-r-lg p-3">
+            <span class="text-xl">💬</span>
+            <div class="flex-1">
+              <div class="font-semibold text-amber-400 text-sm">4. Histórico da conversa</div>
+              <div class="text-xs text-neutral-500">Cresce a cada turno</div>
+            </div>
+            <span class="text-[10px] text-amber-400 font-mono">parcial</span>
+          </div>
+          <div class="flex items-center gap-4 bg-rose-500/10 border-l-4 border-rose-500 rounded-r-lg p-3">
+            <span class="text-xl">✏️</span>
+            <div class="flex-1">
+              <div class="font-semibold text-rose-400 text-sm">5. Sua mensagem atual</div>
+              <div class="text-xs text-neutral-500">Sempre nova</div>
+            </div>
+            <span class="text-[10px] text-rose-400 font-mono">sem cache</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Hábitos que protegem o cache</h4>
+          <ul class="space-y-2.5 text-sm text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>CLAUDE.md curto e estável — edite entre sessões</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Anexar arquivos grandes uma vez, não repetidamente</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Manter MCPs fixos durante a sessão</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Skills fixas — não ativar/desativar no meio</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ Ações que quebram o cache</h4>
+          <ul class="space-y-2.5 text-sm text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Editar CLAUDE.md no meio da sessão</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Ativar/desativar MCPs em runtime</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Adicionar timestamp dinâmico no system</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Mudar a ordem de arquivos entre turnos</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">⚠️ O que quebra o cache</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Você pode estar pagando preço cheio sem saber. Estas são as armadilhas mais comuns — e o jeito de detectar cada uma.
+      </p>
+
+      <!-- Armadilhas timeline -->
+      <div class="space-y-4 mb-6">
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center"><span class="text-rose-400 font-bold">1</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-1">TTL expirou</h4>
+            <p class="text-sm text-neutral-400">Cache de 5min vence se você ficar muito tempo sem mandar mensagem. Próxima chamada re-escreve tudo.</p>
+            <p class="text-xs text-emerald-400 mt-2">→ Se vai pausar bastante, usar TTL de 1h pode compensar.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center"><span class="text-rose-400 font-bold">2</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-1">Edição no prefixo</h4>
+            <p class="text-sm text-neutral-400">Mexeu no CLAUDE.md, trocou MCP ativo, editou um arquivo já lido. Cache a partir daquele ponto é invalidado.</p>
+            <p class="text-xs text-emerald-400 mt-2">→ Planeje edições de configuração entre sessões, não dentro.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center"><span class="text-rose-400 font-bold">3</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-1">Conteúdo dinâmico no topo</h4>
+            <p class="text-sm text-neutral-400">Data/hora atual, IDs gerados, qualquer coisa que muda a cada chamada. Se estiver no prefixo, mata o cache.</p>
+            <p class="text-xs text-emerald-400 mt-2">→ Conteúdo dinâmico sempre no final do prompt.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center"><span class="text-rose-400 font-bold">4</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-white mb-1">Mudança de modelo</h4>
+            <p class="text-sm text-neutral-400">Cache é por modelo. Trocar de Sonnet para Opus re-escreve tudo.</p>
+            <p class="text-xs text-emerald-400 mt-2">→ Escolha o modelo antes de abrir a sessão e mantenha.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">🧮 Exemplo de cálculo real</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Um projeto real: refatoração de um módulo de 1500 linhas. 25 turnos de conversa. Contexto médio de 60k tokens (CLAUDE.md + arquivos + histórico). Vamos ver a conta de 3 formas.
+      </p>
+
+      <!-- Cenários -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+        <!-- Cenário A -->
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-5">
+          <div class="text-xs font-semibold text-red-400 uppercase tracking-wider mb-2">Cenário A</div>
+          <div class="text-lg font-bold mb-3">Sem cache</div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-neutral-400">Input total</span><span class="font-mono">1,5M</span></div>
+            <div class="flex justify-between"><span class="text-neutral-400">Output total</span><span class="font-mono">~50k</span></div>
+            <div class="flex justify-between pt-2 border-t border-red-500/30"><span class="font-semibold">Custo</span><span class="font-mono text-rose-400">US$ 5,25</span></div>
+          </div>
+        </div>
+
+        <!-- Cenário B -->
+        <div class="bg-amber-900/20 rounded-xl border border-amber-500/30 p-5">
+          <div class="text-xs font-semibold text-amber-400 uppercase tracking-wider mb-2">Cenário B</div>
+          <div class="text-lg font-bold mb-3">Cache automático</div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-neutral-400">Write (base)</span><span class="font-mono">60k × 1,25</span></div>
+            <div class="flex justify-between"><span class="text-neutral-400">Reads</span><span class="font-mono">24 × 0,1</span></div>
+            <div class="flex justify-between"><span class="text-neutral-400">Output</span><span class="font-mono">~50k</span></div>
+            <div class="flex justify-between pt-2 border-t border-amber-500/30"><span class="font-semibold">Custo</span><span class="font-mono text-amber-400">US$ 1,80</span></div>
+          </div>
+        </div>
+
+        <!-- Cenário C -->
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-5">
+          <div class="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-2">Cenário C</div>
+          <div class="text-lg font-bold mb-3">Ciclos curtos + cache</div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-neutral-400">2 sessões de 12</span><span class="font-mono">2× write</span></div>
+            <div class="flex justify-between"><span class="text-neutral-400">Context menor</span><span class="font-mono">~35k</span></div>
+            <div class="flex justify-between"><span class="text-neutral-400">Output</span><span class="font-mono">~50k</span></div>
+            <div class="flex justify-between pt-2 border-t border-emerald-500/30"><span class="font-semibold">Custo</span><span class="font-mono text-emerald-400">US$ 0,85</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6 text-center">
+        <div class="text-sm text-emerald-400 font-semibold mb-1">Economia A → C</div>
+        <div class="text-5xl font-bold text-emerald-400 mb-2">~6×</div>
+        <p class="text-neutral-300 text-sm">Mesmo trabalho. Mesma qualidade. 1/6 do custo.</p>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">🎯</span>O que fez a diferença</h3>
+        <ul class="space-y-2 text-sm text-neutral-300">
+          <li class="flex items-start space-x-2"><span class="text-primary">→</span><span>Cache automático do Claude Code (A → B): <strong>3×</strong></span></li>
+          <li class="flex items-start space-x-2"><span class="text-primary">→</span><span>Dividir em 2 sessões curtas reduz input médio (B → C): <strong>2×</strong></span></li>
+          <li class="flex items-start space-x-2"><span class="text-primary">→</span><span>Combinação: <strong>6×</strong> — e é o mesmo trabalho</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-emerald-900/40 via-dark-800 to-dark-800 rounded-xl border border-emerald-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">📋</span>Resumo do Módulo</h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-emerald-400 mt-1">✓</span><div><strong class="text-white">Transformers não têm memória</strong><span class="text-neutral-400"> — cada turno reenvia tudo</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-emerald-400 mt-1">✓</span><div><strong class="text-white">Custo é quadrático</strong><span class="text-neutral-400"> — 2× turnos ≈ 4× custo</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-emerald-400 mt-1">✓</span><div><strong class="text-white">Cache cobra 0,1×</strong><span class="text-neutral-400"> — economia de até 10×</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-emerald-400 mt-1">✓</span><div><strong class="text-white">Estável antes, dinâmico depois</strong><span class="text-neutral-400"> — a regra de ordenação</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-emerald-400 mt-1">✓</span><div><strong class="text-white">Editar em runtime quebra cache</strong><span class="text-neutral-400"> — configure antes de abrir sessão</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-emerald-400 mt-1">✓</span><div><strong class="text-white">6× de economia é real</strong><span class="text-neutral-400"> — no exemplo concreto, com hábitos certos</span></div></div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-emerald-400 mb-2">Próximo módulo:</h3>
+          <p class="text-neutral-300">1.3 — 🍂 Context Rot: O Apodrecimento</p>
+          <p class="text-sm text-neutral-400 mt-1">Por que a qualidade cai antes mesmo do limite de tokens.</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-1-1.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Módulo Anterior</a>
+          <a href="modulo-1-3.html" class="flex-1 text-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition-colors">Próximo: Context Rot →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>🧠 Mestre em Contexto e Tokens — INEMA.CLUB • 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) { darkIcon.classList.remove('hidden'); html.classList.remove('dark'); } else { lightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => { darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden'); html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+  </script>
+</body>
+</html>

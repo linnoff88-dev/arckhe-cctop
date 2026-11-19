@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.3 /clear, /rewind, /compact — Reset Cedo | Mestre em Contexto e Tokens</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .dark body { background-color: #111827; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #4b5563; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .bg-blue-900\/20 { background-color: rgba(37, 99, 235, 0.06); }
+    html:not(.dark) .bg-blue-900\/30 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .hover\:text-blue-400:hover { color: #2563eb; }
+
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+    html:not(.dark) .bg-emerald-900\/40 { background-color: rgba(5, 150, 105, 0.1); }
+    html:not(.dark) .text-red-400 { color: #dc2626; }
+    html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+    html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.25); }
+    html:not(.dark) .text-amber-400 { color: #b45309; }
+    html:not(.dark) .bg-amber-500\/20 { background-color: rgba(180, 83, 9, 0.12); }
+    html:not(.dark) .border-amber-500\/30 { border-color: rgba(180, 83, 9, 0.25); }
+    html:not(.dark) .bg-amber-900\/20 { background-color: rgba(180, 83, 9, 0.06); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.35); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧠</span>
+            <span class="font-bold text-lg hidden sm:inline">Contexto e Tokens</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-blue-400 bg-blue-500/10"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Rotina</span></a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Handoff</span></a>
+          <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Avançado</span></a>
+          <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">Exemplos</span></a>
+          <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Expert</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-blue-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-blue-400">Trilha 2</a>
+      <span>/</span>
+      <span class="text-blue-400">Módulo 2.3</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-blue-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full mb-4">MÓDULO 2.3</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🧹 /clear, /rewind, /compact — Reset Cedo</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Três comandos oficiais, três momentos diferentes. Use o menos drástico que resolva. E resete <strong>cedo</strong> — antes do contexto apodrecer.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">35</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">Básico</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">Prática</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- TOPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">🆑 <code>/clear</code> — começar do zero</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Comando oficial do Claude Code que zera a sessão atual e abre uma <strong class="text-blue-400">nova, vazia</strong>. É o mais drástico dos três — e também o mais econômico. Zera input acumulado, revive cache do zero, corta context rot pela raiz.
+      </p>
+
+      <!-- Card principal -->
+      <div class="bg-gradient-to-r from-rose-900/30 to-dark-800 rounded-xl border border-red-500/30 p-6 mb-6">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-16 h-16 rounded-xl bg-red-500/20 flex items-center justify-center">
+            <code class="text-red-400 font-bold text-sm">/clear</code>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-lg font-bold text-red-400 mb-2">Reset total da sessão</h3>
+            <p class="text-sm text-neutral-300 mb-3">Começa sessão vazia. CLAUDE.md é re-injetado automaticamente. Arquivos no disco permanecem inalterados.</p>
+            <div class="flex flex-wrap gap-2">
+              <span class="text-xs px-2 py-1 bg-red-500/20 text-red-400 rounded">alias: /reset</span>
+              <span class="text-xs px-2 py-1 bg-red-500/20 text-red-400 rounded">alias: /new</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- O que acontece -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">O que <code class="text-blue-400">/clear</code> faz</h3>
+        <div class="space-y-3">
+          <div class="flex items-center gap-4 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-xl">🗑️</span>
+            <div class="text-sm"><strong class="text-red-400">Apaga</strong><span class="text-neutral-400"> histórico da conversa atual</span></div>
+          </div>
+          <div class="flex items-center gap-4 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-xl">🗑️</span>
+            <div class="text-sm"><strong class="text-red-400">Apaga</strong><span class="text-neutral-400"> arquivos lidos cacheados em sessão</span></div>
+          </div>
+          <div class="flex items-center gap-4 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-xl">♻️</span>
+            <div class="text-sm"><strong class="text-emerald-400">Recarrega</strong><span class="text-neutral-400"> CLAUDE.md (automaticamente)</span></div>
+          </div>
+          <div class="flex items-center gap-4 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-xl">💾</span>
+            <div class="text-sm"><strong class="text-emerald-400">Preserva</strong><span class="text-neutral-400"> arquivos no disco e a sessão anterior em <code class="text-emerald-400">/resume</code></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resume -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">🔍</span>A sessão não é perdida: <code class="ml-2 text-blue-400">/resume</code></h3>
+        <p class="text-neutral-300 text-sm leading-relaxed mb-3">
+          <code class="text-blue-400">/clear</code> <strong>não</strong> deleta a sessão anterior. Ela fica acessível via <code class="text-blue-400">/resume</code>, onde você vê a lista e pode reentrar se precisar.
+        </p>
+        <div class="bg-dark-900 rounded-lg p-3 font-mono text-xs text-neutral-300">
+          <div class="text-blue-400">/resume</div>
+          <div class="text-neutral-500">→ lista sessões anteriores por data</div>
+          <div class="text-neutral-500">→ selecione e retome de onde parou</div>
+        </div>
+      </div>
+
+      <!-- Quando usar -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">🎯</span>Quando <code class="ml-2 text-primary">/clear</code> é a resposta</h3>
+        <ul class="space-y-2 text-sm text-neutral-300">
+          <li class="flex items-start gap-2"><span class="text-primary">→</span><span>Contexto "infectado" — muitas idas e vindas, correções em cascata</span></li>
+          <li class="flex items-start gap-2"><span class="text-primary">→</span><span>Terminou uma feature, vai começar outra</span></li>
+          <li class="flex items-start gap-2"><span class="text-primary">→</span><span>Sessão já passou dos ~40 turnos</span></li>
+          <li class="flex items-start gap-2"><span class="text-primary">→</span><span>Detectou qualquer sintoma de context rot</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- TOPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">⏪ <code>/rewind</code> — volta conversa E arquivos</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <code class="text-blue-400">/rewind</code> é o "undo" <strong class="text-blue-400">real</strong> do Claude Code. Diferente do git, ele volta tanto a conversa quanto os arquivos editados. É cirúrgico: volta o necessário, mantém o resto.
+      </p>
+
+      <!-- Card principal -->
+      <div class="bg-gradient-to-r from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-16 h-16 rounded-xl bg-amber-500/20 flex items-center justify-center">
+            <code class="text-amber-400 font-bold text-sm">/rewind</code>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-lg font-bold text-amber-400 mb-2">Undo combinado: conversa + arquivos</h3>
+            <p class="text-sm text-neutral-300 mb-3">Retorna para um ponto anterior da sessão, revertendo também as mudanças feitas nos arquivos. Perfeito para "uma tentativa deu ruim, quero o estado de antes".</p>
+            <div class="flex flex-wrap gap-2">
+              <span class="text-xs px-2 py-1 bg-amber-500/20 text-amber-400 rounded">alias: /checkpoint</span>
+              <span class="text-xs px-2 py-1 bg-amber-500/20 text-amber-400 rounded">alias: /undo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- rewind vs git -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30">
+          <h3 class="font-semibold">Comparação: <code class="text-amber-400">/rewind</code> vs <code class="text-emerald-400">git reset</code></h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-dark-700/50">
+              <tr class="text-left">
+                <th class="px-4 py-3 font-semibold text-neutral-400">Aspecto</th>
+                <th class="px-4 py-3 font-semibold text-amber-400"><code>/rewind</code></th>
+                <th class="px-4 py-3 font-semibold text-emerald-400"><code>git reset</code></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600">
+              <tr><td class="px-4 py-3 font-semibold">Volta arquivos</td><td class="px-4 py-3 text-emerald-400">✓</td><td class="px-4 py-3 text-emerald-400">✓</td></tr>
+              <tr><td class="px-4 py-3 font-semibold">Volta conversa</td><td class="px-4 py-3 text-emerald-400">✓</td><td class="px-4 py-3 text-red-400">✗</td></tr>
+              <tr><td class="px-4 py-3 font-semibold">Precisa de commits</td><td class="px-4 py-3 text-emerald-400">não</td><td class="px-4 py-3 text-red-400">sim</td></tr>
+              <tr><td class="px-4 py-3 font-semibold">Granularidade</td><td class="px-4 py-3 text-neutral-400">por turno</td><td class="px-4 py-3 text-neutral-400">por commit</td></tr>
+              <tr><td class="px-4 py-3 font-semibold">Escopo</td><td class="px-4 py-3 text-neutral-400">sessão Claude</td><td class="px-4 py-3 text-neutral-400">repo</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Exemplo -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Exemplo de uso</h3>
+        <div class="space-y-3 font-mono text-sm">
+          <div class="bg-dark-900 rounded-lg p-3 border-l-2 border-emerald-500">
+            <div class="text-xs text-emerald-400 mb-1">turno 8</div>
+            <div class="text-neutral-300">você: "passo 2 concluído, segue para 3"</div>
+          </div>
+          <div class="bg-dark-900 rounded-lg p-3 border-l-2 border-amber-500">
+            <div class="text-xs text-amber-400 mb-1">turnos 9-12</div>
+            <div class="text-neutral-400">tentativa do passo 3 — deu ruim, solução tortuosa</div>
+          </div>
+          <div class="bg-dark-900 rounded-lg p-3 border-l-2 border-blue-500">
+            <div class="text-xs text-blue-400 mb-1">turno 13</div>
+            <div class="text-neutral-300">você: "<code class="text-blue-400">/rewind</code>" → volta para o estado após turno 8</div>
+          </div>
+          <div class="bg-dark-900 rounded-lg p-3 border-l-2 border-emerald-500">
+            <div class="text-xs text-emerald-400 mb-1">turno 14</div>
+            <div class="text-neutral-300">você: "vamos tentar o passo 3 de outro jeito — use abordagem X"</div>
+          </div>
+        </div>
+        <p class="text-xs text-neutral-500 mt-4">Passos 1 e 2 preservados. Apenas a tentativa ruim foi descartada.</p>
+      </div>
+
+      <!-- Quando usar -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">🎯</span>Quando <code class="ml-2 text-primary">/rewind</code> é a resposta</h3>
+        <ul class="space-y-2 text-sm text-neutral-300">
+          <li class="flex items-start gap-2"><span class="text-primary">→</span><span>Erro pontual numa sessão que no geral está boa</span></li>
+          <li class="flex items-start gap-2"><span class="text-primary">→</span><span>Claude tomou um caminho errado, quer voltar e reexplicar</span></li>
+          <li class="flex items-start gap-2"><span class="text-primary">→</span><span>Edit errado que contaminou arquivos</span></li>
+          <li class="flex items-start gap-2"><span class="text-primary">→</span><span>Quer experimentar abordagem B sem perder o que veio antes</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- TOPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">🗜️ <code>/compact [instruções]</code></h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        <code class="text-blue-400">/compact</code> é o <strong class="text-blue-400">meio-termo</strong>: mantém a sessão viva, mas condensa o histórico em um resumo estruturado. Útil quando o trabalho está bom, o rumo está certo, mas o contexto ficou grande.
+      </p>
+
+      <!-- Card principal -->
+      <div class="bg-gradient-to-r from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-16 h-16 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+            <code class="text-emerald-400 font-bold text-[10px]">/compact</code>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-lg font-bold text-emerald-400 mb-2">Resume mantendo sessão</h3>
+            <p class="text-sm text-neutral-300 mb-3">Condensa o histórico em síntese, libera espaço, preserva continuidade. Aceita instruções opcionais para focar o resumo.</p>
+            <div class="bg-dark-900 rounded-lg p-3 font-mono text-xs text-emerald-400">
+              /compact [foco opcional]
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exemplos -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Exemplos de uso (com foco)</h3>
+        <div class="space-y-3">
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <div class="font-mono text-xs text-emerald-400 mb-2">/compact</div>
+            <p class="text-xs text-neutral-400">Compactação genérica — Claude resume o que achar mais relevante.</p>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <div class="font-mono text-xs text-emerald-400 mb-2">/compact foco em decisões de arquitetura</div>
+            <p class="text-xs text-neutral-400">Preserva as escolhas técnicas principais, corta explicações paralelas.</p>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <div class="font-mono text-xs text-emerald-400 mb-2">/compact manter apenas o estado atual dos arquivos editados</div>
+            <p class="text-xs text-neutral-400">Síntese mínima — útil quando quer baixar o máximo de tokens.</p>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <div class="font-mono text-xs text-emerald-400 mb-2">/compact incluir todos os erros que apareceram e como foram resolvidos</div>
+            <p class="text-xs text-neutral-400">Preserva lições — útil antes de tarefas similares na mesma sessão.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Antes vs depois -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-amber-900/20 rounded-xl border border-amber-500/30 p-6">
+          <h4 class="font-bold text-amber-400 mb-3">Antes do compact</h4>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-neutral-400">Histórico</span><span class="font-mono text-amber-400">~80k tokens</span></div>
+            <div class="flex justify-between"><span class="text-neutral-400">30 turnos</span><span class="font-mono text-amber-400">saturando</span></div>
+            <div class="flex justify-between pt-2 border-t border-amber-500/30"><span class="font-semibold">Status</span><span class="text-amber-400">lento, caro</span></div>
+          </div>
+        </div>
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-3">Depois do compact</h4>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-neutral-400">Resumo</span><span class="font-mono text-emerald-400">~8k tokens</span></div>
+            <div class="flex justify-between"><span class="text-neutral-400">Contexto</span><span class="font-mono text-emerald-400">continua</span></div>
+            <div class="flex justify-between pt-2 border-t border-emerald-500/30"><span class="font-semibold">Status</span><span class="text-emerald-400">rápido, barato</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- compact vs clear -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">🔁</span><code class="mx-2 text-blue-400">/compact</code> não é <code class="mx-2 text-blue-400">/clear</code></h3>
+        <p class="text-neutral-300 text-sm leading-relaxed mb-3">
+          Compact mantém a sessão ativa e a memória do que foi discutido (em forma resumida). Clear começa zero. Use compact quando quer continuidade; clear quando quer ruptura.
+        </p>
+      </div>
+
+      <!-- Quando usar -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">🎯</span>Quando <code class="ml-2 text-primary">/compact</code> é a resposta</h3>
+        <ul class="space-y-2 text-sm text-neutral-300">
+          <li class="flex items-start gap-2"><span class="text-primary">→</span><span>Sessão longa mas produtiva — quer continuar, não recomeçar</span></li>
+          <li class="flex items-start gap-2"><span class="text-primary">→</span><span>Trabalho exploratório com muitas idas e vindas</span></li>
+          <li class="flex items-start gap-2"><span class="text-primary">→</span><span>Passou de 20–30 turnos e quer seguir sem reset</span></li>
+          <li class="flex items-start gap-2"><span class="text-primary">→</span><span>Vai fazer uma pausa e não quer perder rumo</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- TOPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">🕐 Fluxograma: quando cada um</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Três perguntas em sequência. Decisão em menos de 5 segundos. Sem dúvida de qual comando usar.
+      </p>
+
+      <!-- Fluxograma visual -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-6 text-center">Árvore de decisão</h3>
+
+        <div class="space-y-4">
+          <!-- Pergunta 1 -->
+          <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 text-center">
+            <div class="text-xs text-blue-400 font-semibold mb-1">PERGUNTA 1</div>
+            <div class="text-sm text-neutral-100 font-semibold">A última tentativa deu errado e o resto da sessão está ok?</div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-gradient-to-r from-amber-900/30 to-dark-800 rounded-lg border border-amber-500/30 p-4">
+              <div class="text-xs text-amber-400 font-mono mb-1">SIM →</div>
+              <div class="font-bold text-amber-400 text-lg mb-1"><code>/rewind</code></div>
+              <p class="text-xs text-neutral-400">Volta ao último estado bom, tenta de outro jeito.</p>
+            </div>
+            <div class="bg-dark-700/50 rounded-lg border border-dark-600 p-4">
+              <div class="text-xs text-neutral-500 font-mono mb-1">NÃO →</div>
+              <p class="text-xs text-neutral-400">Continue para pergunta 2 ↓</p>
+            </div>
+          </div>
+
+          <!-- Pergunta 2 -->
+          <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 text-center">
+            <div class="text-xs text-blue-400 font-semibold mb-1">PERGUNTA 2</div>
+            <div class="text-sm text-neutral-100 font-semibold">A sessão está longa, mas o trabalho e o rumo estão bons?</div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-gradient-to-r from-emerald-900/30 to-dark-800 rounded-lg border border-emerald-500/30 p-4">
+              <div class="text-xs text-emerald-400 font-mono mb-1">SIM →</div>
+              <div class="font-bold text-emerald-400 text-lg mb-1"><code>/compact</code></div>
+              <p class="text-xs text-neutral-400">Resume, libera espaço, continua.</p>
+            </div>
+            <div class="bg-dark-700/50 rounded-lg border border-dark-600 p-4">
+              <div class="text-xs text-neutral-500 font-mono mb-1">NÃO →</div>
+              <p class="text-xs text-neutral-400">Continue para pergunta 3 ↓</p>
+            </div>
+          </div>
+
+          <!-- Pergunta 3 -->
+          <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 text-center">
+            <div class="text-xs text-blue-400 font-semibold mb-1">PERGUNTA 3</div>
+            <div class="text-sm text-neutral-100 font-semibold">Contexto confuso, context rot, ou vai começar algo novo?</div>
+          </div>
+
+          <div class="bg-gradient-to-r from-rose-900/30 to-dark-800 rounded-lg border border-red-500/30 p-4 text-center">
+            <div class="text-xs text-red-400 font-mono mb-1">SIM →</div>
+            <div class="font-bold text-red-400 text-lg mb-1"><code>/clear</code> + handoff</div>
+            <p class="text-xs text-neutral-400">Reset total. Comece limpo (Trilha 3 ensina o handoff).</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabela resumo -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30">
+          <h3 class="font-semibold">Cheat sheet — um olhar, uma decisão</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-dark-700/50">
+              <tr class="text-left">
+                <th class="px-4 py-3 font-semibold text-neutral-400">Situação</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Comando</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Drasticidade</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600">
+              <tr><td class="px-4 py-3">Último edit estragou tudo</td><td class="px-4 py-3 font-mono text-amber-400">/rewind</td><td class="px-4 py-3 text-amber-400">baixa</td></tr>
+              <tr><td class="px-4 py-3">Sessão longa, rumo bom</td><td class="px-4 py-3 font-mono text-emerald-400">/compact</td><td class="px-4 py-3 text-emerald-400">média</td></tr>
+              <tr><td class="px-4 py-3">Quer pausa com resumo</td><td class="px-4 py-3 font-mono text-emerald-400">/compact</td><td class="px-4 py-3 text-emerald-400">média</td></tr>
+              <tr><td class="px-4 py-3">Context rot visível</td><td class="px-4 py-3 font-mono text-red-400">/clear</td><td class="px-4 py-3 text-red-400">alta</td></tr>
+              <tr><td class="px-4 py-3">Terminou uma feature</td><td class="px-4 py-3 font-mono text-red-400">/clear</td><td class="px-4 py-3 text-red-400">alta</td></tr>
+              <tr><td class="px-4 py-3">Tudo bem, mas passou dos 30 turnos</td><td class="px-4 py-3 font-mono text-emerald-400">/compact</td><td class="px-4 py-3 text-emerald-400">média</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Regra -->
+      <div class="bg-gradient-to-br from-primary/10 via-dark-800 to-dark-800 rounded-xl border border-primary/40 p-8 text-center mb-6">
+        <div class="text-sm font-semibold text-primary uppercase tracking-wider mb-3">Regra única</div>
+        <p class="text-2xl sm:text-3xl font-bold leading-tight mb-3">
+          Use o <span class="text-primary">menos drástico</span> que resolva.
+        </p>
+        <p class="text-neutral-400 text-sm">Rewind &lt; Compact &lt; Clear. Comece pelo mais leve.</p>
+      </div>
+    </section>
+
+    <!-- TOPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">📏 Regra dos 20–30 turns</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Não espere desastre. A cada <strong class="text-blue-400">20–30 turns</strong>, considere um reset preventivo — mesmo que nada pareça errado. É a faixa onde context rot começa a aparecer silenciosamente.
+      </p>
+
+      <!-- Zona de turns -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Zonas de saúde da sessão (em turns)</h3>
+        <div class="space-y-3">
+          <div class="flex items-center gap-4 bg-emerald-500/10 rounded-lg p-4 border-l-4 border-emerald-500">
+            <div class="font-mono text-2xl font-bold text-emerald-400 w-24 text-center">0–15</div>
+            <div class="flex-1">
+              <div class="font-semibold text-emerald-400 text-sm">Zona verde</div>
+              <div class="text-xs text-neutral-400">Sessão fresca. Cache funcionando bem. Qualidade no pico.</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 bg-blue-500/10 rounded-lg p-4 border-l-4 border-blue-500">
+            <div class="font-mono text-2xl font-bold text-blue-400 w-24 text-center">15–25</div>
+            <div class="flex-1">
+              <div class="font-semibold text-blue-400 text-sm">Zona azul — atenção</div>
+              <div class="text-xs text-neutral-400">Ainda ok, mas monitore. Considere <code class="text-blue-400">/compact</code> se vai pausar.</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 bg-amber-500/10 rounded-lg p-4 border-l-4 border-amber-500">
+            <div class="font-mono text-2xl font-bold text-amber-400 w-24 text-center">25–35</div>
+            <div class="flex-1">
+              <div class="font-semibold text-amber-400 text-sm">Zona amarela — aja</div>
+              <div class="text-xs text-neutral-400"><code class="text-amber-400">/compact</code> preventivo recomendado. Rot silencioso pode aparecer.</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 bg-red-500/10 rounded-lg p-4 border-l-4 border-red-500">
+            <div class="font-mono text-2xl font-bold text-red-400 w-24 text-center">35+</div>
+            <div class="flex-1">
+              <div class="font-semibold text-red-400 text-sm">Zona vermelha — reset</div>
+              <div class="text-xs text-neutral-400">Qualquer decisão exceto reset é desperdício. <code class="text-red-400">/clear</code> + handoff.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparação preventivo vs reativo -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-3">✓ Reset preventivo (turno ~25)</h4>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-neutral-400">Custo do compact</span><span class="font-mono">~US$ 0,08</span></div>
+            <div class="flex justify-between"><span class="text-neutral-400">Qualidade após</span><span class="text-emerald-400">alta</span></div>
+            <div class="flex justify-between"><span class="text-neutral-400">Retrabalho evitado</span><span class="text-emerald-400">~0</span></div>
+          </div>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-3">✗ Reset tardio (turno 50+)</h4>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-neutral-400">Tokens desperdiçados</span><span class="font-mono">~300k</span></div>
+            <div class="flex justify-between"><span class="text-neutral-400">Qualidade antes</span><span class="text-red-400">baixa</span></div>
+            <div class="flex justify-between"><span class="text-neutral-400">Retrabalho acumulado</span><span class="text-red-400">alto</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dica -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">⏰</span>Ritual: "a cada 25, reflita"</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Quando perceber que a sessão passou de 25 turns (rápido de contar olhando a UI), pergunte a si mesmo: <em>"o rumo está bom? o contexto está limpo?"</em>. Se sim, <code class="text-primary">/compact</code>. Se não, <code class="text-primary">/clear</code>. Quase nunca "continuar como está".
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">🔁 Não empurrar quando der errado</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Quando uma tentativa dá ruim, a reação natural é "tenta de novo". É <strong class="text-red-400">a pior coisa</strong> que você pode fazer. Empurrar adiciona ruído ao contexto sem resolver a causa. Reorganize em vez de insistir.
+      </p>
+
+      <!-- Padrão errado -->
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">✗</span>Padrão errado — "força bruta contextual"</h3>
+        <div class="space-y-3 font-mono text-sm">
+          <div class="bg-dark-800/50 rounded-lg p-3 border-l-2 border-red-500">
+            <div class="text-xs text-red-400 mb-1">turno N</div>
+            <div class="text-neutral-300">claude: [solução errada]</div>
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-3 border-l-2 border-red-500">
+            <div class="text-xs text-red-400 mb-1">turno N+1</div>
+            <div class="text-neutral-300">você: "não é isso, tenta de novo"</div>
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-3 border-l-2 border-red-500">
+            <div class="text-xs text-red-400 mb-1">turno N+2</div>
+            <div class="text-neutral-300">claude: [outra solução errada, variação da primeira]</div>
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-3 border-l-2 border-red-500">
+            <div class="text-xs text-red-400 mb-1">turno N+3</div>
+            <div class="text-neutral-300">você: "ainda não, tá próximo mas..."</div>
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-3 border-l-2 border-red-500">
+            <div class="text-xs text-red-400 mb-1">...</div>
+            <div class="text-neutral-400">ciclo continua, contexto satura, qualidade despenca</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Padrão correto -->
+      <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center"><span class="mr-2">✓</span>Padrão correto — reorganize</h3>
+        <p class="text-sm text-neutral-300 mb-4">Escolha <strong>um</strong> dos três caminhos, dependendo do diagnóstico:</p>
+        <div class="space-y-3">
+          <div class="bg-dark-800/50 rounded-lg p-4 border-l-4 border-amber-500">
+            <div class="flex items-center gap-2 mb-1"><code class="text-amber-400 text-sm">/rewind</code><span class="font-semibold text-amber-400 text-sm">→ Volte antes do erro</span></div>
+            <p class="text-xs text-neutral-400">Se a tentativa foi recente, volte ao ponto bom e tente outro caminho.</p>
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-4 border-l-4 border-blue-500">
+            <div class="flex items-center gap-2 mb-1"><span class="text-blue-400 text-sm font-semibold">💬</span><span class="font-semibold text-blue-400 text-sm">→ Reexplique com mais contexto</span></div>
+            <p class="text-xs text-neutral-400">Se foi mal-entendido, forneça restrições explícitas antes de pedir de novo. <em>"não é bcrypt, é argon2, e o salt vem do env"</em>.</p>
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-4 border-l-4 border-red-500">
+            <div class="flex items-center gap-2 mb-1"><code class="text-red-400 text-sm">/clear</code><span class="font-semibold text-red-400 text-sm">→ Reset + handoff</span></div>
+            <p class="text-xs text-neutral-400">Se o contexto virou caos, recomece. Handoff estruturado preserva o essencial (Trilha 3).</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analogia -->
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">🧠</span>Analogia</h3>
+        <p class="text-neutral-300 leading-relaxed mb-3">
+          "Tenta de novo" para o Claude é como dizer <strong class="text-blue-400">"pensa de novo"</strong> para um humano exausto. Ele não vai pensar melhor — vai pensar na mesma coisa, só mais cansado.
+        </p>
+        <p class="text-neutral-300 leading-relaxed">
+          Reset = descansar e recomeçar com cabeça fresca. <code class="text-blue-400">/rewind</code> = voltar ao ponto onde ainda estava bem. Reexplicar = dar mais luz. Qualquer um &gt; insistir.
+        </p>
+      </div>
+
+      <!-- Sinais -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-4">Gatilhos: pare de empurrar quando...</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div class="flex items-start gap-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-xl">🔁</span>
+            <div class="text-sm text-neutral-300">Você disse "não é isso" 2+ vezes seguidas</div>
+          </div>
+          <div class="flex items-start gap-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-xl">😤</span>
+            <div class="text-sm text-neutral-300">Sua frustração está crescendo</div>
+          </div>
+          <div class="flex items-start gap-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-xl">🌀</span>
+            <div class="text-sm text-neutral-300">Claude está dando variações da mesma coisa</div>
+          </div>
+          <div class="flex items-start gap-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="text-xl">📏</span>
+            <div class="text-sm text-neutral-300">Os turnos estão crescendo sem progresso</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Regra de ouro final -->
+      <div class="bg-gradient-to-br from-primary/10 via-dark-800 to-dark-800 rounded-xl border border-primary/40 p-8 text-center mb-6">
+        <div class="text-sm font-semibold text-primary uppercase tracking-wider mb-3">Regra de ouro</div>
+        <p class="text-2xl sm:text-3xl font-bold leading-tight mb-3">
+          Quando der errado, <span class="text-primary">reorganize</span>. Nunca empurre.
+        </p>
+        <p class="text-neutral-400 text-sm">Reset/rewind custa pouco. Empurrar custa muito mais.</p>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-blue-900/40 via-dark-800 to-dark-800 rounded-xl border border-blue-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">📋</span>Resumo do Módulo</h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white"><code class="text-red-400">/clear</code> — reset total</strong><span class="text-neutral-400"> — aliases <code>/reset</code>, <code>/new</code>, sessão fica em <code>/resume</code></span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white"><code class="text-amber-400">/rewind</code> — undo real</strong><span class="text-neutral-400"> — volta conversa E arquivos, aliases <code>/checkpoint</code>, <code>/undo</code></span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white"><code class="text-emerald-400">/compact [foco]</code></strong><span class="text-neutral-400"> — resume mantendo sessão, aceita foco opcional</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Fluxograma de 3 perguntas</strong><span class="text-neutral-400"> — decisão em 5 segundos</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Regra dos 20–30 turns</strong><span class="text-neutral-400"> — reset preventivo antes de rot aparecer</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Nunca empurre quando der errado</strong><span class="text-neutral-400"> — reorganize: rewind, reexplique, ou reset</span></div></div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-blue-400 mb-2">Próxima trilha:</h3>
+          <p class="text-neutral-300">T3 — 🔗 Handoff Estruturado</p>
+          <p class="text-sm text-neutral-400 mt-1">Como resetar sem perder contexto: formato de handoff, CLAUDE.md, resumos entre sessões.</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-2-2.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Módulo Anterior</a>
+          <a href="../trilha3/index.html" class="flex-1 text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors">Trilha 3: Handoff →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>🧠 Mestre em Contexto e Tokens — INEMA.CLUB • 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) { darkIcon.classList.remove('hidden'); html.classList.remove('dark'); } else { lightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => { darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden'); html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+  </script>
+</body>
+</html>

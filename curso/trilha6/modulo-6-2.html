@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6.2 Orquestração Multi-Modelo | Mestre em Contexto e Tokens</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .dark body { background-color: #111827; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #4b5563; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-rose-400 { color: #9f1239; }
+    html:not(.dark) .bg-rose-500\/20 { background-color: rgba(225, 29, 72, 0.12); }
+    html:not(.dark) .bg-rose-500\/10 { background-color: rgba(225, 29, 72, 0.08); }
+    html:not(.dark) .border-rose-500\/30 { border-color: rgba(225, 29, 72, 0.25); }
+    html:not(.dark) .hover\:bg-rose-500\/10:hover { background-color: rgba(225, 29, 72, 0.08); }
+    html:not(.dark) .hover\:text-rose-400:hover { color: #9f1239; }
+
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-900\/20 { background-color: rgba(37, 99, 235, 0.06); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .text-red-400 { color: #dc2626; }
+    html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+    html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.25); }
+    html:not(.dark) .bg-rose-900\/20 { background-color: rgba(225, 29, 72, 0.06); }
+    html:not(.dark) .bg-rose-900\/40 { background-color: rgba(225, 29, 72, 0.1); }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .text-amber-400 { color: #b45309; }
+    html:not(.dark) .bg-amber-900\/20 { background-color: rgba(180, 83, 9, 0.06); }
+    html:not(.dark) .border-amber-500\/30 { border-color: rgba(180, 83, 9, 0.25); }
+    html:not(.dark) .text-purple-400 { color: #7e22ce; }
+    html:not(.dark) .bg-purple-500\/20 { background-color: rgba(126, 34, 206, 0.12); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.35); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧠</span>
+            <span class="font-bold text-lg hidden sm:inline">Contexto e Tokens</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Rotina</span></a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Handoff</span></a>
+          <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Avançado</span></a>
+          <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">Exemplos</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-rose-400 bg-rose-500/10"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Expert</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-rose-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-rose-400">Trilha 6</a>
+      <span>/</span>
+      <span class="text-rose-400">Módulo 6.2</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-rose-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="inline-block px-3 py-1 bg-rose-500/20 text-rose-400 text-xs font-semibold rounded-full">MÓDULO 6.2</span>
+        <span class="inline-block px-3 py-1 bg-rose-500/20 text-rose-400 text-xs font-semibold rounded-full">AVANÇADO</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🎭 Orquestração Multi-Modelo</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Opus é caro. Haiku é barato. Se você usar certo, economiza 80% sem perder qualidade. O segredo é distribuir trabalho pelo modelo correto — e saber quem faz o quê.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-rose-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-rose-400">40</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-rose-400">Avançado</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-rose-400">Prático</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- TOPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">🧠 Opus planeja, Haiku executa — o padrão clássico</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O padrão mais poderoso de orquestração é também o mais simples: deixe o <strong class="text-rose-400">modelo caro pensar</strong>, o <strong class="text-rose-400">modelo barato agir</strong>. Opus produz o plano e revisa o resultado; Haiku executa cada passo em paralelo.
+      </p>
+
+      <!-- Diagrama visual do fluxo -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-6">Fluxo clássico de orquestração (3 fases)</h3>
+
+        <div class="space-y-6">
+          <!-- Fase 1: Opus -->
+          <div class="relative">
+            <div class="bg-gradient-to-r from-purple-900/40 via-dark-700/50 to-dark-700/50 rounded-xl border border-purple-500/30 p-5">
+              <div class="flex items-center gap-4">
+                <div class="flex-shrink-0 w-16 h-16 rounded-xl bg-purple-500/20 flex items-center justify-center text-3xl">🧠</div>
+                <div class="flex-1">
+                  <div class="text-xs font-semibold text-purple-400 uppercase tracking-wider mb-1">FASE 1 — Planejamento</div>
+                  <div class="font-bold text-lg">Opus 4.7 analisa e produz plano detalhado</div>
+                  <p class="text-sm text-neutral-400 mt-1">1 chamada • raciocínio complexo • quebra em passos claros</p>
+                </div>
+                <div class="text-right">
+                  <div class="text-xs text-neutral-500">custo</div>
+                  <div class="font-mono text-purple-400">~US$ 0,30</div>
+                </div>
+              </div>
+            </div>
+            <div class="absolute left-10 -bottom-5 w-0.5 h-5 bg-neutral-600"></div>
+          </div>
+
+          <!-- Arrow -->
+          <div class="flex justify-center">
+            <div class="text-neutral-500 text-2xl">↓</div>
+          </div>
+
+          <!-- Fase 2: Haiku paralelo -->
+          <div class="bg-gradient-to-r from-emerald-900/40 via-dark-700/50 to-dark-700/50 rounded-xl border border-emerald-500/30 p-5">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="flex-shrink-0 w-16 h-16 rounded-xl bg-emerald-500/20 flex items-center justify-center text-3xl">🏃</div>
+              <div class="flex-1">
+                <div class="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-1">FASE 2 — Execução paralela</div>
+                <div class="font-bold text-lg">Haiku × 5 executa os passos simultaneamente</div>
+                <p class="text-sm text-neutral-400 mt-1">5 chamadas em paralelo • cada uma faz sua parte</p>
+              </div>
+              <div class="text-right">
+                <div class="text-xs text-neutral-500">custo</div>
+                <div class="font-mono text-emerald-400">~US$ 0,10</div>
+              </div>
+            </div>
+            <!-- Haiku lanes -->
+            <div class="grid grid-cols-5 gap-2 ml-20">
+              <div class="bg-emerald-500/10 rounded p-2 text-center text-xs text-emerald-400 font-mono">Haiku #1</div>
+              <div class="bg-emerald-500/10 rounded p-2 text-center text-xs text-emerald-400 font-mono">Haiku #2</div>
+              <div class="bg-emerald-500/10 rounded p-2 text-center text-xs text-emerald-400 font-mono">Haiku #3</div>
+              <div class="bg-emerald-500/10 rounded p-2 text-center text-xs text-emerald-400 font-mono">Haiku #4</div>
+              <div class="bg-emerald-500/10 rounded p-2 text-center text-xs text-emerald-400 font-mono">Haiku #5</div>
+            </div>
+          </div>
+
+          <!-- Arrow -->
+          <div class="flex justify-center">
+            <div class="text-neutral-500 text-2xl">↓</div>
+          </div>
+
+          <!-- Fase 3: Opus revisa -->
+          <div class="bg-gradient-to-r from-purple-900/40 via-dark-700/50 to-dark-700/50 rounded-xl border border-purple-500/30 p-5">
+            <div class="flex items-center gap-4">
+              <div class="flex-shrink-0 w-16 h-16 rounded-xl bg-purple-500/20 flex items-center justify-center text-3xl">✅</div>
+              <div class="flex-1">
+                <div class="text-xs font-semibold text-purple-400 uppercase tracking-wider mb-1">FASE 3 — Revisão</div>
+                <div class="font-bold text-lg">Opus 4.7 consolida e valida o resultado</div>
+                <p class="text-sm text-neutral-400 mt-1">1 chamada • raciocínio crítico sobre as 5 saídas • ajuste final</p>
+              </div>
+              <div class="text-right">
+                <div class="text-xs text-neutral-500">custo</div>
+                <div class="font-mono text-purple-400">~US$ 0,20</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total -->
+        <div class="mt-6 pt-6 border-t border-dark-600 flex justify-between items-center">
+          <span class="text-sm text-neutral-400">Total da orquestração</span>
+          <span class="font-mono text-lg font-bold text-primary">US$ 0,60</span>
+        </div>
+      </div>
+
+      <!-- Box conceito -->
+      <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-rose-400 mb-3 flex items-center"><span class="mr-2">💡</span>A intuição</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed mb-3">
+          Opus é como um <strong>arquiteto sênior</strong>: caro por hora, mas imbatível em planos e reviews. Haiku é como um <strong>estagiário competente</strong>: rápido, barato, ótimo quando sabe o que fazer.
+        </p>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          A magia está em fazer o arquiteto só as 2 coisas que ele faz melhor (planejar + revisar) e o estagiário tudo no meio (executar).
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">🔀 Model override em subagentes</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Como configurar isso na prática? O Claude Code permite <strong class="text-rose-400">forçar o modelo</strong> de cada subagente via frontmatter no arquivo <code class="text-rose-400 bg-dark-700 px-1.5 py-0.5 rounded">.claude/agents/meu-agente.md</code>.
+      </p>
+
+      <!-- Code example -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30 flex items-center justify-between">
+          <h3 class="font-semibold text-sm">📁 <code class="text-rose-400">.claude/agents/batch-processor.md</code></h3>
+          <span class="text-xs text-neutral-500 font-mono">Subagente Haiku</span>
+        </div>
+        <pre class="p-5 text-xs overflow-x-auto bg-dark-900 text-neutral-300"><code><span class="text-rose-400">---</span>
+<span class="text-blue-400">name:</span> batch-processor
+<span class="text-blue-400">description:</span> Executa tarefas repetitivas em lote — documentação, formatação, busca estruturada em múltiplos arquivos. Invoque quando precisar processar ≥ 5 arquivos com lógica similar.
+<span class="text-blue-400">model:</span> <span class="text-emerald-400">haiku</span>
+<span class="text-blue-400">tools:</span>
+  - Read
+  - Write
+  - Grep
+<span class="text-rose-400">---</span>
+
+<span class="text-neutral-500"># Batch Processor</span>
+
+Você é um agente de execução em lote. Sua responsabilidade é aplicar uma
+transformação consistente em múltiplos arquivos seguindo instruções claras
+recebidas do orquestrador.
+
+<span class="text-neutral-500">## Princípios</span>
+
+1. Leia cada arquivo atribuído UMA vez.
+2. Aplique exatamente a transformação pedida — sem improvisar.
+3. Reporte de volta em formato estruturado: arquivo, status, mudanças aplicadas.
+4. Se encontrar algo ambíguo, pare e devolva para o orquestrador decidir.
+
+<span class="text-neutral-500">## Formato de saída obrigatório</span>
+
+```json
+{
+  "file": "caminho/para/arquivo.ts",
+  "status": "ok" | "skipped" | "error",
+  "changes": ["lista breve das mudanças"]
+}
+```</code></pre>
+      </div>
+
+      <!-- Modelos aceitos -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">📘</span>Valores aceitos em <code class="text-blue-400">model:</code></h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+          <div class="bg-dark-800/50 rounded-lg p-3">
+            <div class="font-mono text-purple-400 mb-1">opus</div>
+            <div class="text-xs text-neutral-400">Mais capaz • mais caro</div>
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-3">
+            <div class="font-mono text-blue-400 mb-1">sonnet</div>
+            <div class="text-xs text-neutral-400">Equilibrado • padrão</div>
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-3">
+            <div class="font-mono text-emerald-400 mb-1">haiku</div>
+            <div class="text-xs text-neutral-400">Rápido • barato</div>
+          </div>
+        </div>
+        <p class="text-xs text-neutral-500 mt-4">Claude Code resolve o alias para a versão mais recente disponível (ex: <code class="text-blue-400">haiku</code> → Haiku 4.5).</p>
+      </div>
+
+      <!-- Exemplo orquestrador -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30 flex items-center justify-between">
+          <h3 class="font-semibold text-sm">📁 <code class="text-rose-400">.claude/agents/orchestrator.md</code></h3>
+          <span class="text-xs text-neutral-500 font-mono">Orquestrador Opus</span>
+        </div>
+        <pre class="p-5 text-xs overflow-x-auto bg-dark-900 text-neutral-300"><code><span class="text-rose-400">---</span>
+<span class="text-blue-400">name:</span> orchestrator
+<span class="text-blue-400">description:</span> Planeja tarefas complexas e delega execução para subagentes especializados. Invoque em tarefas com ≥ 3 passos distintos ou que envolvem múltiplos arquivos.
+<span class="text-blue-400">model:</span> <span class="text-purple-400">opus</span>
+<span class="text-rose-400">---</span>
+
+<span class="text-neutral-500"># Orquestrador</span>
+
+Seu papel é <strong>pensar</strong>, não executar. Para cada tarefa recebida:
+
+1. Analise profundamente o problema
+2. Produza plano com ≥ 3 passos numerados
+3. Delegue cada passo ao subagente adequado:
+   - <code>batch-processor</code> (Haiku): tarefas repetitivas
+   - <code>code-writer</code> (Sonnet): escrita de código novo
+   - <code>architect</code> (Opus): decisões arquiteturais
+4. Consolide resultados e valide antes de devolver.</code></pre>
+      </div>
+
+      <!-- Dica -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">🎯</span>Padrão recomendado</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Crie <strong>3 agentes base</strong> e evolua: 1 orquestrador Opus, 1 code-writer Sonnet, 1 batch-processor Haiku. Cobre 80% dos casos e ensina o padrão para o restante.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">💰 Tabela de custos por modelo</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Saber o preço de cor ajuda a decidir sem pensar. Estes são os valores oficiais da Anthropic (por 1M tokens) — use como referência mental ao escolher o modelo.
+      </p>
+
+      <!-- Tabela principal -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30">
+          <h3 class="font-semibold">Preços oficiais por 1M tokens (Anthropic, 2026)</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-dark-700/50">
+              <tr class="text-left">
+                <th class="px-4 py-3 font-semibold text-neutral-400">Modelo</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Input</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Cache read</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Output</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Ratio vs Haiku</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600">
+              <tr class="bg-purple-900/10">
+                <td class="px-4 py-3 font-semibold text-purple-400">🧠 Opus 4.7</td>
+                <td class="px-4 py-3 font-mono">US$ 15</td>
+                <td class="px-4 py-3 font-mono text-emerald-400">US$ 1,50</td>
+                <td class="px-4 py-3 font-mono text-rose-400">US$ 75</td>
+                <td class="px-4 py-3 font-mono text-rose-400">15× mais caro</td>
+              </tr>
+              <tr class="bg-blue-900/10">
+                <td class="px-4 py-3 font-semibold text-blue-400">⚖️ Sonnet 4.6</td>
+                <td class="px-4 py-3 font-mono">US$ 3</td>
+                <td class="px-4 py-3 font-mono text-emerald-400">US$ 0,30</td>
+                <td class="px-4 py-3 font-mono text-rose-400">US$ 15</td>
+                <td class="px-4 py-3 font-mono text-amber-400">3× mais caro</td>
+              </tr>
+              <tr class="bg-emerald-900/10">
+                <td class="px-4 py-3 font-semibold text-emerald-400">⚡ Haiku 4.5</td>
+                <td class="px-4 py-3 font-mono">US$ 1</td>
+                <td class="px-4 py-3 font-mono text-emerald-400">US$ 0,10</td>
+                <td class="px-4 py-3 font-mono text-rose-400">US$ 5</td>
+                <td class="px-4 py-3 font-mono text-emerald-400">baseline</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-neutral-500 p-4">Valores de referência. Preço oficial atualizado em platform.claude.com. Cache read é sempre 0,1× do input.</p>
+      </div>
+
+      <!-- Visualização de ratio -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Custo relativo (input por 1M tokens)</h3>
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between text-sm mb-1.5"><span class="font-semibold text-purple-400">🧠 Opus 4.7</span><span class="text-neutral-400 font-mono">US$ 15 • 15×</span></div>
+            <div class="w-full bg-dark-700 rounded-full h-4"><div class="bg-purple-500 h-4 rounded-full" style="width: 100%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1.5"><span class="font-semibold text-blue-400">⚖️ Sonnet 4.6</span><span class="text-neutral-400 font-mono">US$ 3 • 3×</span></div>
+            <div class="w-full bg-dark-700 rounded-full h-4"><div class="bg-blue-500 h-4 rounded-full" style="width: 20%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1.5"><span class="font-semibold text-emerald-400">⚡ Haiku 4.5</span><span class="text-neutral-400 font-mono">US$ 1 • 1×</span></div>
+            <div class="w-full bg-dark-700 rounded-full h-4"><div class="bg-emerald-500 h-4 rounded-full" style="width: 6.7%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Box dados -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">📊</span>Leitura rápida</h3>
+        <ul class="space-y-2 text-sm text-neutral-300">
+          <li class="flex items-start space-x-3"><span class="text-blue-400 font-bold">→</span><span><strong>Opus custa 15× Haiku no input</strong>. Se a tarefa cabe em Haiku, Opus é desperdício.</span></li>
+          <li class="flex items-start space-x-3"><span class="text-blue-400 font-bold">→</span><span><strong>Output custa 5× o input</strong> em todos os modelos. Saídas verbosas são a maior fonte de custo evitável.</span></li>
+          <li class="flex items-start space-x-3"><span class="text-blue-400 font-bold">→</span><span><strong>Cache read sempre 90% off</strong>. O cache é o mesmo % de desconto em qualquer modelo.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- TOPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">🎯 Quando cada modelo brilha</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Escolher o modelo errado é <strong class="text-rose-400">a maior alavanca de custo evitável</strong> do ecossistema Claude. Este é o guia de alocação que funciona em 90% dos casos.
+      </p>
+
+      <!-- Três cards grandes -->
+      <div class="space-y-4 mb-6">
+        <!-- Opus -->
+        <div class="bg-dark-800 rounded-xl border border-purple-500/30 p-6">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-purple-500/20 flex items-center justify-center text-3xl">🧠</div>
+            <div class="flex-1">
+              <h4 class="font-bold text-purple-400 text-lg mb-2">Opus 4.7 — o arquiteto</h4>
+              <p class="text-sm text-neutral-400 mb-3">Use quando a qualidade do pensamento importa mais que o custo.</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                <div class="bg-dark-700/50 rounded-lg p-3">
+                  <div class="font-semibold text-purple-400 text-xs uppercase tracking-wider mb-1">Casos ideais</div>
+                  <ul class="text-xs text-neutral-300 space-y-1">
+                    <li>• Raciocínio complexo (debug difícil, trade-offs)</li>
+                    <li>• Arquitetura de sistema</li>
+                    <li>• Código crítico (segurança, concorrência)</li>
+                    <li>• Decisões técnicas ambíguas</li>
+                    <li>• Reviews de pull request importantes</li>
+                  </ul>
+                </div>
+                <div class="bg-dark-700/50 rounded-lg p-3">
+                  <div class="font-semibold text-purple-400 text-xs uppercase tracking-wider mb-1">% esperado em uma equipe</div>
+                  <div class="text-2xl font-bold text-purple-400 mt-1">~20%</div>
+                  <p class="text-xs text-neutral-400 mt-1">Do total de chamadas. Se está acima disso, provavelmente é desperdício.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sonnet -->
+        <div class="bg-dark-800 rounded-xl border border-blue-500/30 p-6">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-blue-500/20 flex items-center justify-center text-3xl">⚖️</div>
+            <div class="flex-1">
+              <h4 class="font-bold text-blue-400 text-lg mb-2">Sonnet 4.6 — o workhorse</h4>
+              <p class="text-sm text-neutral-400 mb-3">O padrão razoável. Bom em quase tudo; excelente em nada específico.</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                <div class="bg-dark-700/50 rounded-lg p-3">
+                  <div class="font-semibold text-blue-400 text-xs uppercase tracking-wider mb-1">Casos ideais</div>
+                  <ul class="text-xs text-neutral-300 space-y-1">
+                    <li>• Escrita de código nova de complexidade média</li>
+                    <li>• Refactors "mecânicos"</li>
+                    <li>• Explicações técnicas</li>
+                    <li>• 90% do uso geral cotidiano</li>
+                    <li>• Default quando não tem certeza</li>
+                  </ul>
+                </div>
+                <div class="bg-dark-700/50 rounded-lg p-3">
+                  <div class="font-semibold text-blue-400 text-xs uppercase tracking-wider mb-1">% esperado em uma equipe</div>
+                  <div class="text-2xl font-bold text-blue-400 mt-1">~50%</div>
+                  <p class="text-xs text-neutral-400 mt-1">A maior fatia. É o trabalho "normal".</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Haiku -->
+        <div class="bg-dark-800 rounded-xl border border-emerald-500/30 p-6">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-14 h-14 rounded-xl bg-emerald-500/20 flex items-center justify-center text-3xl">⚡</div>
+            <div class="flex-1">
+              <h4 class="font-bold text-emerald-400 text-lg mb-2">Haiku 4.5 — o executor</h4>
+              <p class="text-sm text-neutral-400 mb-3">Quando a tarefa é clara e repetitiva, ele faz 15× mais barato.</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                <div class="bg-dark-700/50 rounded-lg p-3">
+                  <div class="font-semibold text-emerald-400 text-xs uppercase tracking-wider mb-1">Casos ideais</div>
+                  <ul class="text-xs text-neutral-300 space-y-1">
+                    <li>• Execução repetitiva (aplicar regex, formatar)</li>
+                    <li>• Busca estruturada em arquivos</li>
+                    <li>• Sumarização simples</li>
+                    <li>• Agentes em paralelo (batch)</li>
+                    <li>• Geração de CRUD padrão</li>
+                  </ul>
+                </div>
+                <div class="bg-dark-700/50 rounded-lg p-3">
+                  <div class="font-semibold text-emerald-400 text-xs uppercase tracking-wider mb-1">% esperado em uma equipe</div>
+                  <div class="text-2xl font-bold text-emerald-400 mt-1">~30%</div>
+                  <p class="text-xs text-neutral-400 mt-1">Se está abaixo disso, você provavelmente está subutilizando.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Matriz de decisão -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-4 flex items-center"><span class="mr-2">🎯</span>Árvore de decisão em 2 perguntas</h3>
+        <ol class="space-y-3 text-sm text-neutral-300">
+          <li><strong class="text-primary">1. A tarefa exige raciocínio ambíguo ou trade-off técnico?</strong> → Opus</li>
+          <li><strong class="text-primary">2. É tarefa clara, repetitiva, ou uma entre muitas iguais?</strong> → Haiku</li>
+          <li><strong class="text-primary">3. Se respondeu "não" a ambas</strong> → Sonnet (default)</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- TOPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">🏃 Haiku paralelo para tarefas repetitivas</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Nenhum padrão tem ROI tão dramático quanto <strong class="text-rose-400">Haiku em paralelo</strong>. Vamos a um caso concreto que deu a volta na internet — documentar 20 arquivos de uma biblioteca.
+      </p>
+
+      <!-- Cenário com 2 colunas -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <!-- Opus sequencial -->
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4 flex items-center"><span class="mr-2">❌</span>Abordagem A — Opus sequencial</h4>
+          <div class="space-y-3 text-sm">
+            <div class="bg-dark-800/50 rounded-lg p-3">
+              <div class="text-xs text-neutral-400 mb-1">Modelo</div>
+              <div class="font-mono text-purple-400">Opus 4.7 × 1 thread</div>
+            </div>
+            <div class="bg-dark-800/50 rounded-lg p-3">
+              <div class="text-xs text-neutral-400 mb-1">Tempo por arquivo</div>
+              <div class="font-mono">~2 min</div>
+            </div>
+            <div class="bg-dark-800/50 rounded-lg p-3">
+              <div class="text-xs text-neutral-400 mb-1">Custo por arquivo</div>
+              <div class="font-mono">~US$ 0,30</div>
+            </div>
+            <div class="pt-3 border-t border-red-500/30">
+              <div class="flex justify-between"><span class="text-neutral-400">Tempo total (20 arquivos)</span><span class="font-mono text-rose-400">40 min</span></div>
+              <div class="flex justify-between mt-1"><span class="text-neutral-400">Custo total</span><span class="font-mono text-rose-400 font-bold">US$ 6,00</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Haiku paralelo -->
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4 flex items-center"><span class="mr-2">✅</span>Abordagem B — Haiku paralelo</h4>
+          <div class="space-y-3 text-sm">
+            <div class="bg-dark-800/50 rounded-lg p-3">
+              <div class="text-xs text-neutral-400 mb-1">Modelo</div>
+              <div class="font-mono text-emerald-400">Haiku 4.5 × 5 threads</div>
+            </div>
+            <div class="bg-dark-800/50 rounded-lg p-3">
+              <div class="text-xs text-neutral-400 mb-1">Tempo por arquivo</div>
+              <div class="font-mono">~2 min</div>
+            </div>
+            <div class="bg-dark-800/50 rounded-lg p-3">
+              <div class="text-xs text-neutral-400 mb-1">Custo por arquivo</div>
+              <div class="font-mono">~US$ 0,04</div>
+            </div>
+            <div class="pt-3 border-t border-emerald-500/30">
+              <div class="flex justify-between"><span class="text-neutral-400">Tempo total (5 × 4 paralelo)</span><span class="font-mono text-emerald-400">~8 min</span></div>
+              <div class="flex justify-between mt-1"><span class="text-neutral-400">Custo total</span><span class="font-mono text-emerald-400 font-bold">US$ 0,80</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultado -->
+      <div class="bg-gradient-to-br from-rose-900/30 via-dark-800 to-dark-800 rounded-xl border border-rose-500/30 p-8 mb-6">
+        <h3 class="text-lg font-semibold text-rose-400 mb-5 text-center">Resultado comparativo</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="text-center">
+            <div class="text-xs text-neutral-400 uppercase tracking-wider mb-2">Economia em custo</div>
+            <div class="text-5xl font-bold text-emerald-400">7,5×</div>
+            <p class="text-sm text-neutral-400 mt-2">US$ 6,00 → US$ 0,80</p>
+          </div>
+          <div class="text-center">
+            <div class="text-xs text-neutral-400 uppercase tracking-wider mb-2">Economia em tempo</div>
+            <div class="text-5xl font-bold text-emerald-400">5×</div>
+            <p class="text-sm text-neutral-400 mt-2">40 min → 8 min</p>
+          </div>
+        </div>
+        <p class="text-center text-sm text-neutral-400 mt-6">
+          Mesmo trabalho. Mesma qualidade. <strong class="text-rose-400">Diferença de produtividade de uma ordem de grandeza.</strong>
+        </p>
+      </div>
+
+      <!-- Box quando funciona -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">✅</span>Quando Haiku paralelo funciona bem</h3>
+        <ul class="space-y-2 text-sm text-neutral-300">
+          <li class="flex items-start space-x-2"><span class="text-blue-400">→</span><span><strong>Tarefas independentes</strong>: cada arquivo pode ser processado isolado</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">→</span><span><strong>Output estruturado</strong>: formato de saída conhecido (JSON, markdown fixo)</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">→</span><span><strong>Transformação clara</strong>: regra explícita, sem decisão subjetiva</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">→</span><span><strong>Agregação simples</strong>: combinar resultados não exige raciocínio</span></li>
+        </ul>
+      </div>
+
+      <!-- Alerta quando não funciona -->
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">⚠️</span>Quando NÃO usar</h3>
+        <ul class="space-y-2 text-sm text-neutral-300">
+          <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Tarefa onde decisão em um arquivo depende de outro</span></li>
+          <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Critério subjetivo ("melhore o design"); Haiku erra sem plano claro</span></li>
+          <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Menos de 5 itens — overhead de paralelização não compensa</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- TOPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">📈 Caso real: redução de 80% de custo</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Equipe de 5 devs full-stack. Projeto SaaS B2B em produção. Usavam Claude Code pesadamente, default Opus em tudo. Em 3 meses, aplicaram orquestração multi-modelo e mediram o impacto.
+      </p>
+
+      <!-- Perfil -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-4">Perfil da equipe</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+          <div class="bg-dark-700/50 rounded-lg p-3"><div class="text-xs text-neutral-400">Devs</div><div class="font-bold text-rose-400">5 full-stack</div></div>
+          <div class="bg-dark-700/50 rounded-lg p-3"><div class="text-xs text-neutral-400">Sessões/dev/dia</div><div class="font-bold text-rose-400">~8</div></div>
+          <div class="bg-dark-700/50 rounded-lg p-3"><div class="text-xs text-neutral-400">Projeto</div><div class="font-bold text-rose-400">SaaS B2B</div></div>
+          <div class="bg-dark-700/50 rounded-lg p-3"><div class="text-xs text-neutral-400">Stack</div><div class="font-bold text-rose-400">Go + React</div></div>
+        </div>
+      </div>
+
+      <!-- Antes vs Depois -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <!-- Antes -->
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">❌ ANTES — Opus em tudo</h4>
+          <div class="space-y-3">
+            <div>
+              <div class="flex justify-between text-sm mb-1"><span class="text-neutral-400">Opus 4.7</span><span class="font-mono">100%</span></div>
+              <div class="w-full bg-dark-700 rounded-full h-2"><div class="bg-purple-500 h-2 rounded-full" style="width: 100%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1"><span class="text-neutral-400">Sonnet 4.6</span><span class="font-mono">0%</span></div>
+              <div class="w-full bg-dark-700 rounded-full h-2"><div class="bg-blue-500 h-2 rounded-full" style="width: 0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1"><span class="text-neutral-400">Haiku 4.5</span><span class="font-mono">0%</span></div>
+              <div class="w-full bg-dark-700 rounded-full h-2"><div class="bg-emerald-500 h-2 rounded-full" style="width: 0%"></div></div>
+            </div>
+            <div class="pt-4 border-t border-red-500/30 text-center">
+              <div class="text-xs text-neutral-400 uppercase tracking-wider">Custo mensal</div>
+              <div class="text-3xl font-bold text-rose-400 mt-1">US$ 2.100</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Depois -->
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✅ DEPOIS — orquestrado</h4>
+          <div class="space-y-3">
+            <div>
+              <div class="flex justify-between text-sm mb-1"><span class="text-neutral-400">Opus 4.7 (planos + reviews)</span><span class="font-mono">20%</span></div>
+              <div class="w-full bg-dark-700 rounded-full h-2"><div class="bg-purple-500 h-2 rounded-full" style="width: 20%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1"><span class="text-neutral-400">Sonnet 4.6 (uso geral)</span><span class="font-mono">50%</span></div>
+              <div class="w-full bg-dark-700 rounded-full h-2"><div class="bg-blue-500 h-2 rounded-full" style="width: 50%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1"><span class="text-neutral-400">Haiku 4.5 (execução)</span><span class="font-mono">30%</span></div>
+              <div class="w-full bg-dark-700 rounded-full h-2"><div class="bg-emerald-500 h-2 rounded-full" style="width: 30%"></div></div>
+            </div>
+            <div class="pt-4 border-t border-emerald-500/30 text-center">
+              <div class="text-xs text-neutral-400 uppercase tracking-wider">Custo mensal</div>
+              <div class="text-3xl font-bold text-emerald-400 mt-1">US$ 420</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabela breakdown -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30">
+          <h3 class="font-semibold">Breakdown detalhado por tipo de chamada</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-dark-700/50">
+              <tr class="text-left">
+                <th class="px-4 py-3 font-semibold text-neutral-400">Tipo de tarefa</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Modelo antes</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Modelo depois</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">% das chamadas</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600">
+              <tr><td class="px-4 py-3">Planejamento de features</td><td class="px-4 py-3 text-purple-400">Opus</td><td class="px-4 py-3 text-purple-400">Opus</td><td class="px-4 py-3 font-mono">10%</td></tr>
+              <tr><td class="px-4 py-3">Code review crítico</td><td class="px-4 py-3 text-purple-400">Opus</td><td class="px-4 py-3 text-purple-400">Opus</td><td class="px-4 py-3 font-mono">10%</td></tr>
+              <tr><td class="px-4 py-3">Escrita de componentes</td><td class="px-4 py-3 text-purple-400">Opus</td><td class="px-4 py-3 text-blue-400">Sonnet</td><td class="px-4 py-3 font-mono">30%</td></tr>
+              <tr><td class="px-4 py-3">Refactor "mecânico"</td><td class="px-4 py-3 text-purple-400">Opus</td><td class="px-4 py-3 text-blue-400">Sonnet</td><td class="px-4 py-3 font-mono">20%</td></tr>
+              <tr><td class="px-4 py-3">Documentação de código</td><td class="px-4 py-3 text-purple-400">Opus</td><td class="px-4 py-3 text-emerald-400">Haiku</td><td class="px-4 py-3 font-mono">15%</td></tr>
+              <tr><td class="px-4 py-3">Formatação / linting</td><td class="px-4 py-3 text-purple-400">Opus</td><td class="px-4 py-3 text-emerald-400">Haiku</td><td class="px-4 py-3 font-mono">10%</td></tr>
+              <tr><td class="px-4 py-3">Busca / sumarização</td><td class="px-4 py-3 text-purple-400">Opus</td><td class="px-4 py-3 text-emerald-400">Haiku</td><td class="px-4 py-3 font-mono">5%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Economia final -->
+      <div class="bg-gradient-to-br from-rose-900/40 via-dark-800 to-dark-800 rounded-xl border border-rose-500/30 p-8 mb-6 text-center">
+        <div class="text-sm text-rose-400 font-semibold uppercase tracking-wider mb-3">Redução de custo</div>
+        <div class="text-6xl font-bold text-rose-400 mb-2">80%</div>
+        <p class="text-lg text-neutral-300 mb-4">US$ 2.100/mês → US$ 420/mês</p>
+        <p class="text-sm text-neutral-400">Economia anual: <strong class="text-rose-400">US$ 20.160</strong> • Mesma produtividade medida em features entregues.</p>
+      </div>
+
+      <!-- Dica -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">🎯</span>Seu plano de ação</h3>
+        <ol class="space-y-2 text-sm text-neutral-300">
+          <li class="flex items-start gap-3"><span class="text-primary font-bold">1.</span><span>Rode <code class="text-primary bg-dark-700 px-1.5 py-0.5 rounded">/cost</code> esta semana e meça seu custo real</span></li>
+          <li class="flex items-start gap-3"><span class="text-primary font-bold">2.</span><span>Identifique as 3 tarefas mais repetitivas que você faz</span></li>
+          <li class="flex items-start gap-3"><span class="text-primary font-bold">3.</span><span>Crie um subagente Haiku para cada uma (<code class="text-primary bg-dark-700 px-1.5 py-0.5 rounded">.claude/agents/*.md</code>)</span></li>
+          <li class="flex items-start gap-3"><span class="text-primary font-bold">4.</span><span>Re-rode <code class="text-primary bg-dark-700 px-1.5 py-0.5 rounded">/cost</code> em 2 semanas e compare</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-rose-900/40 via-dark-800 to-dark-800 rounded-xl border border-rose-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">📋</span>Resumo do Módulo</h2>
+
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-rose-400 mt-1">✓</span><div><strong class="text-white">Opus planeja, Haiku executa</strong><span class="text-neutral-400"> — padrão 3 fases: plano → paralelo → revisão</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-rose-400 mt-1">✓</span><div><strong class="text-white">Model override em subagentes</strong><span class="text-neutral-400"> — <code class="text-rose-400">model: haiku</code> no frontmatter</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-rose-400 mt-1">✓</span><div><strong class="text-white">Opus custa 15× Haiku</strong><span class="text-neutral-400"> — no input; cache read sempre 0,1×</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-rose-400 mt-1">✓</span><div><strong class="text-white">Distribuição 20/50/30</strong><span class="text-neutral-400"> — Opus planos, Sonnet geral, Haiku execução</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-rose-400 mt-1">✓</span><div><strong class="text-white">Haiku paralelo: 7,5× mais barato, 5× mais rápido</strong><span class="text-neutral-400"> — em lotes de ≥ 5 itens</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-rose-400 mt-1">✓</span><div><strong class="text-white">Caso real: US$ 2.100 → US$ 420/mês</strong><span class="text-neutral-400"> — 80% de redução, mesma entrega</span></div></div>
+        </div>
+
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-rose-400 mb-2">Próximo módulo:</h3>
+          <p class="text-neutral-300">6.3 — 🔬 Auditoria de Contexto</p>
+          <p class="text-sm text-neutral-400 mt-1">Descubra exatamente o que está comendo seu contexto e corte com precisão.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-6-1.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Módulo Anterior</a>
+          <a href="modulo-6-3.html" class="flex-1 text-center px-6 py-3 bg-rose-600 text-white rounded-lg font-semibold hover:bg-rose-500 transition-colors">Próximo: Auditoria →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>🧠 Mestre em Contexto e Tokens — INEMA.CLUB • 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) { darkIcon.classList.remove('hidden'); html.classList.remove('dark'); } else { lightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => { darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden'); html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+  </script>
+
+</body>
+</html>

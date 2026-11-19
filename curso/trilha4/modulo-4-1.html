@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.1 Delegar para Subagentes | Mestre em Contexto e Tokens</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .dark body { background-color: #111827; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #4b5563; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-amber-400 { color: #92400e; }
+    html:not(.dark) .bg-amber-500\/20 { background-color: rgba(217, 119, 6, 0.12); }
+    html:not(.dark) .bg-amber-500\/10 { background-color: rgba(217, 119, 6, 0.08); }
+    html:not(.dark) .border-amber-500\/30 { border-color: rgba(217, 119, 6, 0.25); }
+    html:not(.dark) .hover\:bg-amber-500\/10:hover { background-color: rgba(217, 119, 6, 0.08); }
+    html:not(.dark) .hover\:text-amber-400:hover { color: #92400e; }
+    html:not(.dark) .bg-amber-900\/20 { background-color: rgba(217, 119, 6, 0.06); }
+    html:not(.dark) .bg-amber-900\/30 { background-color: rgba(217, 119, 6, 0.08); }
+    html:not(.dark) .bg-amber-900\/40 { background-color: rgba(217, 119, 6, 0.1); }
+
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-900\/20 { background-color: rgba(37, 99, 235, 0.06); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .text-red-400 { color: #dc2626; }
+    html:not(.dark) .bg-red-500\/20 { background-color: rgba(220, 38, 38, 0.12); }
+    html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+    html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.25); }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .bg-purple-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+    html:not(.dark) .text-rose-400 { color: #dc2626; }
+    html:not(.dark) .bg-rose-500\/20 { background-color: rgba(220, 38, 38, 0.12); }
+    html:not(.dark) .text-teal-400 { color: #0d9488; }
+    html:not(.dark) .bg-teal-500\/20 { background-color: rgba(13, 148, 136, 0.12); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.35); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .hover\:text-emerald-400:hover { color: #059669; }
+    html:not(.dark) .hover\:text-blue-400:hover { color: #2563eb; }
+    html:not(.dark) .hover\:text-purple-400:hover { color: #7c3aed; }
+    html:not(.dark) .hover\:text-teal-400:hover { color: #0d9488; }
+    html:not(.dark) .hover\:text-rose-400:hover { color: #dc2626; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧠</span>
+            <span class="font-bold text-lg hidden sm:inline">Contexto e Tokens</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Rotina</span></a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Handoff</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-amber-400 bg-amber-500/10"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Avançado</span></a>
+          <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">Exemplos</span></a>
+          <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Expert</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-amber-400">Início</a><span>/</span>
+      <a href="index.html" class="hover:text-amber-400">Trilha 4</a><span>/</span>
+      <span class="text-amber-400">Módulo 4.1</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-amber-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-amber-500/20 text-amber-400 text-xs font-semibold rounded-full mb-4">MÓDULO 4.1</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🤖 Delegar para Subagentes</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Cada subagente tem contexto próprio. O principal fica limpo. Pesquisas verbosas não poluem mais seu trabalho — o pai só recebe o resumo final.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-amber-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-amber-400">35</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-amber-400">Intermediário</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-amber-400">Prática</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- TOPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">🎯 O que é um subagente</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Um subagente é um agente invocado pelo agente principal que executa uma tarefa em <strong class="text-amber-400">sua própria janela de contexto</strong>. Ele começa do zero, tem system prompt próprio, tools específicas, e devolve apenas um resumo final ao pai.
+      </p>
+
+      <!-- Box citação oficial -->
+      <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-amber-400 mb-3 flex items-center">
+          <span class="mr-2">📚</span> Definição oficial (Anthropic docs)
+        </h3>
+        <blockquote class="border-l-4 border-amber-500/50 pl-4 text-neutral-300 text-sm italic leading-relaxed">
+          "Each subagent runs in its own context window with a custom system prompt, specific tool access, and independent permissions. A subagent's context window starts fresh (no parent conversation)."
+        </blockquote>
+        <p class="text-xs text-neutral-500 mt-3">Fonte: docs.claude.com · Subagents</p>
+      </div>
+
+      <!-- Diagrama pai vs filho -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Relação pai ↔ subagente</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-dark-700/50 rounded-lg p-5 border-l-4 border-amber-500">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-2xl">👤</span>
+              <span class="font-semibold text-amber-400">Agente Principal</span>
+            </div>
+            <ul class="text-sm text-neutral-300 space-y-2">
+              <li>• Contexto acumulado da sessão</li>
+              <li>• Você (usuário) conversa direto</li>
+              <li>• Decide quando invocar subagente</li>
+              <li>• Recebe apenas o resumo final</li>
+              <li>• Não "vê" o trabalho interno do filho</li>
+            </ul>
+          </div>
+          <div class="bg-dark-700/50 rounded-lg p-5 border-l-4 border-blue-500">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-2xl">🤖</span>
+              <span class="font-semibold text-blue-400">Subagente</span>
+            </div>
+            <ul class="text-sm text-neutral-300 space-y-2">
+              <li>• Contexto <strong>novo, isolado</strong></li>
+              <li>• System prompt próprio</li>
+              <li>• Tools configuráveis (limitadas ou amplas)</li>
+              <li>• Executa, gera resumo, morre</li>
+              <li>• Não vê conversa do pai</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Box conceito -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">🧠</span>Mental model</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Pense no subagente como um <strong>funcionário terceirizado</strong>: você passa o briefing, ele faz o trabalho em sala separada, volta com o relatório. Você nunca vê rascunhos, cafés tomados ou discussões internas. Só o resultado.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">📦 Quando usar subagentes</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Regra prática: <strong class="text-amber-400">se o resultado final cabe em 300 palavras mas o caminho para chegar lá lê 50k tokens — delegue</strong>. Subagente brilha em qualquer operação verbosa onde só o resumo importa.
+      </p>
+
+      <!-- Grid de casos de uso -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl">🔍</span>
+            <div>
+              <h4 class="font-semibold text-amber-400 mb-2">Pesquisa em repositório</h4>
+              <p class="text-sm text-neutral-400">"Encontre onde está implementada a autenticação em OAuth neste projeto." Lê 20 arquivos, retorna 3 paths + função.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl">📄</span>
+            <div>
+              <h4 class="font-semibold text-amber-400 mb-2">Análise de documento longo</h4>
+              <p class="text-sm text-neutral-400">"Resuma este contrato de 40 páginas em bullets por cláusula." Input de 60k tokens, retorno de 500.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl">🌐</span>
+            <div>
+              <h4 class="font-semibold text-amber-400 mb-2">Web research</h4>
+              <p class="text-sm text-neutral-400">"Pesquise melhores práticas de cache HTTP para APIs REST em 2025." Visita 15 páginas, retorna síntese.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl">📊</span>
+            <div>
+              <h4 class="font-semibold text-amber-400 mb-2">Análise de logs</h4>
+              <p class="text-sm text-neutral-400">"Identifique padrões de erro em logs/app.log dos últimos 3 dias." Lê arquivo gigante, retorna top 5 erros.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl">🧪</span>
+            <div>
+              <h4 class="font-semibold text-amber-400 mb-2">Diagnóstico de bug</h4>
+              <p class="text-sm text-neutral-400">"Rastreie por que getUserById retorna null às vezes." Lê código, stack trace, retorna hipótese + fix.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-dark-800 rounded-xl border border-dark-600 p-5">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl">📝</span>
+            <div>
+              <h4 class="font-semibold text-amber-400 mb-2">Síntese multi-fonte</h4>
+              <p class="text-sm text-neutral-400">"Compare abordagens A, B e C em docs/adr/*.md." Lê todas ADRs, retorna matriz comparativa.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fazer vs não -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Delegue quando</h4>
+          <ul class="space-y-2.5 text-sm text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Resultado útil é 1–2 parágrafos</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Caminho envolve ler &gt;3 arquivos</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Não vai precisar iterar nos detalhes</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Output verboso atrapalharia a sessão</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ NÃO delegue quando</h4>
+          <ul class="space-y-2.5 text-sm text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Precisa ver o código linha a linha</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Vai iterar várias vezes no mesmo arquivo</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Tarefa já é pequena (&lt;5k tokens)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Conversação contínua sobre o resultado</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">🎭 Tipos prontos no Claude Code</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O Claude Code já vem com um time de subagentes nativos que cobrem os casos mais comuns. Conhecer cada um ajuda a <strong class="text-amber-400">escolher o mais leve</strong> para cada trabalho.
+      </p>
+
+      <!-- Tabela de subagentes -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30">
+          <h3 class="font-semibold">Subagentes disponíveis</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-dark-700/50">
+              <tr class="text-left">
+                <th class="px-4 py-3 font-semibold text-neutral-400">Agente</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Melhor para</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Tools</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Custo relativo</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600">
+              <tr>
+                <td class="px-4 py-3"><span class="font-semibold text-amber-400">Explore</span></td>
+                <td class="px-4 py-3 text-neutral-300">Busca rápida no repo, encontrar código por descrição</td>
+                <td class="px-4 py-3 text-neutral-400 text-xs">Glob, Grep, Read</td>
+                <td class="px-4 py-3 font-mono text-emerald-400">baixo</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3"><span class="font-semibold text-blue-400">general-purpose</span></td>
+                <td class="px-4 py-3 text-neutral-300">Tarefas multi-step, pesquisa complexa</td>
+                <td class="px-4 py-3 text-neutral-400 text-xs">Todas disponíveis</td>
+                <td class="px-4 py-3 font-mono text-amber-400">médio–alto</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3"><span class="font-semibold text-teal-400">web-research-assistant</span></td>
+                <td class="px-4 py-3 text-neutral-300">Pesquisa profunda na internet, síntese de fontes</td>
+                <td class="px-4 py-3 text-neutral-400 text-xs">WebSearch, WebFetch</td>
+                <td class="px-4 py-3 font-mono text-amber-400">médio</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3"><span class="font-semibold text-purple-400">Plan</span></td>
+                <td class="px-4 py-3 text-neutral-300">Criar plano de execução detalhado antes de codar</td>
+                <td class="px-4 py-3 text-neutral-400 text-xs">Read, Grep, Glob</td>
+                <td class="px-4 py-3 font-mono text-emerald-400">baixo–médio</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3"><span class="font-semibold text-rose-400">code-reviewer</span></td>
+                <td class="px-4 py-3 text-neutral-300">Auditoria de diff, review antes de PR</td>
+                <td class="px-4 py-3 text-neutral-400 text-xs">Read, Bash (git)</td>
+                <td class="px-4 py-3 font-mono text-emerald-400">baixo</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-neutral-500 p-4">Custo relativo considera turnos típicos + verbosidade esperada de cada tipo.</p>
+      </div>
+
+      <!-- Box dica -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span>Regra de escolha</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Comece sempre pelo <strong>mais específico</strong>. Explore para busca no repo, Plan para planejamento, code-reviewer para review. Caia em general-purpose só quando a tarefa for realmente multi-faceta.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">🏷️ Criando agentes customizados</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Agentes customizados ficam em <code class="text-amber-400 bg-dark-700 px-1.5 py-0.5 rounded">.claude/agents/</code> no repositório. Cada um é um arquivo markdown com <strong class="text-amber-400">frontmatter YAML</strong> + system prompt.
+      </p>
+
+      <!-- Estrutura do arquivo -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-4">Anatomia de <code class="text-amber-400">.claude/agents/sec-review.md</code></h3>
+        <pre class="bg-dark-900 rounded-lg p-4 text-xs overflow-x-auto text-neutral-100"><code>---
+name: sec-review
+description: Revisa um diff em busca de vulnerabilidades de segurança comuns (SQL injection, XSS, secrets hardcoded, auth ausente). Acione antes de fazer merge de mudanças em rotas HTTP, queries SQL, ou arquivos de configuração.
+tools:
+  - Read
+  - Grep
+  - Glob
+  - Bash
+model: claude-sonnet-4-6
+---
+
+Você é um auditor sênior de segurança. Analise o diff fornecido e produza um relatório estruturado:
+
+## Formato de saída
+1. **Resumo** (1 parágrafo, veredito: SAFE / RISK / BLOCK)
+2. **Achados críticos** (lista numerada, cada um com: arquivo:linha, descrição, correção sugerida)
+3. **Observações** (bullets de coisas menores)
+
+## Regras
+- Seja específico: cite arquivo e linha
+- Não invente vulnerabilidades — cite apenas o que você viu
+- Priorize OWASP Top 10
+- Termine sempre com recomendação clara: pode dar merge ou não</code></pre>
+      </div>
+
+      <!-- Campos do frontmatter -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30">
+          <h3 class="font-semibold">Campos do frontmatter</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-dark-700/50">
+              <tr class="text-left">
+                <th class="px-4 py-3 font-semibold text-neutral-400">Campo</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Obrigatório</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Descrição</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600">
+              <tr><td class="px-4 py-3 font-mono text-amber-400">name</td><td class="px-4 py-3 text-emerald-400">sim</td><td class="px-4 py-3 text-neutral-300">ID único, kebab-case</td></tr>
+              <tr><td class="px-4 py-3 font-mono text-amber-400">description</td><td class="px-4 py-3 text-emerald-400">sim</td><td class="px-4 py-3 text-neutral-300">Quando acionar — é a chave para auto-invocação</td></tr>
+              <tr><td class="px-4 py-3 font-mono text-amber-400">tools</td><td class="px-4 py-3 text-neutral-400">opcional</td><td class="px-4 py-3 text-neutral-300">Lista de tools permitidas. Omitido = todas</td></tr>
+              <tr><td class="px-4 py-3 font-mono text-amber-400">model</td><td class="px-4 py-3 text-neutral-400">opcional</td><td class="px-4 py-3 text-neutral-300">Força um modelo específico (Haiku para barato, Opus para caro)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Box dica -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span>A descrição é o gatilho</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          O campo <code class="text-primary bg-dark-700 px-1.5 py-0.5 rounded">description</code> é lido pelo agente principal para decidir se aciona o subagente. Seja <strong>específico sobre quando</strong>, não só sobre o quê. "Revisa diff" é fraco; "Acione antes de fazer merge em rotas HTTP" é forte.
+        </p>
+      </div>
+
+      <!-- Exemplos de ideias -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">🧰</span>Ideias para sua pasta .claude/agents/</h3>
+        <ul class="text-sm text-neutral-300 space-y-2">
+          <li>📦 <strong>migrator</strong> — Plano de migração framework X → Y</li>
+          <li>🗃️ <strong>dba</strong> — Review de queries SQL e índices</li>
+          <li>🔐 <strong>sec-review</strong> — Auditoria de segurança de diff</li>
+          <li>📝 <strong>doc-writer</strong> — Gera README a partir do código</li>
+          <li>🧪 <strong>test-generator</strong> — Lê função e propõe casos de teste</li>
+          <li>🎨 <strong>a11y-checker</strong> — Revisa HTML em busca de problemas de acessibilidade</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- TOPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">💡 Pai só recebe o resumo</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Essa é a feature mais importante (e mais subestimada) dos subagentes: <strong class="text-amber-400">o contexto é completamente isolado</strong>. O pai não enxerga o que o filho leu, pensou ou gerou internamente — só o texto final.
+      </p>
+
+      <!-- Antes vs Depois -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Contexto do pai: com vs sem delegação</h3>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <!-- Sem delegação -->
+          <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-semibold text-red-400 uppercase tracking-wider">❌ Sem delegação</span>
+              <span class="text-xs text-neutral-500 font-mono">+42k tokens</span>
+            </div>
+            <div class="space-y-2 text-xs font-mono">
+              <div class="bg-dark-900 rounded p-2 text-neutral-300">[user] "Pesquise onde usamos OAuth"</div>
+              <div class="bg-dark-900 rounded p-2 text-neutral-300">[tool] Grep oauth → 47 matches</div>
+              <div class="bg-dark-900 rounded p-2 text-neutral-500">[tool] Read auth/oauth.ts (230 linhas)</div>
+              <div class="bg-dark-900 rounded p-2 text-neutral-500">[tool] Read auth/providers.ts (180 linhas)</div>
+              <div class="bg-dark-900 rounded p-2 text-neutral-500">[tool] Read auth/callback.ts (95 linhas)</div>
+              <div class="bg-dark-900 rounded p-2 text-neutral-500">[tool] Read config/auth.yml (40 linhas)</div>
+              <div class="bg-dark-900 rounded p-2 text-neutral-500">[tool] Read 6 outros arquivos ...</div>
+              <div class="bg-dark-900 rounded p-2 text-neutral-300">[assistant] Análise completa (3k tokens)</div>
+            </div>
+            <p class="text-xs text-red-400 mt-3">Tudo isso FICA no contexto até o fim da sessão.</p>
+          </div>
+
+          <!-- Com delegação -->
+          <div class="bg-emerald-900/20 border border-emerald-500/30 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-semibold text-emerald-400 uppercase tracking-wider">✅ Com delegação</span>
+              <span class="text-xs text-neutral-500 font-mono">+800 tokens</span>
+            </div>
+            <div class="space-y-2 text-xs font-mono">
+              <div class="bg-dark-900 rounded p-2 text-neutral-300">[user] "Pesquise onde usamos OAuth"</div>
+              <div class="bg-dark-900 rounded p-2 text-neutral-300">[Task] Explore agent invocado</div>
+              <div class="bg-dark-900 rounded p-2 text-neutral-500 italic">(subagente lê 10 arquivos, 42k tokens — em sua própria janela, nunca vista aqui)</div>
+              <div class="bg-dark-900 rounded p-2 text-emerald-400">[Task result] "OAuth implementado em auth/oauth.ts. Providers configurados em auth/providers.ts (Google, GitHub). Callback em auth/callback.ts. Config em config/auth.yml."</div>
+            </div>
+            <p class="text-xs text-emerald-400 mt-3">Contexto principal ficou limpo. 50× menos tokens.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Como instruir o formato -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">📝</span>Controle o formato do resumo</h3>
+        <p class="text-neutral-300 text-sm mb-4">
+          Como você só vê o output final, <strong>instrua o subagente sobre o formato</strong> dele. Exemplo ruim vs bom:
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div class="bg-dark-800 rounded p-3 border-l-4 border-red-500">
+            <div class="text-xs text-red-400 font-semibold mb-1">❌ Ruim</div>
+            <code class="text-neutral-300 text-xs">"Pesquise onde usamos OAuth"</code>
+          </div>
+          <div class="bg-dark-800 rounded p-3 border-l-4 border-emerald-500">
+            <div class="text-xs text-emerald-400 font-semibold mb-1">✅ Bom</div>
+            <code class="text-neutral-300 text-xs">"Pesquise onde usamos OAuth. Responda: 1) arquivo principal, 2) providers configurados, 3) rota de callback. Max 100 palavras."</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alerta -->
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center">
+          <span class="mr-2">⚠️</span> Cuidado: você não pode "perguntar depois"
+        </h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Se precisar de detalhe que não veio no resumo, terá que invocar o subagente de novo (e ele começa do zero). Isso incentiva a dar <strong>briefing completo de primeira</strong>.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">💰 Economia: output verboso fica no subagente</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Aqui está a conta do dinheiro: para a mesma tarefa real, comparamos o contexto acumulado no agente principal com e sem delegação. A diferença é da ordem de <strong class="text-amber-400">dezenas de vezes</strong>.
+      </p>
+
+      <!-- Tabela comparativa detalhada -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30">
+          <h3 class="font-semibold">Tarefa: "mapeie todo o fluxo de checkout do projeto"</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-dark-700/50">
+              <tr class="text-left">
+                <th class="px-4 py-3 font-semibold text-neutral-400">Etapa</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Sem delegação (pai)</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Com delegação (pai)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600">
+              <tr><td class="px-4 py-3">Listagem de arquivos (Glob)</td><td class="px-4 py-3 font-mono text-rose-400">+2.000</td><td class="px-4 py-3 font-mono text-emerald-400">0</td></tr>
+              <tr><td class="px-4 py-3">Leitura de 12 arquivos</td><td class="px-4 py-3 font-mono text-rose-400">+28.000</td><td class="px-4 py-3 font-mono text-emerald-400">0</td></tr>
+              <tr><td class="px-4 py-3">4 Greps intermediários</td><td class="px-4 py-3 font-mono text-rose-400">+3.500</td><td class="px-4 py-3 font-mono text-emerald-400">0</td></tr>
+              <tr><td class="px-4 py-3">Análise raciocinando em voz alta</td><td class="px-4 py-3 font-mono text-rose-400">+4.000</td><td class="px-4 py-3 font-mono text-emerald-400">0</td></tr>
+              <tr><td class="px-4 py-3">Resumo final entregue</td><td class="px-4 py-3 font-mono text-amber-400">+800</td><td class="px-4 py-3 font-mono text-amber-400">+800</td></tr>
+              <tr class="bg-dark-700/30">
+                <td class="px-4 py-3 font-bold">Total adicionado ao contexto do pai</td>
+                <td class="px-4 py-3 font-mono text-rose-400 font-bold">~38.300 tokens</td>
+                <td class="px-4 py-3 font-mono text-emerald-400 font-bold">~800 tokens</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Big number -->
+      <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6 text-center">
+        <div class="text-sm text-amber-400 font-semibold mb-1">Economia no contexto principal</div>
+        <div class="text-5xl font-bold text-amber-400 mb-2">~48×</div>
+        <p class="text-neutral-300 text-sm">menos tokens no pai, para a mesma tarefa e mesmo resultado útil</p>
+      </div>
+
+      <!-- Composição do custo -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">💸 Sem delegação — custo total</h4>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-neutral-400">+38k no pai</span><span class="font-mono">pago pelo resto da sessão</span></div>
+            <div class="flex justify-between"><span class="text-neutral-400">Re-lido em todo turno</span><span class="font-mono">×20+ turnos</span></div>
+            <div class="flex justify-between pt-2 border-t border-red-500/30"><span class="font-semibold">Efeito cumulativo</span><span class="font-mono text-rose-400">760k+ tokens</span></div>
+          </div>
+        </div>
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✅ Com delegação — custo total</h4>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-neutral-400">+800 no pai</span><span class="font-mono">pago pelo resto</span></div>
+            <div class="flex justify-between"><span class="text-neutral-400">Subagente paga uma vez (isolado)</span><span class="font-mono">~38k único</span></div>
+            <div class="flex justify-between pt-2 border-t border-emerald-500/30"><span class="font-semibold">Efeito cumulativo</span><span class="font-mono text-emerald-400">~54k totais</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Box insight -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">🎯</span>Por que é exponencial</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          O que fica no contexto do pai <strong>é relido a cada turno seguinte</strong>. Então +38k na pesquisa vira 760k+ ao longo de 20 turnos. O subagente paga o custo uma vez e morre. Por isso a economia <strong>multiplica com o tempo</strong>.
+        </p>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-amber-900/40 via-dark-800 to-dark-800 rounded-xl border border-amber-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">📋</span>Resumo do Módulo</h2>
+
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-amber-400 mt-1">✓</span><div><strong class="text-white">Subagente tem janela própria</strong><span class="text-neutral-400"> — começa do zero, system prompt e tools próprios</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-amber-400 mt-1">✓</span><div><strong class="text-white">Delegue o que é verboso</strong><span class="text-neutral-400"> — pesquisa, análise, síntese, logs</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-amber-400 mt-1">✓</span><div><strong class="text-white">5 tipos prontos no Claude Code</strong><span class="text-neutral-400"> — Explore, general-purpose, research, Plan, code-reviewer</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-amber-400 mt-1">✓</span><div><strong class="text-white">Custom em .claude/agents/*.md</strong><span class="text-neutral-400"> — frontmatter YAML + system prompt</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-amber-400 mt-1">✓</span><div><strong class="text-white">Pai só vê o resumo final</strong><span class="text-neutral-400"> — instrua o formato do output explicitamente</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-amber-400 mt-1">✓</span><div><strong class="text-white">Economia ~48× no caso real</strong><span class="text-neutral-400"> — multiplica com os turnos seguintes</span></div></div>
+        </div>
+
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-amber-400 mb-2">Próximo módulo:</h3>
+          <p class="text-neutral-300">4.2 — 📚 Dividir Tarefas Grandes em Sessões</p>
+          <p class="text-sm text-neutral-400 mt-1">Fluxo canônico, exemplos reais, quando NÃO dividir.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Voltar para Trilha</a>
+          <a href="modulo-4-2.html" class="flex-1 text-center px-6 py-3 bg-amber-600 text-white rounded-lg font-semibold hover:bg-amber-500 transition-colors">Próximo: Dividir em Sessões →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>🧠 Mestre em Contexto e Tokens — INEMA.CLUB • 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) { darkIcon.classList.remove('hidden'); html.classList.remove('dark'); } else { lightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => { darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden'); html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+  </script>
+
+</body>
+</html>

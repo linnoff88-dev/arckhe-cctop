@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.1 Abra Toda Sessão com um Plano | Mestre em Contexto e Tokens</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .dark body { background-color: #111827; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #4b5563; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .bg-blue-900\/20 { background-color: rgba(37, 99, 235, 0.06); }
+    html:not(.dark) .bg-blue-900\/30 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .hover\:text-blue-400:hover { color: #2563eb; }
+
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+    html:not(.dark) .bg-emerald-900\/40 { background-color: rgba(5, 150, 105, 0.1); }
+    html:not(.dark) .text-red-400 { color: #dc2626; }
+    html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+    html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.25); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.35); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧠</span>
+            <span class="font-bold text-lg hidden sm:inline">Contexto e Tokens</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-blue-400 bg-blue-500/10"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Rotina</span></a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">Handoff</span></a>
+          <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Avançado</span></a>
+          <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">Exemplos</span></a>
+          <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Expert</span></a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-blue-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-blue-400">Trilha 2</a>
+      <span>/</span>
+      <span class="text-blue-400">Módulo 2.1</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-blue-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full mb-4">MÓDULO 2.1</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">📋 Abra Toda Sessão com um Plano</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Dois minutos de plano poupam trinta de retrabalho. Este módulo te dá o ritual de abertura: plan mode, template copiável, e o jeito certo de revisar antes de aprovar.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">30</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">Básico</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">Prática</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- TOPICO 1 -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">🎯 Plan mode oficial</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O Claude Code tem um <strong class="text-blue-400">modo plano nativo</strong>. Ativado, o Claude só tem acesso a ferramentas de leitura — ele pode investigar, mas não tocar em arquivo. A saída é um plano estruturado que você revisa antes de liberar a execução.
+      </p>
+
+      <!-- Formas de entrar -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Duas formas de entrar em plan mode</h3>
+        <div class="space-y-4">
+          <div class="bg-dark-700/50 rounded-lg p-5 border-l-4 border-blue-500">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-2xl">⌨️</span>
+              <div class="font-semibold text-blue-400">Opção A — Atalho <code class="bg-dark-900 px-2 py-0.5 rounded text-blue-400">Shift+Tab</code></div>
+            </div>
+            <p class="text-sm text-neutral-400 mb-3">Cicla pelos 3 modos disponíveis:</p>
+            <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+              <span class="px-3 py-1.5 bg-dark-900 rounded text-neutral-300">default</span>
+              <span class="text-neutral-500">→</span>
+              <span class="px-3 py-1.5 bg-dark-900 rounded text-emerald-400">accept edits</span>
+              <span class="text-neutral-500">→</span>
+              <span class="px-3 py-1.5 bg-blue-500/20 rounded text-blue-400 font-semibold">plan mode</span>
+              <span class="text-neutral-500">→</span>
+              <span class="text-neutral-500">(ciclo)</span>
+            </div>
+          </div>
+
+          <div class="bg-dark-700/50 rounded-lg p-5 border-l-4 border-blue-500">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-2xl">📝</span>
+              <div class="font-semibold text-blue-400">Opção B — Comando <code class="bg-dark-900 px-2 py-0.5 rounded text-blue-400">/plan [descrição]</code></div>
+            </div>
+            <p class="text-sm text-neutral-400">Entra direto com o objetivo embutido. Ex.: <code class="bg-dark-900 px-2 py-0.5 rounded text-blue-400">/plan adicionar auth JWT ao endpoint /login</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tools disponíveis -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">🔒</span>O que Claude pode (e não pode) fazer em plan mode</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h4 class="text-sm font-semibold text-emerald-400 mb-2">✓ Permitido (read-only)</h4>
+            <ul class="text-sm text-neutral-300 space-y-1.5">
+              <li class="flex items-start gap-2"><span class="text-emerald-400">•</span><span><code class="text-emerald-400">Read</code> — ler arquivos</span></li>
+              <li class="flex items-start gap-2"><span class="text-emerald-400">•</span><span><code class="text-emerald-400">Grep</code> — buscar no código</span></li>
+              <li class="flex items-start gap-2"><span class="text-emerald-400">•</span><span><code class="text-emerald-400">Glob</code> — listar arquivos</span></li>
+              <li class="flex items-start gap-2"><span class="text-emerald-400">•</span><span><code class="text-emerald-400">WebFetch</code> / <code class="text-emerald-400">WebSearch</code></span></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-sm font-semibold text-red-400 mb-2">✗ Bloqueado</h4>
+            <ul class="text-sm text-neutral-300 space-y-1.5">
+              <li class="flex items-start gap-2"><span class="text-red-400">•</span><span><code class="text-red-400">Edit</code> / <code class="text-red-400">Write</code> — modificar arquivos</span></li>
+              <li class="flex items-start gap-2"><span class="text-red-400">•</span><span><code class="text-red-400">Bash</code> destrutivo</span></li>
+              <li class="flex items-start gap-2"><span class="text-red-400">•</span><span>MCPs que modificam estado externo</span></li>
+              <li class="flex items-start gap-2"><span class="text-red-400">•</span><span>Qualquer side-effect não reversível</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dica -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">💡</span>Por que isso é importante</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          A restrição não é limitação — é <strong>guard-rail</strong>. O Claude não consegue "pular direto para código" mesmo que queira. Ele investiga, monta plano, apresenta. Você aprova conscientemente. É o contrário de "executa e vê no que dá".
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 2 -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">📝 Template de abertura de sessão</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Este é o <strong class="text-blue-400">prompt que você cola toda vez</strong> que abre uma sessão nova para um trabalho não-trivial. Quatro linhas. Estrutura fixa. Preenche os placeholders.
+      </p>
+
+      <!-- Prompt pronto -->
+      <div class="bg-dark-800 rounded-xl border border-blue-500/30 overflow-hidden mb-6">
+        <div class="bg-blue-900/30 px-4 py-2 border-b border-blue-500/30 flex items-center justify-between">
+          <span class="text-xs font-semibold text-blue-400 uppercase tracking-wider">Prompt copiável</span>
+          <span class="text-xs text-neutral-500 font-mono">template de abertura</span>
+        </div>
+        <pre class="p-5 text-sm text-neutral-200 leading-relaxed overflow-x-auto"><code>Vamos trabalhar em modo planejamento.
+Objetivo: [X]
+Contexto: [repo / arquivos relevantes]
+Antes de tocar em código, me proponha um plano em no máximo 5 passos.</code></pre>
+      </div>
+
+      <!-- Exemplo preenchido -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-4">Exemplo preenchido</h3>
+        <div class="bg-dark-900 rounded-lg p-5 font-mono text-sm text-neutral-200 leading-relaxed border border-dark-700">
+          <div class="text-blue-400">Vamos trabalhar em modo planejamento.</div>
+          <div class="text-neutral-300 mt-2">Objetivo: <span class="text-emerald-400">adicionar rate limiting no endpoint /api/login</span></div>
+          <div class="text-neutral-300 mt-1">Contexto: <span class="text-emerald-400">src/api/auth/*, usar Redis que já está em docker-compose.yml</span></div>
+          <div class="text-neutral-300 mt-2">Antes de tocar em código, me proponha um plano em no máximo 5 passos.</div>
+        </div>
+      </div>
+
+      <!-- Anatomia -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Anatomia das 4 linhas</h3>
+        <div class="space-y-3">
+          <div class="flex items-start gap-4 bg-dark-700/50 rounded-lg p-4 border-l-4 border-blue-500">
+            <span class="text-xl">🎛️</span>
+            <div>
+              <div class="font-semibold text-blue-400 text-sm mb-1">Linha 1 — Declara o modo</div>
+              <div class="text-xs text-neutral-400">Reforça plan mode textualmente mesmo se já ativado pelo atalho. Claude fica "no pé" da regra.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 bg-dark-700/50 rounded-lg p-4 border-l-4 border-blue-500">
+            <span class="text-xl">🎯</span>
+            <div>
+              <div class="font-semibold text-blue-400 text-sm mb-1">Linha 2 — Objetivo único</div>
+              <div class="text-xs text-neutral-400">Uma coisa só, específica. Se tem "e", provavelmente são duas sessões.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 bg-dark-700/50 rounded-lg p-4 border-l-4 border-blue-500">
+            <span class="text-xl">📍</span>
+            <div>
+              <div class="font-semibold text-blue-400 text-sm mb-1">Linha 3 — Contexto pontual</div>
+              <div class="text-xs text-neutral-400">Indica onde olhar sem despejar 20 arquivos. Claude abre por demanda.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 bg-dark-700/50 rounded-lg p-4 border-l-4 border-blue-500">
+            <span class="text-xl">📐</span>
+            <div>
+              <div class="font-semibold text-blue-400 text-sm mb-1">Linha 4 — Restrição de tamanho</div>
+              <div class="text-xs text-neutral-400">"Máximo 5 passos" força enxugamento. Sem isso, planos viram tratados.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dica -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">⏱️</span>Vale os 30 segundos</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Copiar-colar e preencher leva meio minuto. Depois desse meio minuto você tem um plano avaliado, sem surpresas. Vs. "começar direto": 5 minutos até perceber que o modelo entendeu errado.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 3 -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">🔍 Como bom plano evita retrabalho</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Retrabalho é o maior sumidouro de tokens. Um plano revisado antes de executar captura <strong class="text-blue-400">80% dos erros</strong> que iriam aparecer depois, num estágio onde corrigir custa ~0 tokens.
+      </p>
+
+      <!-- Comparação visual -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">❌ Sem plano — "faça tudo"</h4>
+          <div class="space-y-3 text-sm">
+            <div class="bg-dark-800/50 rounded-lg p-3">
+              <div class="text-xs text-neutral-500 mb-1">Você:</div>
+              <div class="text-neutral-300">"implementa cache para os endpoints /api/*"</div>
+            </div>
+            <div class="text-xs text-neutral-400 flex items-center gap-2"><span class="text-red-400">→</span><span>Claude escolhe Redis (você queria in-memory)</span></div>
+            <div class="text-xs text-neutral-400 flex items-center gap-2"><span class="text-red-400">→</span><span>Aplica em /api/metrics (você não queria)</span></div>
+            <div class="text-xs text-neutral-400 flex items-center gap-2"><span class="text-red-400">→</span><span>TTL fixo de 60s (você queria config)</span></div>
+            <div class="text-xs text-neutral-400 flex items-center gap-2"><span class="text-red-400">→</span><span>15 turnos depois, metade refeita</span></div>
+            <div class="pt-3 border-t border-red-500/30 text-center">
+              <div class="text-xs text-neutral-500">Custo real</div>
+              <div class="text-2xl font-bold text-red-400">~US$ 3,80</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Com plano — 3 passos claros</h4>
+          <div class="space-y-3 text-sm">
+            <div class="bg-dark-800/50 rounded-lg p-3">
+              <div class="text-xs text-neutral-500 mb-1">Plano proposto:</div>
+              <div class="text-neutral-300 text-xs">1. middleware in-memory com TTL config<br>2. aplicar em /api/products e /api/users<br>3. não tocar em /api/metrics</div>
+            </div>
+            <div class="text-xs text-neutral-400 flex items-center gap-2"><span class="text-emerald-400">→</span><span>Você corrige antes: "TTL via env, não config file"</span></div>
+            <div class="text-xs text-neutral-400 flex items-center gap-2"><span class="text-emerald-400">→</span><span>Aprova e executa em 3 turnos</span></div>
+            <div class="text-xs text-neutral-400 flex items-center gap-2"><span class="text-emerald-400">→</span><span>Zero retrabalho</span></div>
+            <div class="pt-3 border-t border-emerald-500/30 text-center">
+              <div class="text-xs text-neutral-500">Custo real</div>
+              <div class="text-2xl font-bold text-emerald-400">~US$ 0,60</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Economia -->
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6 text-center">
+        <div class="text-sm text-blue-400 font-semibold mb-1">Economia com plano</div>
+        <div class="text-5xl font-bold text-blue-400 mb-2">~6×</div>
+        <p class="text-neutral-300 text-sm">no mesmo trabalho. Dois minutos de planejamento valem a conta.</p>
+      </div>
+
+      <!-- Onde o plano ataca -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-4">4 erros que planejar filtra</h3>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <div class="text-sm"><strong class="text-blue-400">Escopo inflado</strong><span class="text-neutral-400"> — Claude decide tocar em mais arquivos que necessário. Plano mostra o mapa, você poda.</span></div>
+          </div>
+          <div class="flex items-start gap-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <div class="text-sm"><strong class="text-blue-400">Escolha técnica errada</strong><span class="text-neutral-400"> — Redis vs in-memory, bcrypt vs argon2. No plano dá para alinhar; depois é refactor.</span></div>
+          </div>
+          <div class="flex items-start gap-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <div class="text-sm"><strong class="text-blue-400">Suposição não declarada</strong><span class="text-neutral-400"> — "Assumi que vocês usam Zod". Se não usam, descobriu antes de codar.</span></div>
+          </div>
+          <div class="flex items-start gap-3 bg-dark-700/50 rounded-lg p-3">
+            <span class="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <div class="text-sm"><strong class="text-blue-400">Ordem ruim</strong><span class="text-neutral-400"> — Testes antes da implementação? Migration antes do model? Plano deixa visível.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOPICO 4 -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">💡 Perguntar primeiro, executar depois</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Um plano que diz <strong class="text-blue-400">"não sei X, me explica?"</strong> é melhor que um plano confiante que chuta. Plan mode incentiva isso porque Claude tem tools de leitura — ele consegue ir até onde o código permite antes de admitir limite.
+      </p>
+
+      <!-- Comparação bom vs ruim -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ Plano confiante que chuta</h4>
+          <div class="bg-dark-800/50 rounded-lg p-4 text-sm text-neutral-300 space-y-2">
+            <div>1. Criar middleware em <code class="text-red-400">src/middleware/rate.ts</code></div>
+            <div>2. Usar <code class="text-red-400">express-rate-limit</code></div>
+            <div>3. Configurar 100 req/min</div>
+            <div>4. Aplicar globalmente</div>
+          </div>
+          <p class="text-xs text-neutral-500 mt-3">Problema: seu projeto usa Fastify, não Express. E o limite devia ser por rota. Vai descobrir no passo 4.</p>
+        </div>
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Plano que admite incerteza</h4>
+          <div class="bg-dark-800/50 rounded-lg p-4 text-sm text-neutral-300 space-y-2">
+            <div class="text-emerald-400 text-xs font-semibold mb-1">Antes de propor passos, tenho perguntas:</div>
+            <div>• Você usa Fastify ou Express? Vi fastify/plugin no package.json</div>
+            <div>• Rate limit por rota ou global?</div>
+            <div>• Redis está disponível em dev também?</div>
+          </div>
+          <p class="text-xs text-emerald-400 mt-3">→ Respondeu → Claude gera plano correto na primeira.</p>
+        </div>
+      </div>
+
+      <!-- Box conceito -->
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">🧠</span>Incentivo via CLAUDE.md</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed mb-3">
+          Coloque uma linha como esta no seu CLAUDE.md:
+        </p>
+        <div class="bg-dark-900 rounded-lg p-3 font-mono text-xs text-blue-400 border border-dark-700">
+          &gt; Em plan mode, prefira perguntar quando houver ambiguidade a assumir. Listar perguntas antes do plano é encorajado.
+        </div>
+        <p class="text-neutral-400 text-xs mt-3">Isso calibra o Claude para o comportamento que você quer — sem precisar pedir toda vez.</p>
+      </div>
+
+      <!-- Tabela tipos de incerteza -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 overflow-hidden mb-6">
+        <div class="p-4 border-b border-dark-600 bg-dark-700/30">
+          <h3 class="font-semibold">Tipos de incerteza que valem pergunta</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-dark-700/50">
+              <tr class="text-left">
+                <th class="px-4 py-3 font-semibold text-neutral-400">Categoria</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Exemplo</th>
+                <th class="px-4 py-3 font-semibold text-neutral-400">Custo se errar</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-600">
+              <tr><td class="px-4 py-3 font-semibold">Stack</td><td class="px-4 py-3 text-neutral-400">ORM? Framework HTTP?</td><td class="px-4 py-3 text-red-400 font-mono">refactor inteiro</td></tr>
+              <tr><td class="px-4 py-3 font-semibold">Convenção</td><td class="px-4 py-3 text-neutral-400">camelCase ou snake?</td><td class="px-4 py-3 text-amber-400 font-mono">find & replace</td></tr>
+              <tr><td class="px-4 py-3 font-semibold">Escopo</td><td class="px-4 py-3 text-neutral-400">Mobile também?</td><td class="px-4 py-3 text-red-400 font-mono">dobra o trabalho</td></tr>
+              <tr><td class="px-4 py-3 font-semibold">Segurança</td><td class="px-4 py-3 text-neutral-400">Tokens em cookie ou header?</td><td class="px-4 py-3 text-red-400 font-mono">revisão completa</td></tr>
+              <tr><td class="px-4 py-3 font-semibold">Performance</td><td class="px-4 py-3 text-neutral-400">Cache agressivo ou conservador?</td><td class="px-4 py-3 text-amber-400 font-mono">ajuste de config</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOPICO 5 -->
+    <section id="topico-5" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">📐 Planos pequenos: 3–5 passos</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Se seu "plano" tem 10 passos, você não fez um plano — fez um <strong class="text-blue-400">projeto</strong>. Projetos precisam de etapas com handoff. Planos cabem em 3–5 passos executáveis numa sessão.
+      </p>
+
+      <!-- Comparação de tamanhos -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Tamanho do plano — regras de bolso</h3>
+        <div class="space-y-3">
+          <div class="flex items-center gap-4 bg-emerald-500/10 rounded-lg p-4 border-l-4 border-emerald-500">
+            <div class="text-3xl font-bold text-emerald-400 w-12 text-center">3</div>
+            <div class="flex-1">
+              <div class="font-semibold text-emerald-400 text-sm">Ideal</div>
+              <div class="text-xs text-neutral-400">Bug fix, feature pequena, refactor pontual. Fecha em 1 sessão.</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 bg-blue-500/10 rounded-lg p-4 border-l-4 border-blue-500">
+            <div class="text-3xl font-bold text-blue-400 w-12 text-center">5</div>
+            <div class="flex-1">
+              <div class="font-semibold text-blue-400 text-sm">Máximo saudável</div>
+              <div class="text-xs text-neutral-400">Feature de tamanho médio. Sessão cheia, mas cabe.</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 bg-amber-500/10 rounded-lg p-4 border-l-4 border-amber-500">
+            <div class="text-3xl font-bold text-amber-400 w-12 text-center">7</div>
+            <div class="flex-1">
+              <div class="font-semibold text-amber-400 text-sm">Vira projeto</div>
+              <div class="text-xs text-neutral-400">Tem que quebrar em 2 sessões com handoff entre elas.</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 bg-red-500/10 rounded-lg p-4 border-l-4 border-red-500">
+            <div class="text-3xl font-bold text-red-400 w-12 text-center">10+</div>
+            <div class="flex-1">
+              <div class="font-semibold text-red-400 text-sm">Quebra obrigatória</div>
+              <div class="text-xs text-neutral-400">Vai estourar contexto ou context rot antes de acabar.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exemplo antes/depois -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-3">✗ Plano inchado (9 passos)</h4>
+          <div class="space-y-1 text-xs text-neutral-400 font-mono">
+            <div>1. Criar migration</div>
+            <div>2. Criar model</div>
+            <div>3. Criar repository</div>
+            <div>4. Criar service</div>
+            <div>5. Criar controller</div>
+            <div>6. Criar rotas</div>
+            <div>7. Criar DTOs</div>
+            <div>8. Adicionar validation</div>
+            <div>9. Adicionar testes</div>
+          </div>
+          <p class="text-xs text-neutral-500 mt-3">Parece completo mas não cabe numa sessão. Até o passo 5, contexto já está saturado.</p>
+        </div>
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-3">✓ Plano enxuto (3+3 passos)</h4>
+          <div class="text-xs text-emerald-400 font-semibold mb-2">Sessão A (data layer)</div>
+          <div class="space-y-1 text-xs text-neutral-400 font-mono mb-3">
+            <div>1. Migration + model</div>
+            <div>2. Repository</div>
+            <div>3. Testes do repository</div>
+          </div>
+          <div class="text-xs text-emerald-400 font-semibold mb-2">Sessão B (HTTP layer) — handoff</div>
+          <div class="space-y-1 text-xs text-neutral-400 font-mono">
+            <div>1. Service + DTOs</div>
+            <div>2. Controller + rotas</div>
+            <div>3. Testes de integração</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dica -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">✂️</span>Quando Claude sugerir 8+ passos</h3>
+        <p class="text-neutral-300 text-sm leading-relaxed">
+          Responda: <em>"ok, qual é o MVP dentro disso? Vamos fechar o primeiro bloco de 3 passos, depois conversamos para o segundo."</em> Você acabou de transformar um projeto em duas sessões — e garantiu que cada uma termine.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOPICO 6 -->
+    <section id="topico-6" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">🔄 Revisar plano antes de aceitar</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Plano apresentado ≠ plano aprovado. Esta é a etapa mais barata de corrigir — <strong class="text-blue-400">antes do primeiro Edit</strong>, você ainda gastou poucos tokens e zero linhas de código.
+      </p>
+
+      <!-- Checklist de revisão -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-sm font-semibold text-neutral-400 uppercase tracking-wider mb-5">Checklist mental antes de aprovar</h3>
+        <div class="space-y-2.5">
+          <label class="flex items-start gap-3 bg-dark-700/50 rounded-lg p-3 hover:bg-dark-700 transition-colors cursor-pointer">
+            <input type="checkbox" class="mt-0.5 w-4 h-4 accent-blue-500">
+            <div class="text-sm"><strong class="text-blue-400">Objetivo bate?</strong><span class="text-neutral-400"> — O plano endereça o que eu pedi, nem mais nem menos?</span></div>
+          </label>
+          <label class="flex items-start gap-3 bg-dark-700/50 rounded-lg p-3 hover:bg-dark-700 transition-colors cursor-pointer">
+            <input type="checkbox" class="mt-0.5 w-4 h-4 accent-blue-500">
+            <div class="text-sm"><strong class="text-blue-400">Ordem faz sentido?</strong><span class="text-neutral-400"> — Cada passo libera o seguinte?</span></div>
+          </label>
+          <label class="flex items-start gap-3 bg-dark-700/50 rounded-lg p-3 hover:bg-dark-700 transition-colors cursor-pointer">
+            <input type="checkbox" class="mt-0.5 w-4 h-4 accent-blue-500">
+            <div class="text-sm"><strong class="text-blue-400">Cada passo é específico?</strong><span class="text-neutral-400"> — Ou há vaguezas tipo "ajustar conforme necessário"?</span></div>
+          </label>
+          <label class="flex items-start gap-3 bg-dark-700/50 rounded-lg p-3 hover:bg-dark-700 transition-colors cursor-pointer">
+            <input type="checkbox" class="mt-0.5 w-4 h-4 accent-blue-500">
+            <div class="text-sm"><strong class="text-blue-400">Escolhas técnicas corretas?</strong><span class="text-neutral-400"> — Bibliotecas, padrões, estruturas alinhados com o projeto?</span></div>
+          </label>
+          <label class="flex items-start gap-3 bg-dark-700/50 rounded-lg p-3 hover:bg-dark-700 transition-colors cursor-pointer">
+            <input type="checkbox" class="mt-0.5 w-4 h-4 accent-blue-500">
+            <div class="text-sm"><strong class="text-blue-400">Cabe em 3–5 passos?</strong><span class="text-neutral-400"> — Ou inflou? Se inflou, qual o MVP?</span></div>
+          </label>
+          <label class="flex items-start gap-3 bg-dark-700/50 rounded-lg p-3 hover:bg-dark-700 transition-colors cursor-pointer">
+            <input type="checkbox" class="mt-0.5 w-4 h-4 accent-blue-500">
+            <div class="text-sm"><strong class="text-blue-400">Existem suposições escondidas?</strong><span class="text-neutral-400"> — Claude assumiu algo que eu não validei?</span></div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Frases úteis -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">💬</span>Frases que refinam sem reescrever tudo</h3>
+        <div class="space-y-2.5 text-sm">
+          <div class="bg-dark-800/50 rounded-lg p-3 font-mono text-blue-400 text-xs">
+            "refina passo 2 — detalhe qual arquivo, qual função"
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-3 font-mono text-blue-400 text-xs">
+            "inverta 3 e 4, faz mais sentido"
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-3 font-mono text-blue-400 text-xs">
+            "tire o passo 5, fora do escopo dessa sessão"
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-3 font-mono text-blue-400 text-xs">
+            "no passo 1, use zod em vez de joi"
+          </div>
+          <div class="bg-dark-800/50 rounded-lg p-3 font-mono text-blue-400 text-xs">
+            "o passo 2 está vago, especifique o arquivo"
+          </div>
+        </div>
+        <p class="text-xs text-neutral-500 mt-4">Edições cirúrgicas preservam o resto do plano. Mais barato que pedir "faça tudo de novo".</p>
+      </div>
+
+      <!-- Fazer vs evitar -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ Revisão ativa</h4>
+          <ul class="space-y-2.5 text-sm text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Leia cada passo completo</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Desafie suposições nomeadas</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Refine passo a passo</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Só aprove quando estiver limpo</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ Aprovação no automático</h4>
+          <ul class="space-y-2.5 text-sm text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>"ok, pode fazer"</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Saltar o passo vago "e o que mais for necessário"</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Aceitar plano de 12 passos</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Ignorar sinal de alerta ("talvez", "se eu entendi")</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-blue-900/40 via-dark-800 to-dark-800 rounded-xl border border-blue-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">📋</span>Resumo do Módulo</h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Plan mode é oficial</strong><span class="text-neutral-400"> — Shift+Tab ou <code class="text-blue-400">/plan</code>, só read-only</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Template de 4 linhas</strong><span class="text-neutral-400"> — modo, objetivo, contexto, tamanho</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Plano bom evita retrabalho</strong><span class="text-neutral-400"> — ~6× de economia em exemplo real</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Pergunte antes de executar</strong><span class="text-neutral-400"> — incerteza admitida &gt; suposição silenciosa</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">3–5 passos, não 10</strong><span class="text-neutral-400"> — se maior, é projeto e vai para 2 sessões</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-white">Revise antes de aprovar</strong><span class="text-neutral-400"> — checklist de 6 perguntas</span></div></div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-blue-400 mb-2">Próximo módulo:</h3>
+          <p class="text-neutral-300">2.2 — 🧱 Trabalhe em Blocos</p>
+          <p class="text-sm text-neutral-400 mt-1">Como fatiar a execução em unidades curtas, com checkpoints entre cada uma.</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Voltar para Trilha</a>
+          <a href="modulo-2-2.html" class="flex-1 text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors">Próximo: Trabalhe em Blocos →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>🧠 Mestre em Contexto e Tokens — INEMA.CLUB • 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) { darkIcon.classList.remove('hidden'); html.classList.remove('dark'); } else { lightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => { darkIcon.classList.toggle('hidden'); lightIcon.classList.toggle('hidden'); html.classList.toggle('dark'); localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light'); });
+  </script>
+</body>
+</html>
