@@ -1,4 +1,4 @@
-﻿# ðŸ§  Mestre em Contexto e Tokens
+# ðŸ§  Mestre em Contexto e Tokens
 
 <div align="center">
   <img src="capa/logo.svg" alt="Arckhé AI" height="48" />
@@ -43,7 +43,7 @@ ConteÃºdo validado com documentaÃ§Ã£o oficial da Anthropic (docs.anthropic
 
 ## LicenÃ§a
 
-Curso INEMA.CLUB â€¢ 2026
+Curso ARCKHÉ AI â€¢ 2026
 
 ---
 
