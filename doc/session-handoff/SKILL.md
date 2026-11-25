@@ -1,7 +1,7 @@
 \---
 
 name: session-handoff
-description: Use when the user says "session handoff", "wrap up session", "hand off", "handoff summary", "organiza a sessão", "limpa a sessão" or wants a structured end-of-session summary before clearing context. Produces a chat-only handoff covering decisions, shipped changes, key files, running state, verification steps, deferrals, and open questions so a fresh agent can continue seamlessly.
+description: Use when the user says "session handoff", "wrap up session", "hand off", "handoff summary", "organiza a sessêo", "limpa a sessêo" or wants a structured end-of-session summary before clearing context. Produces a chat-only handoff covering decisions, shipped changes, key files, running state, verification steps, deferrals, and open questions so a fresh agent can continue seamlessly.
 ---
 
 # Session Handoff
